@@ -38,7 +38,7 @@ Grab via `Maven`：
 <dependency>
 	<groupId>com.bladejava</groupId>
 	<artifactId>blade-core</artifactId>
-	<version>1.7.1-beta</version>
+	<version>1.7.1-release</version>
 </dependency>
 <dependency>
 	<groupId>com.bladejava</groupId>
@@ -48,7 +48,7 @@ Grab via `Maven`：
 ```
 or `Gradle`:
 ```sh
-compile 'com.bladejava:blade-core:1.7.1-beta'
+compile 'com.bladejava:blade-core:1.7.1-release'
 compile 'com.bladejava:blade-embed-jetty:0.1.2'
 ```
 

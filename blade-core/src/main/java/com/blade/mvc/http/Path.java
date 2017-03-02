@@ -85,6 +85,7 @@ public final class Path {
         if (path.length() > 1 && path.endsWith("/")) {
             path = path.substring(0, path.length() - 1);
         }
+        path = path.replaceAll("\\s", "%20");
         return path;
     }
 
