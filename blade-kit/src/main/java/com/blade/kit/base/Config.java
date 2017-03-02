@@ -23,7 +23,18 @@ public class Config {
     
     public Config() {
 	}
-    
+
+    public Config(Map<String, String> config) {
+        this.config = config;
+    }
+
+    public Config(Properties props) {
+        for (String key : props.stringPropertyNames()) {
+            String value = props.getProperty(key);
+            this.config.put(key, value);
+        }
+    }
+
 	public Config load(Properties props) {
         Assert.notNull(props, "properties not null");
         Iterator<Object> it = props.keySet().iterator();
