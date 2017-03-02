@@ -15,10 +15,7 @@
  */
 package com.blade.mvc.http.wrapper;
 
-import com.blade.kit.CollectionKit;
-import com.blade.kit.IOKit;
-import com.blade.kit.ObjectKit;
-import com.blade.kit.StringKit;
+import com.blade.kit.*;
 import com.blade.mvc.handler.MultipartHandler;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Path;
@@ -356,7 +353,7 @@ public class ServletRequest implements Request {
 
     @Override
     public String address() {
-        return request.getRemoteAddr();
+        return IPKit.getIpAddrByRequest(raw());
     }
 
     @Override
