@@ -15,6 +15,7 @@
  */
 package com.blade.mvc.route;
 
+import com.blade.exception.BladeException;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.mvc.http.HttpMethod;
@@ -159,7 +160,7 @@ public class RouteMatcher {
             URI uri = new URI(path);
             return uri.getPath();
         } catch (URISyntaxException e) {
-            return null;
+            throw new BladeException(e);
         }
     }
 
