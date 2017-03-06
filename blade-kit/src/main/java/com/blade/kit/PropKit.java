@@ -42,7 +42,7 @@ public class PropKit {
             location = location.substring(1);
         }
         try {
-            InputStream is = getDefault().getResourceAsStream(location);
+            InputStream is = Config.getDefault().getResourceAsStream(location);
             LOGGER.info("Load config [classpath:" + location + "]");
             return loadInputStream(is, location);
         } catch (Exception e) {
@@ -79,26 +79,6 @@ public class PropKit {
                 }
             }
         }
-    }
-
-    private static ClassLoader getDefault() {
-        ClassLoader loader = null;
-        try {
-            loader = Thread.currentThread().getContextClassLoader();
-        } catch (Exception e) {
-        }
-        if (loader == null) {
-            loader = Config.class.getClassLoader();
-            if (loader == null) {
-                try {
-                    // getClassLoader() returning null indicates the bootstrap ClassLoader
-                    loader = ClassLoader.getSystemClassLoader();
-                } catch (Exception e) {
-                    // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
-                }
-            }
-        }
-        return loader;
     }
 
 }

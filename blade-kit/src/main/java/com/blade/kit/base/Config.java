@@ -175,7 +175,7 @@ public class Config {
     /**
      * Returns current thread's context class loader
      */
-    private static ClassLoader getDefault() {
+    public static ClassLoader getDefault() {
         ClassLoader loader = null;
         try {
             loader = Thread.currentThread().getContextClassLoader();
@@ -246,7 +246,7 @@ public class Config {
 		}
 		return null;
 	}
-	
+
 	public Boolean getBoolean(String key, boolean defaultValue) {
 		return null != getBoolean(key) ? getBoolean(key) : defaultValue;
 	}
@@ -254,6 +254,10 @@ public class Config {
     public Config put(String key, Object value){
         config.put(key, value.toString());
         return this;
+    }
+
+    public Config set(String key, Object value){
+        return put(key, value);
     }
 	
 }
