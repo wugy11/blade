@@ -41,13 +41,6 @@ public interface Request {
     HttpServletRequest raw();
 
     /**
-     * URL parameters on the initial route, e.g:/user/23
-     *
-     * @param routePath Route URL
-     */
-    void initPathParams(String routePath);
-
-    /**
      * @return Return client request host
      */
     String host();

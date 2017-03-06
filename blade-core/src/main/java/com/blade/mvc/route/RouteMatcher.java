@@ -15,41 +15,105 @@
  */
 package com.blade.mvc.route;
 
+import com.blade.Blade;
 import com.blade.exception.BladeException;
 import com.blade.kit.CollectionKit;
-import com.blade.kit.StringKit;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Default Route Matcher
  *
  * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.5
+ * @since 1.7.1-release
  */
 public class RouteMatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteMatcher.class);
 
     // Storage URL and route
     private Map<String, Route> routes = null;
     private Map<String, Route> interceptors = null;
 
-    // Storage Map Key
-    private Set<String> routeKeys = null;
-
     private List<Route> interceptorRoutes = CollectionKit.newArrayList(8);
 
+    private static final Pattern PATH_VARIABLE_PATTERN = Pattern.compile(":(\\w+)");
+
+    private static final String PATH_VARIABLE_REPLACE = "([^/]+)";
+
+    private Map<HttpMethod, Map<Integer, FastRouteMappingInfo>> regexRoutes = new HashMap<>();
+
+    private Map<String, Route> staticRoutes = new HashMap<>();
+    private Map<HttpMethod, Pattern> regexRoutePatterns = new HashMap<>();
+    private Map<HttpMethod, Integer> indexes = new HashMap<>();
+    private Map<HttpMethod, StringBuilder> patternBuilders = new HashMap<>();
+
     public RouteMatcher(Routers routers) {
+        this.update(routers);
+    }
+
+    public void update(){
+        this.update(Blade.$().routers());
+    }
+
+    public void update(Routers routers){
         this.routes = routers.getRoutes();
         this.interceptors = routers.getInterceptors();
-        this.routeKeys = routes.keySet();
         Collection<Route> inters = interceptors.values();
         if (!inters.isEmpty()) {
             this.interceptorRoutes.addAll(inters);
         }
+        this.staticRoutes.clear();
+        this.regexRoutePatterns.clear();
+        this.regexRoutes.clear();
+        this.indexes.clear();
+        this.register();
+    }
+
+    public Route lookupRoute(String httpMethod, String path){
+        path = parsePath(path);
+        String routeKey = path + '#' + httpMethod.toUpperCase();
+        Route route = staticRoutes.get(routeKey);
+        if(null != route){
+            return route;
+        }
+        route = staticRoutes.get(path + "#ALL");
+        if(null != route){
+            return route;
+        }
+
+        Map<String, String> uriVariables = CollectionKit.newLinkedHashMap();
+        HttpMethod requestMethod = HttpMethod.valueOf(httpMethod);
+        Matcher matcher = regexRoutePatterns.get(requestMethod).matcher(path);
+        boolean matched = matcher.matches();
+        if(!matched){
+            matcher = regexRoutePatterns.get(HttpMethod.ALL).matcher(path);
+            matched = matcher.matches();
+        }
+        if (matched) {
+            int i;
+            for (i = 1; matcher.group(i) == null; i++);
+            FastRouteMappingInfo mappingInfo = regexRoutes.get(requestMethod).get(i);
+            route = mappingInfo.getRoute();
+
+            // find path variable
+            String uriVariable;
+            int j = 0;
+            while (++i <= matcher.groupCount() && (uriVariable = matcher.group(i)) != null) {
+                uriVariables.put(mappingInfo.getVariableNames().get(j++), uriVariable);
+            }
+            route.setPathParams(uriVariables);
+            LOGGER.trace("lookup path: " + path + " uri variables: " + uriVariables);
+        }
+        return route;
     }
 
     /**
@@ -59,32 +123,7 @@ public class RouteMatcher {
      * @return return route object
      */
     public Route getRoute(String httpMethod, String path) {
-        String cleanPath = parsePath(path);
-
-        String routeKey = path + '#' + httpMethod.toUpperCase();
-        final Route[] route = {routes.get(routeKey)};
-        if (null != route[0]) {
-            return route[0];
-        }
-        route[0] = routes.get(path + "#ALL");
-        if (null != route[0]) {
-            return route[0];
-        }
-
-        List<Route> matchRoutes = CollectionKit.newArrayList();
-
-        routeKeys.forEach(key -> {
-            String[] keyArr = StringKit.split(key, '#');
-            if (matchesPath(keyArr[0], cleanPath)) {
-                route[0] = routes.get(key);
-                matchRoutes.add(route[0]);
-            }
-        });
-
-        // Priority matching principle
-        this.giveMatch(path, matchRoutes);
-
-        return matchRoutes.isEmpty() ? null : matchRoutes.get(0);
+        return lookupRoute(httpMethod, path);
     }
 
     /**
@@ -161,6 +200,73 @@ public class RouteMatcher {
             return uri.getPath();
         } catch (URISyntaxException e) {
             throw new BladeException(e);
+        }
+    }
+
+    // a bad way
+    void register() {
+
+        List<Route> routeHandlers = new ArrayList<>(routes.values());
+        routeHandlers.addAll(interceptors.values());
+
+        for (Route route : routeHandlers) {
+            String path = parsePath(route.getPath());
+            Matcher matcher = PATH_VARIABLE_PATTERN.matcher(path);
+            boolean find = false;
+            List<String> uriVariableNames = new ArrayList<>();
+            while (matcher.find()) {
+                if (!find) {
+                    find = true;
+                }
+                String group = matcher.group(0);
+                uriVariableNames.add(group.substring(1));   // {id} -> id
+            }
+            HttpMethod httpMethod = route.getHttpMethod();
+            if (find || (httpMethod == HttpMethod.AFTER || httpMethod == HttpMethod.BEFORE) ) {
+                if (regexRoutes.get(httpMethod) == null) {
+                    regexRoutes.put(httpMethod, new HashMap<>());
+                    patternBuilders.put(httpMethod, new StringBuilder("^"));
+                    indexes.put(httpMethod, 1);
+                }
+                int i = indexes.get(httpMethod);
+                regexRoutes.get(httpMethod).put(i, new FastRouteMappingInfo(route, uriVariableNames));
+                indexes.put(httpMethod, i + uriVariableNames.size() + 1);
+                patternBuilders.get(httpMethod).append("(").append(matcher.replaceAll(PATH_VARIABLE_REPLACE)).append(")|");
+            } else {
+                String routeKey = path + '#' + httpMethod.toString();
+                if (staticRoutes.get(routeKey) == null) {
+                    staticRoutes.put(routeKey, route);
+                }
+            }
+        }
+        for (Map.Entry<HttpMethod, StringBuilder> entry : patternBuilders.entrySet()) {
+            HttpMethod httpMethod = entry.getKey();
+            StringBuilder patternBuilder = entry.getValue();
+            if (patternBuilder.length() > 1) {
+                patternBuilder.setCharAt(patternBuilder.length() - 1, '$');
+            }
+            LOGGER.debug("Fast Route Method: {}, regex: {}", httpMethod, patternBuilder);
+            regexRoutePatterns.put(httpMethod, Pattern.compile(patternBuilder.toString()));
+        }
+    }
+
+    private class FastRouteMappingInfo {
+
+        private Route route;
+
+        private List<String> variableNames;
+
+        public FastRouteMappingInfo(Route route, List<String> variableNames) {
+            this.route = route;
+            this.variableNames = variableNames;
+        }
+
+        public Route getRoute() {
+            return route;
+        }
+
+        public List<String> getVariableNames() {
+            return variableNames;
         }
     }
 

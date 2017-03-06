@@ -19,6 +19,8 @@ import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Path;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Route Bean
@@ -53,7 +55,20 @@ public class Route {
 	 */
 	private Method action;
 
+	/**
+	 * Url path params
+	 */
+	private Map<String, String> pathParams = new HashMap<>();
+
 	public Route() {
+	}
+
+	public Route(HttpMethod httpMethod, String path, Class<?> targetType, Method action) {
+		super();
+		this.httpMethod = httpMethod;
+		this.path = Path.fixPath(path);
+		this.targetType = targetType;
+		this.action = action;
 	}
 
 	public Route(HttpMethod httpMethod, String path, Object target, Class<?> targetType, Method action) {
@@ -93,34 +108,38 @@ public class Route {
 		return targetType;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((action == null) ? 0 : action.hashCode());
-		result = prime * result + ((httpMethod == null) ? 0 : httpMethod.hashCode());
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((target == null) ? 0 : target.hashCode());
-		return result;
+	public Map<String, String> getPathParams() {
+		return pathParams;
+	}
+
+	public void setPathParams(Map<String, String> pathParams) {
+		this.pathParams = pathParams;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Route other = (Route) obj;
-		if (httpMethod != other.httpMethod)
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!path.equals(other.path))
-			return false;
-		return true;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Route route = (Route) o;
+
+		if (httpMethod != route.httpMethod) return false;
+		if (path != null ? !path.equals(route.path) : route.path != null) return false;
+		if (target != null ? !target.equals(route.target) : route.target != null) return false;
+		if (targetType != null ? !targetType.equals(route.targetType) : route.targetType != null) return false;
+		if (action != null ? !action.equals(route.action) : route.action != null) return false;
+		return pathParams != null ? pathParams.equals(route.pathParams) : route.pathParams == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = httpMethod != null ? httpMethod.hashCode() : 0;
+		result = 31 * result + (path != null ? path.hashCode() : 0);
+		result = 31 * result + (target != null ? target.hashCode() : 0);
+		result = 31 * result + (targetType != null ? targetType.hashCode() : 0);
+		result = 31 * result + (action != null ? action.hashCode() : 0);
+		result = 31 * result + (pathParams != null ? pathParams.hashCode() : 0);
+		return result;
 	}
 
 	@Override

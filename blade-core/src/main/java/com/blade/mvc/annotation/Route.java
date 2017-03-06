@@ -49,11 +49,15 @@ public @interface Route {
     /**
      * @return Request url
      */
+    String[] values() default {"/"};
+
+    @Deprecated
     String[] value() default {"/"};
 
     /**
      * @return Request HttpMethod
      */
     HttpMethod method() default HttpMethod.ALL;
+
 
 }

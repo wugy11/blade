@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  * Blade Abstract DispatcherServlet
  *
  * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.7.1-alpha
+ * @since 1.7.1-release
  */
 public abstract class AbsDispatcherServlet extends HttpServlet {
 
@@ -47,7 +47,7 @@ public abstract class AbsDispatcherServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         blade = Blade.$();
-        this.dispatcherHandler = new DispatcherHandler(config.getServletContext(), blade.routers());
+        this.dispatcherHandler = new DispatcherHandler(blade.routers());
         this.asyncContextTimeout = blade.config().getInt("server.async-ctx-timeout", 10 * 1000);
         executor = new ThreadPoolExecutor(100, 200, 50000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
         LOGGER.info("init worker thread pool.");

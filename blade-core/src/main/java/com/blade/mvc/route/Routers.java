@@ -18,8 +18,8 @@ package com.blade.mvc.route;
 import com.blade.exception.BladeException;
 import com.blade.kit.Assert;
 import com.blade.kit.CollectionKit;
+import com.blade.kit.StringKit;
 import com.blade.kit.reflect.ReflectKit;
-import com.blade.mvc.handler.RouteHandler;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Registration, management route
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public class Routers {
@@ -84,10 +84,10 @@ public class Routers {
         routes.forEach(this::addRoute);
     }
 
-    public void addRoute(HttpMethod httpMethod, String path, RouteHandler handler, String methodName) throws NoSuchMethodException {
+    public void addRoute(HttpMethod httpMethod, String path, com.blade.mvc.handler.RouteHandler handler, String methodName) throws NoSuchMethodException {
         Class<?> handleType = handler.getClass();
         Method method = handleType.getMethod(methodName, Request.class, Response.class);
-        addRoute(httpMethod, path, handler, RouteHandler.class, method);
+        addRoute(httpMethod, path, handler, com.blade.mvc.handler.RouteHandler.class, method);
     }
 
     public void addRoute(HttpMethod httpMethod, String path, Object controller, Class<?> controllerType, Method method) {
@@ -114,7 +114,7 @@ public class Routers {
 
     }
 
-    public void route(String path, RouteHandler handler, HttpMethod httpMethod) {
+    public void route(String path, com.blade.mvc.handler.RouteHandler handler, HttpMethod httpMethod) {
         try {
             addRoute(httpMethod, path, handler, METHOD_NAME);
         } catch (NoSuchMethodException e) {
@@ -122,7 +122,7 @@ public class Routers {
         }
     }
 
-    public void route(String[] paths, RouteHandler handler, HttpMethod httpMethod) {
+    public void route(String[] paths, com.blade.mvc.handler.RouteHandler handler, HttpMethod httpMethod) {
         for (String path : paths) {
             route(path, handler, httpMethod);
         }
@@ -173,6 +173,12 @@ public class Routers {
 
     public void buildRoute(String path, Class<?> clazz, Method method, HttpMethod httpMethod) {
         addRoute(httpMethod, path, null, clazz, method);
+    }
+
+    public void delRoute(String key) {
+        if (StringKit.isNotBlank(key)) {
+            routes.remove(key);
+        }
     }
 
 }

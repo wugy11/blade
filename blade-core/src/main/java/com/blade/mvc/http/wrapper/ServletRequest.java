@@ -32,9 +32,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ServletRequest
@@ -53,27 +54,24 @@ public class ServletRequest implements Request {
     /**
      * path parameter eg: /user/12
      */
-    private Map<String, String> pathParams = null;
+    private Map<String, String> pathParams = CollectionKit.newConcurrentHashMap(8);
 
     /**
      * query parameter eg: /user?name=jack
      */
-    private Map<String, String> queryParams = null;
+    private Map<String, String> queryParams = CollectionKit.newConcurrentHashMap(8);
 
-    private Map<String, FileItem> fileItems = null;
+    private Map<String, FileItem> fileItems = CollectionKit.newConcurrentHashMap(8);
+
     private Session session = null;
     private boolean isAbort = false;
 
     public ServletRequest(HttpServletRequest request) throws MultipartException, IOException {
         this.request = request;
-        this.pathParams = CollectionKit.newConcurrentHashMap(8);
-        this.queryParams = CollectionKit.newConcurrentHashMap(16);
-        this.fileItems = CollectionKit.newConcurrentHashMap(8);
         this.init();
     }
 
     public void init() throws IOException, MultipartException {
-
         // retrieve multipart/form-data parameters
         if (Multipart.isMultipartContent(request)) {
             Multipart multipart = new Multipart();
@@ -100,35 +98,6 @@ public class ServletRequest implements Request {
             return ret.substring(1);
         }
         return ret.toString();
-    }
-
-    @Override
-    public void initPathParams(String routePath) {
-        this.pathParams.clear();
-
-        List<String> variables = getPathParam(routePath);
-        String regexPath = routePath.replaceAll(Path.VAR_REGEXP, Path.VAR_REPLACE);
-
-        String uri = Path.getRelativePath(uri(), contextPath());
-
-        Matcher matcher = Pattern.compile("(?i)" + regexPath).matcher(uri);
-
-        if (matcher.matches()) {
-            // start index at 1 as group(0) always stands for the entire expression
-            for (int i = 1, len = variables.size(); i <= len; i++) {
-                String value = matcher.group(i);
-                this.pathParams.put(variables.get(i - 1), value);
-            }
-        }
-    }
-
-    private List<String> getPathParam(String routePath) {
-        List<String> variables = CollectionKit.newArrayList(8);
-        Matcher matcher = Pattern.compile(Path.VAR_REGEXP).matcher(routePath);
-        while (matcher.find()) {
-            variables.add(matcher.group(1));
-        }
-        return variables;
     }
 
     @Override
@@ -511,7 +480,7 @@ public class ServletRequest implements Request {
     @Override
     public void setRoute(Route route) {
         this.route = route;
-        initPathParams(route.getPath());
+        this.pathParams = route.getPathParams();
     }
 
     @Override

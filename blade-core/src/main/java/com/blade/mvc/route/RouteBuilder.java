@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 /**
  * Route builder
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public class RouteBuilder {
@@ -48,7 +48,7 @@ public class RouteBuilder {
     /**
      * Parse Interceptor
      *
-     * @param interceptor    resolve the interceptor class
+     * @param interceptor resolve the interceptor class
      */
     public void addInterceptor(final Class<?> interceptor) {
 
@@ -76,7 +76,7 @@ public class RouteBuilder {
     /**
      * Parse all routing in a controller
      *
-     * @param router    resolve the routing class
+     * @param router resolve the routing class
      */
     public void addRouter(final Class<?> router) {
 
@@ -106,7 +106,10 @@ public class RouteBuilder {
             if (null != mapping) {
                 // build multiple route
                 HttpMethod methodType = mapping.method();
-                String[] paths = mapping.value();
+                String[] paths = mapping.values();
+                if (mapping.value().length > 1 || !mapping.value()[0].equals("/")) {
+                    paths = mapping.value();
+                }
                 if (paths.length > 0) {
                     for (String path : paths) {
                         String pathV = getRoutePath(path, nameSpace, suffix);
@@ -135,10 +138,10 @@ public class RouteBuilder {
     /**
      * Build a route
      *
-     * @param clazz        route target execution class
-     * @param execMethod    route execution method
-     * @param path            route path
-     * @param method        route httpmethod
+     * @param clazz      route target execution class
+     * @param execMethod route execution method
+     * @param path       route path
+     * @param method     route httpmethod
      */
     private void buildRoute(Class<?> clazz, Method execMethod, String path, HttpMethod method) {
         routers.buildRoute(path, clazz, execMethod, method);
@@ -147,10 +150,10 @@ public class RouteBuilder {
     /**
      * Build a route
      *
-     * @param path            route path
-     * @param clazz        route target execution class
-     * @param execMethod    route execution method
-     * @param method        route httpmethod
+     * @param path       route path
+     * @param clazz      route target execution class
+     * @param execMethod route execution method
+     * @param method     route httpmethod
      */
     private void buildInterceptor(String path, Class<?> clazz, Method execMethod, HttpMethod method) {
         routers.buildRoute(path, clazz, execMethod, method);

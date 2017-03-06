@@ -27,13 +27,9 @@ import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.base.Config;
 import com.blade.kit.reflect.ReflectKit;
-import com.blade.mvc.handler.RouteHandler;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.interceptor.Interceptor;
-import com.blade.mvc.route.Route;
-import com.blade.mvc.route.RouteBuilder;
-import com.blade.mvc.route.RouteGroup;
-import com.blade.mvc.route.Routers;
+import com.blade.mvc.route.*;
 import com.blade.mvc.route.loader.ClassPathRouteLoader;
 import com.blade.plugin.Plugin;
 
@@ -49,7 +45,7 @@ import java.util.Set;
  * Blade Core Class
  *
  * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.7.0-beta
+ * @since 1.7.1-release
  */
 public final class Blade {
 
@@ -77,6 +73,11 @@ public final class Blade {
      * Route builder
      */
     private RouteBuilder routeBuilder;
+
+    /**
+     * Route matcher
+     */
+    private RouteMatcher routeMatcher;
 
     /**
      * Is enabled server
@@ -306,7 +307,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade get(String path, RouteHandler handler) {
+    public Blade get(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.GET);
         return this;
     }
@@ -318,7 +319,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade post(String path, RouteHandler handler) {
+    public Blade post(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.POST);
         return this;
     }
@@ -330,7 +331,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade delete(String path, RouteHandler handler) {
+    public Blade delete(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.DELETE);
         return this;
     }
@@ -342,7 +343,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade put(String path, RouteHandler handler) {
+    public Blade put(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.PUT);
         return this;
     }
@@ -354,7 +355,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade all(String path, RouteHandler handler) {
+    public Blade all(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.ALL);
         return this;
     }
@@ -366,7 +367,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade any(String path, RouteHandler handler) {
+    public Blade any(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.ALL);
         return this;
     }
@@ -389,7 +390,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade before(String path, RouteHandler handler) {
+    public Blade before(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.BEFORE);
         return this;
     }
@@ -401,7 +402,7 @@ public final class Blade {
      * @param handler execute route Handle
      * @return return blade
      */
-    public Blade after(String path, RouteHandler handler) {
+    public Blade after(String path, com.blade.mvc.handler.RouteHandler handler) {
         routers.route(path, handler, HttpMethod.AFTER);
         return this;
     }
@@ -621,4 +622,17 @@ public final class Blade {
         return this.plugins;
     }
 
+    public RouteMatcher routeMatcher() {
+        return routeMatcher;
+    }
+
+    public Blade routeMatcher(RouteMatcher routeMatcher) {
+        this.routeMatcher = routeMatcher;
+        return this;
+    }
+
+    public Blade delRoute(String key){
+        routers().delRoute(key);
+        return this;
+    }
 }

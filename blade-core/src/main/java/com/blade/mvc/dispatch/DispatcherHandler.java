@@ -21,7 +21,6 @@ import com.blade.context.WebContextHolder;
 import com.blade.ioc.Ioc;
 import com.blade.kit.DispatchKit;
 import com.blade.kit.StringKit;
-import com.blade.mvc.handler.RouteHandler;
 import com.blade.mvc.http.*;
 import com.blade.mvc.http.wrapper.ServletRequest;
 import com.blade.mvc.http.wrapper.ServletResponse;
@@ -35,7 +34,6 @@ import com.blade.mvc.view.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,7 +43,7 @@ import java.util.List;
  * Synchronous request processor
  *
  * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.7.1-alpha
+ * @since 1.7.1-release
  */
 class DispatcherHandler {
 
@@ -55,11 +53,12 @@ class DispatcherHandler {
     private RouteMatcher routeMatcher;
     private RouteViewResolve routeViewHandler;
 
-    public DispatcherHandler(ServletContext servletContext, Routers routers) {
+    public DispatcherHandler(Routers routers) {
         Blade blade = Blade.$();
         this.ioc = blade.ioc();
         this.routeMatcher = new RouteMatcher(routers);
         this.routeViewHandler = new RouteViewResolve(this.ioc);
+        blade.routeMatcher(routeMatcher);
     }
 
     public void handle(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
@@ -173,12 +172,10 @@ class DispatcherHandler {
             target = ioc.getBean(clazz);
             route.setTarget(target);
         }
-        request.initPathParams(route.getPath());
-
         // Init context
         WebContextHolder.init(request, response);
-        if (route.getTargetType() == RouteHandler.class) {
-            RouteHandler routeHandler = (RouteHandler) target;
+        if (route.getTargetType() == com.blade.mvc.handler.RouteHandler.class) {
+            com.blade.mvc.handler.RouteHandler routeHandler = (com.blade.mvc.handler.RouteHandler) target;
             routeHandler.handle(request, response);
         } else {
             routeViewHandler.handle(request, response, route);

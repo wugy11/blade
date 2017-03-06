@@ -31,7 +31,7 @@ import java.util.List;
 public final class Path {
 
     public static final String VAR_REGEXP = ":(\\w+)";
-    public static final String VAR_REPLACE = "([^#/?]+)";
+    public static final String VAR_REPLACE = "([^#/?.]+)";
     public static final String SLASH = "/";
 
     public static String getRelativePath(String path, String contextPath) {
