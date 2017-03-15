@@ -185,6 +185,20 @@ public class EmbedJettyServer implements EmbedServer {
         }
     }
 
+    @Override
+    public void addServlet(Class<? extends Servlet> servlet, String pathSpec) {
+        if(null != servlet){
+            webAppContext.addServlet(servlet, pathSpec);
+        }
+    }
+
+    @Override
+    public void addFilter(Class<? extends Filter> filter, String pathSpec) {
+        if(null != filter && StringKit.isNotBlank(pathSpec)){
+            webAppContext.addFilter(filter, pathSpec, EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE));
+        }
+    }
+
     public void hotSwap(int scanInterval, String resBase) throws Exception {
         Scanner scanner = new Scanner();
         scanner.setScanInterval(scanInterval);
