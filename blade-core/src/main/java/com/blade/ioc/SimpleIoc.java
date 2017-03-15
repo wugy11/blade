@@ -213,6 +213,16 @@ public class SimpleIoc implements Ioc {
 	}
 
 	@Override
+	public void remove(String beanName) {
+		pool.remove(beanName);
+	}
+
+	@Override
+	public void remove(Class<?> type) {
+		pool.remove(type.getSimpleName());
+	}
+
+	@Override
 	public void clearAll() {
 		pool.clear();
 	}

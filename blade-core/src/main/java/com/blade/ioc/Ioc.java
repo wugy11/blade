@@ -48,6 +48,10 @@ public interface Ioc {
 
 	Set<String> getBeanNames();
 
+	void remove(Class<?> type);
+
+	void remove(String beanName);
+
 	void clearAll();
 
 }
