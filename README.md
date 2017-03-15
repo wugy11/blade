@@ -38,18 +38,18 @@ Grab via `Maven`：
 <dependency>
 	<groupId>com.bladejava</groupId>
 	<artifactId>blade-core</artifactId>
-	<version>1.7.1-release</version>
+	<version>1.7.2-alpha</version>
 </dependency>
 <dependency>
 	<groupId>com.bladejava</groupId>
 	<artifactId>blade-embed-jetty</artifactId>
-	<version>0.1.2</version>
+	<version>0.1.3</version>
 </dependency>
 ```
 or `Gradle`:
 ```sh
-compile 'com.bladejava:blade-core:1.7.1-release'
-compile 'com.bladejava:blade-embed-jetty:0.1.2'
+compile 'com.bladejava:blade-core:1.7.2-alpha'
+compile 'com.bladejava:blade-embed-jetty:0.1.3'
 ```
 
 Create `Main` method like this：

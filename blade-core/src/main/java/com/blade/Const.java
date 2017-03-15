@@ -30,7 +30,7 @@ public interface Const {
     /**
      * the last blade framework version
      */
-    String VERSION = "1.7.1-release";
+    String VERSION = "1.7.2-alpha";
 
     /**
      * server 500
