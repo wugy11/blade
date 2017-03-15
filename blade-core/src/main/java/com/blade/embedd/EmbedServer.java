@@ -31,6 +31,8 @@ public interface EmbedServer {
 
     void join();
 
+    void addStatic(String... statics);
+
     void shutdown();
 
     void setWebRoot(String webRoot);

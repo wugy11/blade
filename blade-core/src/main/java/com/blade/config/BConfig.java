@@ -25,6 +25,7 @@ import com.blade.mvc.view.ViewSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -174,15 +175,7 @@ public class BConfig {
 
     public void addStatic(String[] statics) {
         if (null != statics && statics.length > 0) {
-            for (String s : statics) {
-                if (s.endsWith("/*")) {
-                    s = s.replace("/*", "");
-                }
-                if (!s.endsWith("/")) {
-                    s += "/";
-                }
-                this.statics.add(s);
-            }
+            this.statics.addAll(Arrays.asList(statics));
         }
     }
 
