@@ -61,7 +61,7 @@
 <dependency>
     <groupId>com.bladejava</groupId>
     <artifactId>blade-jdbc</artifactId>
-    <version>0.1.4-beta</version>
+    <version>0.1.6-alpha</version>
 </dependency>
 ```
 
