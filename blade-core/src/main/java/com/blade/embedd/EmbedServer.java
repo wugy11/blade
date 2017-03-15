@@ -15,6 +15,9 @@
  */
 package com.blade.embedd;
 
+import javax.servlet.Filter;
+import javax.servlet.Servlet;
+
 /**
  * Jetty Server
  *
@@ -32,6 +35,10 @@ public interface EmbedServer {
     void join();
 
     void addStatic(String... statics);
+
+    void addServlet(Class<? extends Servlet> servlet, String pathSpec);
+
+    void addFilter(Class<? extends Filter> filter, String pathSpec);
 
     void shutdown();
 
