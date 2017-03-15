@@ -52,6 +52,8 @@ public class EmbedJettyServer implements EmbedServer {
 
     private WebAppContext webAppContext;
 
+    private ServletHolder defaultHolder;
+
     public EmbedJettyServer() {
         System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
         if (DynamicContext.isJarContext()) {
@@ -133,7 +135,7 @@ public class EmbedJettyServer implements EmbedServer {
         webAppContext.addEventListener(new BladeInitListener());
 
         Set<String> statics = Blade.$().bConfig().getStatics();
-        ServletHolder defaultHolder = new ServletHolder(DefaultServlet.class);
+        defaultHolder = new ServletHolder(DefaultServlet.class);
         defaultHolder.setInitOrder(0);
         if (StringKit.isNotBlank(classPath)) {
             LOGGER.info("add classpath : {}", classPath);
@@ -148,7 +150,7 @@ public class EmbedJettyServer implements EmbedServer {
                 webAppContext.addServlet(defaultHolder, s);
             }
         });
-
+        webAppContext.addServlet(defaultHolder, "/favicon.ico");
         webAppContext.addServlet(servletHolder, "/");
 
         try {
@@ -174,7 +176,6 @@ public class EmbedJettyServer implements EmbedServer {
         if(null == statics || statics.length < 1 || null == webAppContext){
             return;
         }
-        ServletHolder defaultHolder = new ServletHolder(DefaultServlet.class);
         for(String s : statics){
             if(s.indexOf(".") != -1){
                 webAppContext.addServlet(defaultHolder, s);
