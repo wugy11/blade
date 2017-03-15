@@ -78,7 +78,7 @@ public class RouteMatcher {
         this.register();
     }
 
-    public Route lookupRoute(String httpMethod, String path){
+    public Route lookupRoute(String httpMethod, String path) throws BladeException {
         path = parsePath(path);
         String routeKey = path + '#' + httpMethod.toUpperCase();
         Route route = staticRoutes.get(routeKey);
@@ -92,28 +92,32 @@ public class RouteMatcher {
 
         Map<String, String> uriVariables = CollectionKit.newLinkedHashMap();
         HttpMethod requestMethod = HttpMethod.valueOf(httpMethod);
-        Matcher matcher = regexRoutePatterns.get(requestMethod).matcher(path);
-        boolean matched = matcher.matches();
-        if(!matched){
-            matcher = regexRoutePatterns.get(HttpMethod.ALL).matcher(path);
-            matched = matcher.matches();
-        }
-        if (matched) {
-            int i;
-            for (i = 1; matcher.group(i) == null; i++);
-            FastRouteMappingInfo mappingInfo = regexRoutes.get(requestMethod).get(i);
-            route = mappingInfo.getRoute();
-
-            // find path variable
-            String uriVariable;
-            int j = 0;
-            while (++i <= matcher.groupCount() && (uriVariable = matcher.group(i)) != null) {
-                uriVariables.put(mappingInfo.getVariableNames().get(j++), uriVariable);
+        try {
+            Matcher matcher = regexRoutePatterns.get(requestMethod).matcher(path);
+            boolean matched = matcher.matches();
+            if(!matched){
+                matcher = regexRoutePatterns.get(HttpMethod.ALL).matcher(path);
+                matched = matcher.matches();
             }
-            route.setPathParams(uriVariables);
-            LOGGER.trace("lookup path: " + path + " uri variables: " + uriVariables);
+            if (matched) {
+                int i;
+                for (i = 1; matcher.group(i) == null; i++);
+                FastRouteMappingInfo mappingInfo = regexRoutes.get(requestMethod).get(i);
+                route = mappingInfo.getRoute();
+
+                // find path variable
+                String uriVariable;
+                int j = 0;
+                while (++i <= matcher.groupCount() && (uriVariable = matcher.group(i)) != null) {
+                    uriVariables.put(mappingInfo.getVariableNames().get(j++), uriVariable);
+                }
+                route.setPathParams(uriVariables);
+                LOGGER.trace("lookup path: " + path + " uri variables: " + uriVariables);
+            }
+            return route;
+        } catch (Exception e){
+            throw new BladeException(e);
         }
-        return route;
     }
 
     /**
@@ -123,7 +127,16 @@ public class RouteMatcher {
      * @return return route object
      */
     public Route getRoute(String httpMethod, String path) {
-        return lookupRoute(httpMethod, path);
+        try {
+            return lookupRoute(httpMethod, path);
+        } catch (BladeException e){
+            Throwable t = e.getCause();
+            if(t instanceof NullPointerException){
+            } else {
+                LOGGER.warn("", e);
+            }
+        }
+        return null;
     }
 
     /**
