@@ -140,7 +140,14 @@ public class EmbedJettyServer implements EmbedServer {
             defaultHolder.setInitParameter("resourceBase", classPath);
         }
 
-        statics.forEach(s -> webAppContext.addServlet(defaultHolder, s + '*'));
+        statics.forEach(s -> {
+            if(s.indexOf(".") != -1){
+                webAppContext.addServlet(defaultHolder, s);
+            } else {
+                s = s.endsWith("/") ? s + '*' : s + "/*";
+                webAppContext.addServlet(defaultHolder, s);
+            }
+        });
 
         webAppContext.addServlet(servletHolder, "/");
 
@@ -159,6 +166,22 @@ public class EmbedJettyServer implements EmbedServer {
             server.join();
         } catch (Exception e) {
             throw new EmbedServerException(e);
+        }
+    }
+
+    @Override
+    public void addStatic(String... statics) {
+        if(null == statics || statics.length < 1 || null == webAppContext){
+            return;
+        }
+        ServletHolder defaultHolder = new ServletHolder(DefaultServlet.class);
+        for(String s : statics){
+            if(s.indexOf(".") != -1){
+                webAppContext.addServlet(defaultHolder, s);
+            } else {
+                s = s.endsWith("/") ? s + '*' : s + "/*";
+                webAppContext.addServlet(defaultHolder, s);
+            }
         }
     }
 
