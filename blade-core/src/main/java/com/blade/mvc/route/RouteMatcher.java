@@ -96,7 +96,8 @@ public class RouteMatcher {
             Matcher matcher = regexRoutePatterns.get(requestMethod).matcher(path);
             boolean matched = matcher.matches();
             if(!matched){
-                matcher = regexRoutePatterns.get(HttpMethod.ALL).matcher(path);
+                requestMethod = HttpMethod.ALL;
+                matcher = regexRoutePatterns.get(requestMethod).matcher(path);
                 matched = matcher.matches();
             }
             if (matched) {
