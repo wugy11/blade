@@ -19,7 +19,7 @@ import com.blade.Const;
 
 public class BladeBanner implements Banner {
 
-    private static final String[] banner = {
+    static final String[] banner = {
             " __, _,   _, __, __,",
             " |_) |   /_\\ | \\ |_",
             " |_) | , | | |_/ |",

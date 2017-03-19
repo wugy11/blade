@@ -44,9 +44,7 @@
 		<module>blade-kit</module>
 		<module>blade-core</module>
 		<module>blade-embed-jetty</module>
-		<module>blade-auth</module>
 		<module>blade-aop</module>
-		<module>blade-websocket-jetty</module>
     </modules>
 
 	<dependencyManagement>

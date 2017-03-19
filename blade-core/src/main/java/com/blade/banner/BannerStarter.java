@@ -15,6 +15,8 @@
  */
 package com.blade.banner;
 
+import java.io.IOException;
+
 public final class BannerStarter {
 
     private static Banner BANNER = new BladeBanner();
@@ -28,10 +30,11 @@ public final class BannerStarter {
     }
 
     public static void banner(final String text) {
-        BANNER = new Banner() {
-            @Override
-            public String startText() {
-                return text;
+        BANNER = () -> {
+            try {
+                return BannerFont.load().asAscii(text);
+            } catch (IOException e) {
+                return new BladeBanner().startText();
             }
         };
     }
