@@ -80,13 +80,13 @@ public static void main(String[] args) {
 ```java
 public static void main(String[] args) {
 	$().get("/user/:uid", (request, response) -> {
-		Integer uid = request.paramAsInt("uid");
+		Integer uid = request.paramInt("uid");
 		response.text("uid : " + uid);
 	});
 	
 	$().get("/users/:uid/post/:pid", (request, response) -> {
-		Integer uid = request.paramAsInt("uid");
-		Integer pid = request.paramAsInt("pid");
+		Integer uid = request.paramInt("uid");
+		Integer pid = request.paramInt("pid");
 		String msg = "uid = " + uid + ", pid = " + pid;
 		response.text(msg);
 	});
@@ -100,7 +100,7 @@ public static void main(String[] args) {
 ```java
 public static void main(String[] args) {
 	$().get("/user", (request, response) -> {
-		Integer uid = request.queryAsInt("uid");
+		Integer uid = request.queryInt("uid");
 		response.text("uid : " + uid);
 	}).start(Application.class);
 }
@@ -149,10 +149,10 @@ You may refer to these examples for additional guidance:
 
 ## Used Blade WebSite
 
++ Blog：https://github.com/otale/tale
 + BBS：https://java-china.org
-+ Gallery：https://nice.biezhi.me
++ Gallery：https://github.com/biezhi/nice
 + SS Panel：https://github.com/biezhi/ss-panel
-+ Doc Site：https://bladejava.com
 	
 ## Update
 

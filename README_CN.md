@@ -83,13 +83,13 @@ public static void main(String[] args) {
 ```java
 public static void main(String[] args) {
 	$().get("/user/:uid", (request, response) -> {
-		Integer uid = request.paramAsInt("uid");
+		Integer uid = request.paramInt("uid");
 		response.text("uid : " + uid);
 	});
 	
 	$().get("/users/:uid/post/:pid", (request, response) -> {
-		Integer uid = request.paramAsInt("uid");
-		Integer pid = request.paramAsInt("pid");
+		Integer uid = request.paramInt("uid");
+		Integer pid = request.paramInt("pid");
 		String msg = "uid = " + uid + ", pid = " + pid;
 		response.text(msg);
 	});
@@ -103,7 +103,7 @@ public static void main(String[] args) {
 ```java
 public static void main(String[] args) {
 	$().get("/user", (request, response) -> {
-		Integer uid = request.queryAsInt("uid");
+		Integer uid = request.queryInt("uid");
 		response.text("uid : " + uid);
 	}).start(Application.class);
 }
@@ -152,10 +152,10 @@ public static void main(String[] args) {
 
 ## 使用Blade的站点
 
++ 博客系统：https://github.com/otale/tale
 + 论坛程序：https://java-china.org
-+ 图片社交：https://nice.biezhi.me
++ 图片社交：https://github.com/biezhi/nice
 + SS面板：https://github.com/biezhi/ss-panel
-+ 文档站点：https://bladejava.com
 
 ## 更新日志
 
