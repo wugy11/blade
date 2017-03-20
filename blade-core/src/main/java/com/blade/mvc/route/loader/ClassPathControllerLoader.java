@@ -21,66 +21,66 @@ import com.blade.ioc.Ioc;
 import com.blade.kit.StringKit;
 
 /**
- * ClassPath controller of loader 
+ * ClassPath controller of loader
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public class ClassPathControllerLoader implements ControllerLoader {
 
-	private String basePackage;
+    private String basePackage;
 
-	private ClassLoader classLoader = ClassPathControllerLoader.class.getClassLoader();
+    private ClassLoader classLoader = ClassPathControllerLoader.class.getClassLoader();
 
-	private Ioc ioc = Blade.$().ioc();
+    private Ioc ioc = Blade.$().ioc();
 
-	public ClassPathControllerLoader() {
-		this("");
-	}
+    public ClassPathControllerLoader() {
+        this("");
+    }
 
-	public ClassPathControllerLoader(String basePackage) {
-		this.basePackage = basePackage;
+    public ClassPathControllerLoader(String basePackage) {
+        this.basePackage = basePackage;
 
-		if (StringKit.isNotBlank(basePackage)) {
-			if (!this.basePackage.endsWith(".")) {
-				this.basePackage += '.';
-			}
-		}
-	}
+        if (StringKit.isNotBlank(basePackage)) {
+            if (!this.basePackage.endsWith(".")) {
+                this.basePackage += '.';
+            }
+        }
+    }
 
-	@Override
-	public Object load(String controllerName) throws RouteException {
-		String className = basePackage + controllerName;
+    @Override
+    public Object load(String controllerName) throws RouteException {
+        String className = basePackage + controllerName;
 
-		try {
-			// Load controller instance
-			Class<?> controllerClass = classLoader.loadClass(className);
+        try {
+            // Load controller instance
+            Class<?> controllerClass = classLoader.loadClass(className);
 
-			Object controller = ioc.getBean(controllerClass);
-			if (null == controller) {
-				ioc.addBean(controllerClass);
-				controller = ioc.getBean(controllerClass);
-			}
-			return controller;
-		} catch (Exception e) {
-			throw new RouteException(e);
-		}
-	}
+            Object controller = ioc.getBean(controllerClass);
+            if (null == controller) {
+                ioc.addBean(controllerClass);
+                controller = ioc.getBean(controllerClass);
+            }
+            return controller;
+        } catch (Exception e) {
+            throw new RouteException(e);
+        }
+    }
 
-	public String getBasePackage() {
-		return basePackage;
-	}
+    public String getBasePackage() {
+        return basePackage;
+    }
 
-	public void setBasePackage(String basePackage) {
-		this.basePackage = basePackage;
-	}
+    public void setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
+    }
 
-	public ClassLoader getClassLoader() {
-		return classLoader;
-	}
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
 
-	public void setClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
-	}
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
 }

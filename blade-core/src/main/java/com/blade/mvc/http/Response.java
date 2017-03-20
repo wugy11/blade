@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 /**
  * HTTP Response
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public interface Response {
@@ -93,8 +93,8 @@ public interface Response {
     /**
      * Setting header
      *
-     * @param name    Header Name
-     * @param value    Header Value
+     * @param name  Header Name
+     * @param value Header Value
      * @return Return Response
      */
     Response header(String name, String value);
@@ -102,7 +102,7 @@ public interface Response {
     /**
      * Setting Cookie
      *
-     * @param cookie    Cookie Object
+     * @param cookie Cookie Object
      * @return Return Response
      */
     Response cookie(Cookie cookie);
@@ -152,7 +152,7 @@ public interface Response {
     /**
      * Remove Cookie
      *
-     * @param cookie    Cookie Object
+     * @param cookie Cookie Object
      * @return Return Response
      */
     Response removeCookie(Cookie cookie);
@@ -168,7 +168,7 @@ public interface Response {
     /**
      * Render by text
      *
-     * @param text        text content
+     * @param text text content
      * @return Return Response
      */
     Response text(String text);
@@ -228,7 +228,7 @@ public interface Response {
     /**
      * Render view And Setting Data
      *
-     * @param modelAndView    ModelAndView object
+     * @param modelAndView ModelAndView object
      * @return Return Response
      */
     Response render(ModelAndView modelAndView);

@@ -20,9 +20,9 @@ import com.blade.mvc.view.ModelAndView;
 import java.io.Writer;
 
 /**
- * TemplateEngine Interface, For view layer to display data 
+ * TemplateEngine Interface, For view layer to display data
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public interface TemplateEngine {

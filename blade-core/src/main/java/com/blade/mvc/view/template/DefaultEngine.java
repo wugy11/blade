@@ -27,7 +27,7 @@ import java.io.*;
 /**
  * JSP Render, Default Render
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.6.6
  */
 public final class DefaultEngine implements TemplateEngine {

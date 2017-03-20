@@ -24,7 +24,8 @@ import java.lang.annotation.*;
  * {@link Intercept}
  * public class BaseInterceptor {...}
  * </pre>
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ *
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 @Target(ElementType.TYPE)

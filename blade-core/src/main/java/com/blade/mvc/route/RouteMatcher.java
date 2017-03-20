@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 /**
  * Default Route Matcher
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.7.1-release
  */
 public class RouteMatcher {
@@ -60,11 +60,11 @@ public class RouteMatcher {
         this.update(routers);
     }
 
-    public void update(){
+    public void update() {
         this.update(Blade.$().routers());
     }
 
-    public void update(Routers routers){
+    public void update(Routers routers) {
         this.routes = routers.getRoutes();
         this.interceptors = routers.getInterceptors();
         Collection<Route> inters = interceptors.values();
@@ -82,11 +82,11 @@ public class RouteMatcher {
         path = parsePath(path);
         String routeKey = path + '#' + httpMethod.toUpperCase();
         Route route = staticRoutes.get(routeKey);
-        if(null != route){
+        if (null != route) {
             return route;
         }
         route = staticRoutes.get(path + "#ALL");
-        if(null != route){
+        if (null != route) {
             return route;
         }
 
@@ -95,14 +95,14 @@ public class RouteMatcher {
         try {
             Matcher matcher = regexRoutePatterns.get(requestMethod).matcher(path);
             boolean matched = matcher.matches();
-            if(!matched){
+            if (!matched) {
                 requestMethod = HttpMethod.ALL;
                 matcher = regexRoutePatterns.get(requestMethod).matcher(path);
                 matched = matcher.matches();
             }
             if (matched) {
                 int i;
-                for (i = 1; matcher.group(i) == null; i++);
+                for (i = 1; matcher.group(i) == null; i++) ;
                 FastRouteMappingInfo mappingInfo = regexRoutes.get(requestMethod).get(i);
                 route = mappingInfo.getRoute();
 
@@ -116,23 +116,24 @@ public class RouteMatcher {
                 LOGGER.trace("lookup path: " + path + " uri variables: " + uriVariables);
             }
             return route;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new BladeException(e);
         }
     }
 
     /**
-     * Find a route 
-     * @param httpMethod    httpMethod
-     * @param path            request path
+     * Find a route
+     *
+     * @param httpMethod httpMethod
+     * @param path       request path
      * @return return route object
      */
     public Route getRoute(String httpMethod, String path) {
         try {
             return lookupRoute(httpMethod, path);
-        } catch (BladeException e){
+        } catch (BladeException e) {
             Throwable t = e.getCause();
-            if(t instanceof NullPointerException){
+            if (t instanceof NullPointerException) {
             } else {
                 LOGGER.warn("", e);
             }
@@ -141,8 +142,9 @@ public class RouteMatcher {
     }
 
     /**
-     * Find all in before of the interceptor 
-     * @param path    request path
+     * Find all in before of the interceptor
+     *
+     * @param path request path
      * @return return interceptor list
      */
     public List<Route> getBefore(String path) {
@@ -158,8 +160,9 @@ public class RouteMatcher {
     }
 
     /**
-     * Find all in after of the interceptor 
-     * @param path    request path
+     * Find all in after of the interceptor
+     *
+     * @param path request path
      * @return return interceptor list
      */
     public List<Route> getAfter(String path) {
@@ -192,8 +195,8 @@ public class RouteMatcher {
     /**
      * Matching path
      *
-     * @param routePath        route path
-     * @param pathToMatch    match path
+     * @param routePath   route path
+     * @param pathToMatch match path
      * @return return match is success
      */
     private boolean matchesPath(String routePath, String pathToMatch) {
@@ -204,7 +207,7 @@ public class RouteMatcher {
     /**
      * Parse Path
      *
-     * @param path        route path
+     * @param path route path
      * @return return parsed path
      */
     private String parsePath(String path) {
@@ -236,7 +239,7 @@ public class RouteMatcher {
                 uriVariableNames.add(group.substring(1));   // {id} -> id
             }
             HttpMethod httpMethod = route.getHttpMethod();
-            if (find || (httpMethod == HttpMethod.AFTER || httpMethod == HttpMethod.BEFORE) ) {
+            if (find || (httpMethod == HttpMethod.AFTER || httpMethod == HttpMethod.BEFORE)) {
                 if (regexRoutes.get(httpMethod) == null) {
                     regexRoutes.put(httpMethod, new HashMap<>());
                     patternBuilders.put(httpMethod, new StringBuilder("^"));

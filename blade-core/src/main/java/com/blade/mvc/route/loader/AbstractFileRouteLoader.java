@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Abstract loader implementation 
+ * Abstract loader implementation
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public abstract class AbstractFileRouteLoader implements RouteLoader {
@@ -168,8 +168,8 @@ public abstract class AbstractFileRouteLoader implements RouteLoader {
     /**
      * Verification controller method
      *
-     * @param beanAndMethod        controller and method, using.
-     * @param line                line number
+     * @param beanAndMethod controller and method, using.
+     * @param line          line number
      * @return return a string that is verified after the verification.
      * @throws ParseException
      */
@@ -185,10 +185,10 @@ public abstract class AbstractFileRouteLoader implements RouteLoader {
     /**
      * Construct a routing object
      *
-     * @param httpMethod        request httpMethod
-     * @param path                route path
-     * @param controllerName    controller name
-     * @param methodName        method name
+     * @param httpMethod     request httpMethod
+     * @param path           route path
+     * @param controllerName controller name
+     * @param methodName     method name
      * @return return route object
      * @throws RouteException
      */

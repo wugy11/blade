@@ -18,7 +18,7 @@ package com.blade.mvc.http;
 /**
  * HTTP Status
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public interface HttpStatus {

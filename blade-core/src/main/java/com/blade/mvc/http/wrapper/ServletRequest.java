@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * ServletRequest
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.7.0-beta
  */
 public class ServletRequest implements Request {

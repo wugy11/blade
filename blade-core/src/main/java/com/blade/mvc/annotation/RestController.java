@@ -19,10 +19,10 @@ import java.lang.annotation.*;
 
 /**
  * Return JSON Data to client.
- *
+ * <p>
  * The controller all methods have this attr.
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 @Target(ElementType.TYPE)

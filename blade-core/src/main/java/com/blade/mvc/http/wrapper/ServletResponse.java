@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * ServletResponse
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 public class ServletResponse implements Response {

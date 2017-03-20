@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Synchronous request processor
  *
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.7.1-release
  */
 class DispatcherHandler {
@@ -161,9 +161,9 @@ class DispatcherHandler {
     /**
      * Actual routing method execution
      *
-     * @param request    request object
-     * @param response    response object
-     * @param route        route object
+     * @param request  request object
+     * @param response response object
+     * @param route    route object
      */
     private void routeHandle(Request request, Response response, Route route) throws Exception {
         Object target = route.getTarget();

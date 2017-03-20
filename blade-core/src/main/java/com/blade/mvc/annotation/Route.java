@@ -24,22 +24,22 @@ import java.lang.annotation.Target;
 
 /**
  * Methods defined on the route notes
+ * <p>
+ * Restful routes:
+ * <pre>
+ * ==========================================================================================
+ * verb    path                   action          used for
+ * ==========================================================================================
+ * GET     /users                 index 	       display a list of all books
+ * GET     /users/new_form        new_form        return an HTML form for creating a new book
+ * POST    /users                 create 	       create a new book
+ * GET     /users/id              show            display a specific book
+ * GET     /users/id/edit_form    edit_form       return an HTML form for editing a books
+ * PUT     /users/id              update          update a specific book
+ * DELETE 	/users/id              destroy         delete a specific book
+ * </pre>
  *
- Restful routes:
- <pre>
- ==========================================================================================
- verb    path                   action          used for
- ==========================================================================================
- GET     /users                 index 	       display a list of all books
- GET     /users/new_form        new_form        return an HTML form for creating a new book
- POST    /users                 create 	       create a new book
- GET     /users/id              show            display a specific book
- GET     /users/id/edit_form    edit_form       return an HTML form for editing a books
- PUT     /users/id              update          update a specific book
- DELETE 	/users/id              destroy         delete a specific book
- </pre>
-
- * @author    <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
+ * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
  * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)
