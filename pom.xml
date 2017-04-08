@@ -45,6 +45,7 @@
 		<module>blade-core</module>
 		<module>blade-embed-jetty</module>
 		<module>blade-aop</module>
+		<module>blade-jdbc</module>
     </modules>
 
 	<dependencyManagement>
