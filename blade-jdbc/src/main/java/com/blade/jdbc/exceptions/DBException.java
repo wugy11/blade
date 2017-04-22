@@ -7,75 +7,82 @@ import com.blade.jdbc.model.IEnum;
  */
 public class DBException extends RuntimeException {
 
-    /** Exception code */
-    protected String resultCode = "UN_KNOWN_EXCEPTION";
+	private static final long serialVersionUID = 1L;
 
-    /** Exception message */
-    protected String resultMsg  = "Unknown exception";
+	/** Exception code */
+	protected String resultCode = "UN_KNOWN_EXCEPTION";
 
-    /**
-     * Constructor
-     */
-    public DBException() {
-        super();
-    }
+	/** Exception message */
+	protected String resultMsg = "Unknown exception";
 
-    /**
-     * Instantiates a new DBException.
-     *
-     * @param e the e
-     */
-    public DBException(IEnum e) {
-        super(e.getDesc());
-        this.resultCode = e.getCode();
-        this.resultMsg = e.getDesc();
-    }
+	/**
+	 * Constructor
+	 */
+	public DBException() {
+		super();
+	}
 
-    /**
-     * Instantiates a new DBException.
-     *
-     * @param e the e
-     */
-    public DBException(Throwable e) {
-        super(e);
-        this.resultMsg = e.getMessage();
-    }
+	/**
+	 * Instantiates a new DBException.
+	 *
+	 * @param e
+	 *            the e
+	 */
+	public DBException(IEnum e) {
+		super(e.getDesc());
+		this.resultCode = e.getCode();
+		this.resultMsg = e.getDesc();
+	}
 
-    /**
-     * Constructor
-     *
-     * @param message the message
-     */
-    public DBException(String message) {
-        super(message);
-        this.resultMsg = message;
-    }
+	/**
+	 * Instantiates a new DBException.
+	 *
+	 * @param e
+	 *            the e
+	 */
+	public DBException(Throwable e) {
+		super(e);
+		this.resultMsg = e.getMessage();
+	}
 
-    /**
-     * Constructor
-     *
-     * @param code the code
-     * @param message the message
-     */
-    public DBException(String code, String message) {
-        super(message);
-        this.resultCode = code;
-        this.resultMsg = message;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param message
+	 *            the message
+	 */
+	public DBException(String message) {
+		super(message);
+		this.resultMsg = message;
+	}
 
-    public String getResultCode() {
-        return resultCode;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param code
+	 *            the code
+	 * @param message
+	 *            the message
+	 */
+	public DBException(String code, String message) {
+		super(message);
+		this.resultCode = code;
+		this.resultMsg = message;
+	}
 
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
-    }
+	public String getResultCode() {
+		return resultCode;
+	}
 
-    public String getResultMsg() {
-        return resultMsg;
-    }
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
+	}
 
-    public void setResultMsg(String resultMsg) {
-        this.resultMsg = resultMsg;
-    }
+	public String getResultMsg() {
+		return resultMsg;
+	}
+
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
+	}
 }

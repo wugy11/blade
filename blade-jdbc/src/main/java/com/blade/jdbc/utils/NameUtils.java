@@ -1,5 +1,8 @@
 package com.blade.jdbc.utils;
 
+import com.blade.kit.StringKit;
+import com.blade.kit.UUID;
+
 /**
  * 名称操作辅助类
  */
@@ -12,7 +15,7 @@ public class NameUtils {
      * @return
      */
     public static String getFirstUpperName(String name) {
-        if (StringUtils.isBlank(name)) {
+        if (StringKit.isBlank(name)) {
             return null;
         }
         String firstChar = name.substring(0, 1).toUpperCase();
@@ -26,7 +29,7 @@ public class NameUtils {
      * @return
      */
     public static String getFirstLowerName(String name) {
-        if (StringUtils.isBlank(name)) {
+        if (StringKit.isBlank(name)) {
             return null;
         }
         String firstChar = name.substring(0, 1).toLowerCase();
@@ -40,7 +43,7 @@ public class NameUtils {
      * @return
      */
     public static String getCamelName(String name) {
-        if (StringUtils.isBlank(name)) {
+        if (StringKit.isBlank(name)) {
             return null;
         }
         name = name.toLowerCase();
@@ -78,7 +81,7 @@ public class NameUtils {
      */
     public static String getUnderlineName(String name) {
 
-        if (StringUtils.isBlank(name)) {
+        if (StringKit.isBlank(name)) {
             return null;
         }
 
@@ -108,7 +111,7 @@ public class NameUtils {
 
         int index = fileName.lastIndexOf(".");
         String suffix = fileName.substring(index);
-        String uqName = UUIDUtils.getUUID16() + suffix;
+        String uqName = UUID.UU16() + suffix;
         return uqName;
     }
 

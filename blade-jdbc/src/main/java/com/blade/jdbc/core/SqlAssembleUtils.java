@@ -1,13 +1,5 @@
 package com.blade.jdbc.core;
 
-import com.blade.jdbc.model.QueryOpts;
-import com.blade.jdbc.exceptions.AssistantException;
-import com.blade.jdbc.utils.ClassUtils;
-import com.blade.jdbc.utils.CollectionUtils;
-import com.blade.jdbc.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
@@ -17,6 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.blade.jdbc.exceptions.AssistantException;
+import com.blade.jdbc.model.QueryOpts;
+import com.blade.jdbc.utils.ClassUtils;
+import com.blade.kit.CollectionKit;
+import com.blade.kit.StringKit;
 
 public class SqlAssembleUtils {
 
@@ -139,17 +140,17 @@ public class SqlAssembleUtils {
 
                 Object[] values = autoField.getValues();
 
-                if (null == values || values.length == 0 || StringUtils.isBlank(values[0].toString())) {
+                if (null == values || values.length == 0 || StringKit.isBlank(values[0].toString())) {
                     throw new AssistantException("primary key not is null");
                 }
                 primaryValue = values[0];
             }
 
             //白名单 黑名单
-            if (take != null && !CollectionUtils.isEmpty(take.getIncludeFields())
+            if (take != null && !CollectionKit.isEmpty(take.getIncludeFields())
                 && !take.getIncludeFields().contains(autoField.getName())) {
                 continue;
-            } else if (take != null && !CollectionUtils.isEmpty(take.getExcludeFields())
+            } else if (take != null && !CollectionKit.isEmpty(take.getExcludeFields())
                        && take.getExcludeFields().contains(autoField.getName())) {
                 continue;
             }
@@ -215,7 +216,7 @@ public class SqlAssembleUtils {
                 continue;
             }
 
-            if (value instanceof String && StringUtils.isBlank(value.toString())) {
+            if (value instanceof String && StringKit.isBlank(value.toString())) {
                 continue;
             }
 
@@ -256,8 +257,8 @@ public class SqlAssembleUtils {
             String columnName = nameHandler.getColumnName(autoField.getName());
             Object[] values = autoField.getValues();
 
-            if (QueryOpts.IN.equalsIgnoreCase(StringUtils.trim(autoField.getFieldOperator()))
-                || QueryOpts.NOT_IN.equalsIgnoreCase(StringUtils.trim(autoField.getFieldOperator()))) {
+            if (QueryOpts.IN.equalsIgnoreCase(StringKit.trim(autoField.getFieldOperator()))
+					|| QueryOpts.NOT_IN.equalsIgnoreCase(StringKit.trim(autoField.getFieldOperator()))) {
 
                 //in，not in的情况
                 sql.append(columnName).append(" ").append(autoField.getFieldOperator()).append(" ");
@@ -395,7 +396,7 @@ public class SqlAssembleUtils {
         StringBuilder querySql = new StringBuilder("select " + columns + " from ");
         querySql.append(tableName);
 
-        List<Object> params = Collections.EMPTY_LIST;
+        List<Object> params = Collections.emptyList();
         if ( null != take && take.hasWhere() || autoFields.size() > 0 ) {
             querySql.append(" where ");
 
@@ -459,8 +460,8 @@ public class SqlAssembleUtils {
         StringBuilder countSql = new StringBuilder("select count(0) from ");
         countSql.append(tableName);
 
-        List<Object> params = Collections.EMPTY_LIST;
-        if (!CollectionUtils.isEmpty(autoFields)) {
+        List<Object> params = Collections.emptyList();
+        if (!CollectionKit.isEmpty(autoFields)) {
             countSql.append(" where ");
             BoundSql boundSql = builderWhereSql(autoFields, nameHandler);
             countSql.append(boundSql.getSql());
@@ -493,9 +494,9 @@ public class SqlAssembleUtils {
             String fieldName = pd.getName();
 
             //白名单 黑名单
-            if (!CollectionUtils.isEmpty(includeField) && !includeField.contains(fieldName)) {
+            if (!CollectionKit.isEmpty(includeField) && !includeField.contains(fieldName)) {
                 continue;
-            } else if (!CollectionUtils.isEmpty(excludeField) && excludeField.contains(fieldName)) {
+			} else if (!CollectionKit.isEmpty(excludeField) && excludeField.contains(fieldName)) {
                 continue;
             }
 

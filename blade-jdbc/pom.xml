@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>blade-jdbc</artifactId>
-    <version>0.1.6-alpha</version>
+    <version>${blade-jdbc.version}</version>
     <packaging>jar</packaging>
 
     <name>blade-jdbc</name>
@@ -17,8 +17,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mysql.version>5.1.38</mysql.version>
-        <h2.version>1.4.192</h2.version>
+        <!-- <mysql.version>5.1.38</mysql.version>
+        <h2.version>1.4.192</h2.version> -->
         <hikaricp.version>2.4.1</hikaricp.version>
         <druid.version>1.0.24</druid.version>
         <fastjson.version>1.2.16</fastjson.version>
@@ -41,23 +41,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-            <scope>test</scope>
-        </dependency>
+	<!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+		<version>${mysql.version}</version> <scope>test</scope> </dependency> -->
 
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -75,9 +69,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-log4j12.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>blade-kit</artifactId>
+			<version>${blade-kit.version}</version>
+		</dependency>
 
     </dependencies>
 

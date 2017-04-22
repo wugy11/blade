@@ -5,18 +5,20 @@ package com.blade.jdbc.exceptions;
  */
 public class TransactionException extends RuntimeException {
 
-    public TransactionException() {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public TransactionException(String message) {
-        super(message);
-    }
+	public TransactionException() {
+	}
 
-    public TransactionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public TransactionException(String message) {
+		super(message);
+	}
 
-    public TransactionException(Throwable cause) {
-        super(cause);
-    }
+	public TransactionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public TransactionException(Throwable cause) {
+		super(cause);
+	}
 }
