@@ -1,11 +1,11 @@
 package com.blade.jdbc.core;
 
-import com.blade.jdbc.exceptions.AssistantException;
-import com.blade.jdbc.model.PageRow;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.blade.jdbc.exceptions.AssistantException;
+import com.blade.jdbc.model.PageRow;
+import com.blade.kit.CollectionKit;
 
 /**
  * 条件操作
@@ -39,8 +39,8 @@ public class Take {
 	 */
 	public Take(Class<?> clazz) {
 		this.entityClass = clazz;
-		this.autoFields = new ArrayList<AutoField>();
-		this.orderByFields = new ArrayList<AutoField>();
+		this.autoFields = CollectionKit.newArrayList();
+		this.orderByFields = CollectionKit.newArrayList();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Take {
 	 */
 	public Take include(String... field) {
 		if (this.includeFields == null) {
-			this.includeFields = new ArrayList<String>();
+			this.includeFields = CollectionKit.newArrayList();
 		}
 		this.includeFields.addAll(Arrays.asList(field));
 		return this;
@@ -75,7 +75,7 @@ public class Take {
 	 */
 	public Take exclude(String... field) {
 		if (this.excludeFields == null) {
-			this.excludeFields = new ArrayList<String>();
+			this.excludeFields = CollectionKit.newArrayList();
 		}
 		this.excludeFields.addAll(Arrays.asList(field));
 		return this;
