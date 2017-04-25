@@ -15,16 +15,13 @@
  */
 package com.blade.kit.reflect;
 
-import com.blade.kit.Emptys;
-import com.blade.kit.ExceptionKit;
-import com.blade.kit.StringKit;
-import com.blade.kit.SystemKit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -34,22 +31,34 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.blade.kit.Emptys;
+import com.blade.kit.ExceptionKit;
+import com.blade.kit.StringKit;
+import com.blade.kit.SystemKit;
+
 /**
  * 有关 Reflection处理的工具类。
  * 
- * 这个类中的每个方法都可以“安全”地处理 <code>null</code> ，而不会抛出 <code>NullPointerException</code>。
+ * 这个类中的每个方法都可以“安全”地处理 <code>null</code> ，而不会抛出
+ * <code>NullPointerException</code>。
  * 
- * @author	<a href="mailto:biezhi.me@gmail.com">biezhi</a>
- * @since	1.0
+ * @author <a href="mailto:biezhi.me@gmail.com">biezhi</a>
+ * @since 1.0
  */
 public abstract class ReflectKit {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectKit.class);
-	
-	/** 新建对象 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException */
+
+	/**
+	 * 新建对象
+	 * 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
+	 */
 	public static Object newInstance(String className) {
 		Object obj = null;
 		try {
@@ -61,14 +70,16 @@ public abstract class ReflectKit {
 		LOGGER.debug("New {}", className);
 		return obj;
 	}
-	
+
 	/**
-     * 创建一个实例对象
-     * @param clazz class对象
-     * @return
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-     */
+	 * 创建一个实例对象
+	 * 
+	 * @param clazz
+	 *            class对象
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
 	public static Object newInstance(Class<?> clazz) {
 		try {
 			return clazz.newInstance();
@@ -78,54 +89,57 @@ public abstract class ReflectKit {
 	}
 
 	/**
-     * 根据类名获取Class对象
-     * 
-     * @param className	类名称
-     * @return			返回Class对象
-     */
-    public static Class<?> newClass(String className){
-    	try {
-    		return Class.forName(className);
+	 * 根据类名获取Class对象
+	 * 
+	 * @param className
+	 *            类名称
+	 * @return 返回Class对象
+	 */
+	public static Class<?> newClass(String className) {
+		try {
+			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
 		}
-    	return null;
-    }
-    
-    /**
-     * 获取包是否存在
-     * 
-     * @param packageName	包名称
-     * @return				返回包是否存在
-     */
-    public static boolean isPackage(String packageName){
-    	if(StringKit.isNotBlank(packageName)){
-    		Package temp = Package.getPackage(packageName);
-    		return null != temp;
-    	}
-    	return false;
-    }
-    
-    public static boolean isClass(String className){
-    	if(StringKit.isNotBlank(className)){
-    		try {
+		return null;
+	}
+
+	/**
+	 * 获取包是否存在
+	 * 
+	 * @param packageName
+	 *            包名称
+	 * @return 返回包是否存在
+	 */
+	public static boolean isPackage(String packageName) {
+		if (StringKit.isNotBlank(packageName)) {
+			Package temp = Package.getPackage(packageName);
+			return null != temp;
+		}
+		return false;
+	}
+
+	public static boolean isClass(String className) {
+		if (StringKit.isNotBlank(className)) {
+			try {
 				Class.forName(className);
 				return true;
 			} catch (ClassNotFoundException e) {
 			}
-    	}
-    	return false;
-    }
-    
-    
-    /**
-     * 创建一个实例对象
-     * @param clazz class对象
-     * @return
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-     */
-    public static <T> T newBean(Class<T> clazz) {
-    	try {
+		}
+		return false;
+	}
+
+	/**
+	 * 创建一个实例对象
+	 * 
+	 * @param clazz
+	 *            class对象
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+	public static <T> T newBean(Class<T> clazz) {
+		try {
 			Object object = clazz.newInstance();
 			return clazz.cast(object);
 		} catch (InstantiationException e) {
@@ -133,23 +147,31 @@ public abstract class ReflectKit {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-    	return null;
-    }
+		return null;
+	}
 
-	/** 用setter设置bean属性 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException */
-	public static void setProperty(Object bean, String name, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	/**
+	 * 用setter设置bean属性
+	 * 
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public static void setProperty(Object bean, String name, Object value)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String methodName = "set" + StringKit.firstUpperCase(name);
 		invokeMehodByName(bean, methodName, value);
 	}
 
-	/** 用getter获取bean属性 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException */
-	public static Object getProperty(Object bean, String name) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	/**
+	 * 用getter获取bean属性
+	 * 
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public static Object getProperty(Object bean, String name)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String methodName = "get" + StringKit.firstUpperCase(name);
 		return invokeMehodByName(bean, methodName);
 	}
@@ -194,7 +216,7 @@ public abstract class ReflectKit {
 		}
 		return ret;
 	}
-	
+
 	public static Method getMethodByName(Class<?> clazz, String methodName) {
 		Method ret = null;
 		for (Method method : clazz.getMethods()) {
@@ -205,84 +227,29 @@ public abstract class ReflectKit {
 		}
 		return ret;
 	}
-	
-	/*private static boolean sameType(Type[] types, Class<?>[] clazzes) {
-		if (types.length != clazzes.length) {
-			return false;
-		}
-		for (int i = 0; i < types.length; i++) {
-			if (!Type.getType(clazzes[i]).equals(types[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static String[] getMethodParamsNames(final Method m) {
-		try {
-			final String[] paramNames = new String[m.getParameterTypes().length];
-			Class<?> declaringClass = m.getDeclaringClass();
-			String className = declaringClass.getName();
-			int lastDotIndex = className.lastIndexOf(".");
-			InputStream is = declaringClass.getResourceAsStream(className.substring(lastDotIndex + 1) + ".class");
-			ClassReader cr = new ClassReader(is);
-			cr.accept(new ClassVisitor(Opcodes.ASM4) {
-				@Override
-				public MethodVisitor visitMethod(final int access, final String name, final String desc,
-						final String signature, final String[] exceptions) {
 
-					final Type[] args = Type.getArgumentTypes(desc);
-					// 方法名相同并且参数个数相同
-					if (!name.equals(m.getName()) || !sameType(args, m.getParameterTypes())) {
-						return super.visitMethod(access, name, desc, signature, exceptions);
-					}
-					MethodVisitor v = super.visitMethod(access, name, desc, signature, exceptions);
-					return new MethodVisitor(Opcodes.ASM4, v) {
-						@Override
-						public void visitLocalVariable(String name, String desc, String signature, Label start,
-								Label end, int index) {
-							int i = index - 1;
-							// 如果是静态方法，则第一就是参数
-							// 如果不是静态方法，则第一个是"this"，然后才是方法的参数
-							if (Modifier.isStatic(m.getModifiers())) {
-								i = index;
-							}
-							if (i >= 0 && i < paramNames.length) {
-								paramNames[i] = name;
-							}
-							super.visitLocalVariable(name, desc, signature, start, end, index);
-						}
-					};
-				}
-			}, 0);
-			return paramNames;
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}*/
-	
 	/**
 	 * 
-	 * @param bean 类实例
-	 * @param methodName 方法名称
-	 * @param args 方法参数
+	 * @param bean
+	 *            类实例
+	 * @param methodName
+	 *            方法名称
+	 * @param args
+	 *            方法参数
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
 	 */
-	public static Object invokeMehodByName(Object bean, String methodName, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static Object invokeMehodByName(Object bean, String methodName, Object... args)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Method method = getMethodByName(bean, methodName);
 		Class<?>[] types = method.getParameterTypes();
 
 		int argCount = args == null ? 0 : args.length;
 
 		// 参数个数对不上
-		ExceptionKit.makeRunTimeWhen(argCount != types.length,
-				"%s in %s", methodName, bean);
+		ExceptionKit.makeRunTimeWhen(argCount != types.length, "%s in %s", methodName, bean);
 
 		// 转参数类型
 		for (int i = 0; i < argCount; i++) {
@@ -293,29 +260,33 @@ public abstract class ReflectKit {
 
 	/**
 	 * 
-	 * @param bean 类实例
-	 * @param method 方法名称
-	 * @param args 方法参数
+	 * @param bean
+	 *            类实例
+	 * @param method
+	 *            方法名称
+	 * @param args
+	 *            方法参数
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
 	 */
-	public static Object invokeMehod(Object bean, Method method, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static Object invokeMehod(Object bean, Method method, Object... args)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?>[] types = method.getParameterTypes();
 
 		int argCount = args == null ? 0 : args.length;
 
 		// 参数个数对不上
 		ExceptionKit.makeRunTimeWhen(argCount != types.length, "%s in %s", method.getName(), bean);
-		
+
 		// 转参数类型
 		for (int i = 0; i < argCount; i++) {
 			args[i] = cast(args[i], types[i]);
 		}
 		return method.invoke(bean, args);
 	}
-	
+
 	// ------------------------------------------------------
 
 	/** 对象是否其中一个 */
@@ -331,7 +302,7 @@ public abstract class ReflectKit {
 	public static boolean isNot(Object obj, Object... mybe) {
 		return !is(obj, mybe);
 	}
-	
+
 	// ------------------------------------------------------
 
 	/** 扫描包下面所有的类 */
@@ -363,8 +334,7 @@ public abstract class ReflectKit {
 	}
 
 	/** 扫描文件夹下所有class文件 */
-	private static void scanPackageClassInFile(String rootPackageName,
-			File rootFile, List<String> classNames) {
+	private static void scanPackageClassInFile(String rootPackageName, File rootFile, List<String> classNames) {
 		String absFileName = rootPackageName + "." + rootFile.getName();
 		if (rootFile.isFile() && absFileName.endsWith(".class")) {
 			classNames.add(absFileName.substring(0, absFileName.length() - 6));
@@ -378,9 +348,13 @@ public abstract class ReflectKit {
 
 	/**
 	 * 扫描jar里面的类
-	 * @param jar jar包文件
-	 * @param packageDirName 包目录 
-	 * @param classNames class名称列表
+	 * 
+	 * @param jar
+	 *            jar包文件
+	 * @param packageDirName
+	 *            包目录
+	 * @param classNames
+	 *            class名称列表
 	 */
 	private static void scanPackageClassInJar(JarFile jar, String packageDirName, List<String> classNames) {
 		Enumeration<JarEntry> entries = jar.entries();
@@ -392,177 +366,192 @@ public abstract class ReflectKit {
 			}
 		}
 	}
-		
 
-    /**
-     * 方法调用，如果<code>clazz</code>为<code>null</code>，返回<code>null</code>；
-     * <p>
-     * 如果<code>method</code>为<code>null</code>，返回<code>null</code>
-     * <p>
-     * 如果<code>target</code>为<code>null</code>，则为静态方法
-     * 
-     * @param method 调用的方法
-     * @param target 目标对象
-     * @param args 方法的参数值
-     * @return 调用结果
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     */
-    public static Object invokeMethod(Method method, Object target, Object...args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (method == null) {
-            return null;
-        }
-        method.setAccessible(true);
-        return method.invoke(target, args);
-    }
+	/**
+	 * 方法调用，如果<code>clazz</code>为<code>null</code>，返回<code>null</code>；
+	 * <p>
+	 * 如果<code>method</code>为<code>null</code>，返回<code>null</code>
+	 * <p>
+	 * 如果<code>target</code>为<code>null</code>，则为静态方法
+	 * 
+	 * @param method
+	 *            调用的方法
+	 * @param target
+	 *            目标对象
+	 * @param args
+	 *            方法的参数值
+	 * @return 调用结果
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public static Object invokeMethod(Method method, Object target, Object... args)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if (method == null) {
+			return null;
+		}
+		method.setAccessible(true);
+		return method.invoke(target, args);
+	}
 
-    /**
-     * <p>
-     * 调用一个命名的方法，其参数类型相匹配的对象类型。
-     * </p>
-     * 
-     * 
-     * @param object 调用方法作用的对象
-     * @param methodName 方法名
-     * @param args 参数值
-     * @param parameterTypes 参数类型
-     * @return 调用的方法的返回值
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     * 
-     */
-    public static Object invokeMethod(Object object, String methodName, Object[] args, Class<?>...parameterTypes) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (object == null || StringKit.isEmpty(methodName)) {
-            return null;
-        }
+	/**
+	 * <p>
+	 * 调用一个命名的方法，其参数类型相匹配的对象类型。
+	 * </p>
+	 * 
+	 * 
+	 * @param object
+	 *            调用方法作用的对象
+	 * @param methodName
+	 *            方法名
+	 * @param args
+	 *            参数值
+	 * @param parameterTypes
+	 *            参数类型
+	 * @return 调用的方法的返回值
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * 
+	 */
+	public static Object invokeMethod(Object object, String methodName, Object[] args, Class<?>... parameterTypes)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if (object == null || StringKit.isEmpty(methodName)) {
+			return null;
+		}
 
-        if (parameterTypes == null) {
-            parameterTypes = Emptys.EMPTY_CLASS_ARRAY;
-        }
-        if (args == null) {
-            args = Emptys.EMPTY_OBJECT_ARRAY;
-        }
-        Method method;
-        try {
-            method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
-        } catch (Exception ex) {
-            throw ExceptionKit.toRuntimeException(ex);
-        }
-        if (method == null) {
-            return null;
-        }
-        return invokeMethod(method, object, args);
-    }
+		if (parameterTypes == null) {
+			parameterTypes = Emptys.EMPTY_CLASS_ARRAY;
+		}
+		if (args == null) {
+			args = Emptys.EMPTY_OBJECT_ARRAY;
+		}
+		Method method;
+		try {
+			method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
+		} catch (Exception ex) {
+			throw ExceptionKit.toRuntimeException(ex);
+		}
+		if (method == null) {
+			return null;
+		}
+		return invokeMethod(method, object, args);
+	}
 
-    /**
-     * <p>
-     * 调用一个命名的静态方法，其参数类型相匹配的对象类型。
-     * </p>
-     * 
-     * 
-     * @param clazz 调用方法作用的类
-     * @param methodName 方法名
-     * @param args 参数值
-     * @param parameterTypes 参数类型
-     * @return 调用的方法的返回值
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     * 
-     */
-    public static Object invokeStaticMethod(Class<?> clazz, String methodName, Object[] args, Class<?>...parameterTypes) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (parameterTypes == null) {
-            parameterTypes = Emptys.EMPTY_CLASS_ARRAY;
-        }
-        if (args == null) {
-            args = Emptys.EMPTY_OBJECT_ARRAY;
-        }
-        Method method;
-        try {
-            method = clazz.getDeclaredMethod(methodName, parameterTypes);
-        } catch (Exception ex) {
-            throw ExceptionKit.toRuntimeException(ex);
-        }
-        if (method == null) {
-            return null;
-        }
-        return invokeMethod(method, null, args);
-    }
+	/**
+	 * <p>
+	 * 调用一个命名的静态方法，其参数类型相匹配的对象类型。
+	 * </p>
+	 * 
+	 * 
+	 * @param clazz
+	 *            调用方法作用的类
+	 * @param methodName
+	 *            方法名
+	 * @param args
+	 *            参数值
+	 * @param parameterTypes
+	 *            参数类型
+	 * @return 调用的方法的返回值
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * 
+	 */
+	public static Object invokeStaticMethod(Class<?> clazz, String methodName, Object[] args,
+			Class<?>... parameterTypes)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if (parameterTypes == null) {
+			parameterTypes = Emptys.EMPTY_CLASS_ARRAY;
+		}
+		if (args == null) {
+			args = Emptys.EMPTY_OBJECT_ARRAY;
+		}
+		Method method;
+		try {
+			method = clazz.getDeclaredMethod(methodName, parameterTypes);
+		} catch (Exception ex) {
+			throw ExceptionKit.toRuntimeException(ex);
+		}
+		if (method == null) {
+			return null;
+		}
+		return invokeMethod(method, null, args);
+	}
 
-    // ==========================================================================
-    // 辅助方法。
-    // ==========================================================================
+	// ==========================================================================
+	// 辅助方法。
+	// ==========================================================================
 
-    private static final Method IS_SYNTHETIC;
-    static {
-        Method isSynthetic = null;
-        if (SystemKit.getJavaInfo().isJavaVersionAtLeast(1.5f)) {
-            // cannot call synthetic methods:
-            try {
-                isSynthetic = Member.class.getMethod("isSynthetic", Emptys.EMPTY_CLASS_ARRAY);
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        IS_SYNTHETIC = isSynthetic;
-    }
+	private static final Method IS_SYNTHETIC;
+	static {
+		Method isSynthetic = null;
+		if (SystemKit.getJavaInfo().isJavaVersionAtLeast(1.5f)) {
+			// cannot call synthetic methods:
+			try {
+				isSynthetic = Member.class.getMethod("isSynthetic", Emptys.EMPTY_CLASS_ARRAY);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		IS_SYNTHETIC = isSynthetic;
+	}
 
-    public static boolean isAccessible(Member m) {
-        return m != null && Modifier.isPublic(m.getModifiers()) && !isSynthetic(m);
-    }
+	public static boolean isAccessible(Member m) {
+		return m != null && Modifier.isPublic(m.getModifiers()) && !isSynthetic(m);
+	}
 
-    static boolean isSynthetic(Member m) {
-        if (IS_SYNTHETIC != null) {
-            try {
-                return ((Boolean) IS_SYNTHETIC.invoke(m, (Object[]) null)).booleanValue();
-            } catch (Exception e) {
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Check whether the {@link Class} identified by the supplied name is present.
-     *
-     * @param className the name of the class to check
-     * @return true if class is present, false otherwise
-     */
-    public static boolean isPresent(String className) {
-        try {
-            // what's wrong with old plain Class.forName
-            // this code supposed to work everywhere including containers
-            Class.forName(className);
-            // getClassLoader().loadClass(className);
-            return true;
-        }
-        catch (Throwable ex) {
-            return false;
-        }
-    }
+	static boolean isSynthetic(Member m) {
+		if (IS_SYNTHETIC != null) {
+			try {
+				return ((Boolean) IS_SYNTHETIC.invoke(m, (Object[]) null)).booleanValue();
+			} catch (Exception e) {
+			}
+		}
+		return false;
+	}
 
-    public static boolean isPublic(Member m) {
-        return m != null && Modifier.isPublic(m.getModifiers());
-    }
+	/**
+	 * Check whether the {@link Class} identified by the supplied name is
+	 * present.
+	 *
+	 * @param className
+	 *            the name of the class to check
+	 * @return true if class is present, false otherwise
+	 */
+	public static boolean isPresent(String className) {
+		try {
+			// what's wrong with old plain Class.forName
+			// this code supposed to work everywhere including containers
+			Class.forName(className);
+			// getClassLoader().loadClass(className);
+			return true;
+		} catch (Throwable ex) {
+			return false;
+		}
+	}
 
-    public static void forceAccess(AccessibleObject object) {
-        if (object == null || object.isAccessible()) {
-            return;
-        }
-        try {
-            object.setAccessible(true);
-        } catch (SecurityException e) {
-            throw ExceptionKit.toRuntimeException(e);
-        }
-    }
+	public static boolean isPublic(Member m) {
+		return m != null && Modifier.isPublic(m.getModifiers());
+	}
+
+	public static void forceAccess(AccessibleObject object) {
+		if (object == null || object.isAccessible()) {
+			return;
+		}
+		try {
+			object.setAccessible(true);
+		} catch (SecurityException e) {
+			throw ExceptionKit.toRuntimeException(e);
+		}
+	}
 
 	public static boolean hasInterface(Class<?> type, Class<?> interfaceType) {
-		if(null != type && null != interfaceType){
+		if (null != type && null != interfaceType) {
 			Class<?>[] interfaces = type.getInterfaces();
-			if(null != interfaces && interfaces.length > 0){
-				for(Class<?> inte : interfaces){
-					if(inte == interfaceType){
+			if (null != interfaces && interfaces.length > 0) {
+				for (Class<?> inte : interfaces) {
+					if (inte == interfaceType) {
 						return true;
 					}
 				}
@@ -570,5 +559,5 @@ public abstract class ReflectKit {
 		}
 		return false;
 	}
-
+	
 }
