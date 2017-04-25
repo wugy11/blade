@@ -78,7 +78,8 @@ public class RouteBuilder {
      *
      * @param router resolve the routing class
      */
-    public void addRouter(final Class<?> router) {
+    @SuppressWarnings("deprecation")
+	public void addRouter(final Class<?> router) {
 
         Method[] methods = router.getMethods();
         if (null == methods || methods.length == 0) {

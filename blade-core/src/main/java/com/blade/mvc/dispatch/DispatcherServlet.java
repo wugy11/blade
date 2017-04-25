@@ -30,13 +30,16 @@ import java.io.IOException;
  */
 public class DispatcherServlet extends AbsDispatcherServlet {
 
-    @Override
-    protected void service(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
-        httpRequest.setCharacterEncoding(blade.encoding());
-        httpResponse.setCharacterEncoding(blade.encoding());
-        httpResponse.setHeader("X-Powered-By", "Blade(" + Const.VERSION + ")");
-        httpRequest.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
-        dispatcherHandler.handle(httpRequest, httpResponse);
-    }
+	private static final long serialVersionUID = 798980992978868597L;
+
+	@Override
+	protected void service(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+			throws ServletException, IOException {
+		httpRequest.setCharacterEncoding(blade.encoding());
+		httpResponse.setCharacterEncoding(blade.encoding());
+		httpResponse.setHeader("X-Powered-By", "Blade(" + Const.VERSION + ")");
+		httpRequest.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+		dispatcherHandler.handle(httpRequest, httpResponse);
+	}
 
 }

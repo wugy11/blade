@@ -41,66 +41,67 @@ import static com.blade.Blade.$;
  */
 public class BladeInitListener implements ServletContextListener, HttpSessionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BladeInitListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BladeInitListener.class);
 
-    @Override
-    public void sessionCreated(HttpSessionEvent event) {
-        // session time out, default is 15 minutes, unit is minutes
-        int timeout = $().config().getInt("server.timeout", 15);
-        event.getSession().setMaxInactiveInterval(timeout * 60);
-    }
+	@Override
+	public void sessionCreated(HttpSessionEvent event) {
+		// session time out, default is 15 minutes, unit is minutes
+		int timeout = $().config().getInt("server.timeout", 15);
+		event.getSession().setMaxInactiveInterval(timeout * 60);
+	}
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        Blade blade = Blade.$();
-        if (!blade.isInit()) {
-            LOGGER.info("jdk.version\t=> {}", SystemKit.getJavaInfo().getVersion());
-            LOGGER.info("user.dir\t\t=> {}", System.getProperty("user.dir"));
-            LOGGER.info("java.io.tmpdir\t=> {}", System.getProperty("java.io.tmpdir"));
-            LOGGER.info("user.timezone\t=> {}", System.getProperty("user.timezone"));
-            LOGGER.info("file.encoding\t=> {}", System.getProperty("file.encoding"));
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		Blade blade = Blade.$();
+		if (!blade.isInit()) {
+			LOGGER.info("jdk.version\t=> {}", SystemKit.getJavaInfo().getVersion());
+			LOGGER.info("user.dir\t\t=> {}", System.getProperty("user.dir"));
+			LOGGER.info("java.io.tmpdir\t=> {}", System.getProperty("java.io.tmpdir"));
+			LOGGER.info("user.timezone\t=> {}", System.getProperty("user.timezone"));
+			LOGGER.info("file.encoding\t=> {}", System.getProperty("file.encoding"));
 
-            long initStart = System.currentTimeMillis();
+			long initStart = System.currentTimeMillis();
 
-            ServletContext servletContext = sce.getServletContext();
-            String webRoot = DispatchKit.getWebRoot(servletContext);
+			ServletContext servletContext = sce.getServletContext();
+			String webRoot = DispatchKit.getWebRoot(servletContext);
 
-            blade.webRoot(webRoot);
-            EmbedServer embedServer = blade.embedServer();
-            if (null != embedServer) {
-                embedServer.setWebRoot(webRoot);
-            }
+			blade.webRoot(webRoot);
+			EmbedServer embedServer = blade.embedServer();
+			if (null != embedServer) {
+				embedServer.setWebRoot(webRoot);
+			}
 
-            LOGGER.info("blade.webroot\t=> {}", webRoot);
+			LOGGER.info("blade.webroot\t=> {}", webRoot);
 
-            try {
-                // initialization ioc
-                IocApplication iocApplication = new IocApplication();
-                iocApplication.initBeans();
+			try {
+				// initialization ioc
+				IocApplication iocApplication = new IocApplication();
+				iocApplication.initBeans();
 
-                LOGGER.info("blade.isDev\t=> {}", blade.isDev());
+				LOGGER.info("blade.isDev\t=> {}", blade.isDev());
 
-                BannerStarter.printStart();
-                String appName = blade.config().get("app.name", "Blade");
-                appName = new String(appName.getBytes("iso8859-1"), "utf-8");
-                LOGGER.info("{} initialize successfully, Time elapsed: {} ms.", appName, System.currentTimeMillis() - initStart);
+				BannerStarter.printStart();
+				String appName = blade.config().get("app.name", "Blade");
+				appName = new String(appName.getBytes("iso8859-1"), "utf-8");
+				LOGGER.info("{} initialize successfully, Time elapsed: {} ms.", appName,
+						System.currentTimeMillis() - initStart);
 
-                iocApplication.initCtx(servletContext);
+				iocApplication.initCtx(servletContext);
 
-                blade.init();
-            } catch (Exception e) {
-                LOGGER.error("ApplicationContext init error", e);
-            }
-        }
-    }
+				blade.init();
+			} catch (Exception e) {
+				LOGGER.error("ApplicationContext init error", e);
+			}
+		}
+	}
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        WebContextHolder.destroy();
-    }
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		WebContextHolder.destroy();
+	}
 
-    @Override
-    public void sessionDestroyed(HttpSessionEvent event) {
-    }
+	@Override
+	public void sessionDestroyed(HttpSessionEvent event) {
+	}
 
 }

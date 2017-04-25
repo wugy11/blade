@@ -31,7 +31,8 @@ import java.util.Map;
 
 public final class MethodArgument {
 
-    public static Object[] getArgs(Request request, Response response, Method actionMethod) throws Exception {
+    @SuppressWarnings("deprecation")
+	public static Object[] getArgs(Request request, Response response, Method actionMethod) throws Exception {
 
         Class<?>[] parameters = actionMethod.getParameterTypes();
         Annotation[][] annotations = actionMethod.getParameterAnnotations();
@@ -100,7 +101,7 @@ public final class MethodArgument {
                 if (annotation.annotationType() == PathParam.class) {
                     PathParam pathParam = (PathParam) annotation;
                     String paramName = pathParam.value();
-                    String val = request.pathParam(paramName);
+					String val = request.pathParam(paramName);
 
                     if (StringKit.isBlank(paramName)) {
                         assert paramaterNames != null;

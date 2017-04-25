@@ -18,6 +18,7 @@ package com.blade;
 /**
  * Const Interface
  * <p>
+ * 
  * <pre>
  *     The basic configuration of the blade framework is stored
  * </pre>
@@ -27,50 +28,55 @@ package com.blade;
  */
 public interface Const {
 
-    /**
-     * the last blade framework version
-     */
-    String VERSION = "1.7.2-beta";
+	/**
+	 * the last blade framework version
+	 */
+	String VERSION = "1.7.2";
 
-    /**
-     * server 500
-     */
-    String VIEW_500 = "<html><head><title>500 Internal Error</title></head><body bgcolor=\"white\"><center><h1>500 Internal Error</h1></center><hr><center>blade " + VERSION + "</center></body></html>";
+	/**
+	 * server 500
+	 */
+	String VIEW_500 = "<html><head><title>500 Internal Error</title></head><body bgcolor=\"white\"><center><h1>500 Internal Error</h1></center><hr><center>blade "
+			+ VERSION + "</center></body></html>";
 
-    /**
-     * server 404
-     */
-    String VIEW_404 = "<html><head><title>404 Not Found</title></head><body bgcolor=\"white\"><center><h1>[ %s ] Not Found</h1></center><hr><center>blade " + VERSION + "</center></body></html>";
+	/**
+	 * server 404
+	 */
+	String VIEW_404 = "<html><head><title>404 Not Found</title></head><body bgcolor=\"white\"><center><h1>[ %s ] Not Found</h1></center><hr><center>blade "
+			+ VERSION + "</center></body></html>";
 
-    /**
-     * server 405
-     */
-    String VIEW_405 = "<html><head><title>403 Uri Forbidden</title></head><body bgcolor=\"white\"><center><h1>[ %s ] Method Not Allowed</h1></center><hr><center>blade " + VERSION + "</center></body></html>";
+	/**
+	 * server 405
+	 */
+	String VIEW_405 = "<html><head><title>403 Uri Forbidden</title></head><body bgcolor=\"white\"><center><h1>[ %s ] Method Not Allowed</h1></center><hr><center>blade "
+			+ VERSION + "</center></body></html>";
 
-    /**
-     * default web server port
-     */
-    int DEFAULT_PORT = 9000;
+	/**
+	 * default web server port
+	 */
+	int DEFAULT_PORT = 9000;
 
-    String DEFAULT_ENCODING = "UTF-8";
+	String DEFAULT_ENCODING = "UTF-8";
 
-    String DEFAULT_ROUTE_CONF = "route.conf";
+	String DEFAULT_ROUTE_CONF = "route.conf";
 
-    /**** blade properties ****/
-    String JETTY_SERVER_CLASS = "com.blade.embedd.EmbedJettyServer";
-    String TOMCAT_SERVER_CLASS = "com.blade.embedd.EmbedTomcatServer";
+	/**** blade properties ****/
+	String JETTY_SERVER_CLASS = "com.blade.embedd.EmbedJettyServer";
+	String TOMCAT_SERVER_CLASS = "com.blade.embedd.EmbedTomcatServer";
 
-    String SERVER_PORT = "server.port";
+	String SERVER_PORT = "server.port";
 
-    String MVC_STATICS = "mvc.statics";
-    String MVC_VIEW_404 = "mvc.view.404";
-    String MVC_VIEW_500 = "mvc.view.500";
-    String HTTP_ENCODING = "http.encoding";
+	String MVC_STATICS = "mvc.statics";
+	String MVC_VIEW_404 = "mvc.view.404";
+	String MVC_VIEW_500 = "mvc.view.500";
+	String HTTP_ENCODING = "http.encoding";
 
-    String APP_PROPERTIES = "app.properties";
-    String APP_DEV = "app.dev";
-    String APP_SCAN = "app.scan";
-    String APP_BASE_PKG = "app.base-package";
-    String APP_CLASSPATH = "app.classpath";
+	String APP_PROPERTIES = "app.properties";
+	String APP_DEV = "app.dev";
+	String APP_SCAN = "app.scan";
+	String APP_BASE_PKG = "app.base-package";
+	String APP_CLASSPATH = "app.classpath";
+
+	String INSTALLED = "install.txt";
 
 }

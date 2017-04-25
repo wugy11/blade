@@ -33,22 +33,25 @@ import java.io.IOException;
  */
 public class AsyncDispatcherServlet extends AbsDispatcherServlet {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AsyncDispatcherServlet.class);
+	private static final long serialVersionUID = 962566584961807838L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AsyncDispatcherServlet.class);
 
-    @Override
-    protected void service(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
+	@Override
+	protected void service(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+			throws ServletException, IOException {
 
-        LOGGER.debug("AsyncLongRunningServlet Start::Name={} :: ID={}", Thread.currentThread().getName(), Thread.currentThread().getId());
+		LOGGER.debug("AsyncLongRunningServlet Start::Name={} :: ID={}", Thread.currentThread().getName(),
+				Thread.currentThread().getId());
 
-        httpRequest.setCharacterEncoding(blade.encoding());
-        httpResponse.setCharacterEncoding(blade.encoding());
-        httpResponse.setHeader("X-Powered-By", "Blade(" + Const.VERSION + ")");
-        httpRequest.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+		httpRequest.setCharacterEncoding(blade.encoding());
+		httpResponse.setCharacterEncoding(blade.encoding());
+		httpResponse.setHeader("X-Powered-By", "Blade(" + Const.VERSION + ")");
+		httpRequest.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
 
-        AsyncContext asyncContext = httpRequest.startAsync();
-        asyncContext.addListener(new BladeAsyncListener());
-        asyncContext.setTimeout(asyncContextTimeout);
-        executor.execute(new AsyncRequestProcessor(asyncContext, dispatcherHandler));
-    }
+		AsyncContext asyncContext = httpRequest.startAsync();
+		asyncContext.addListener(new BladeAsyncListener());
+		asyncContext.setTimeout(asyncContextTimeout);
+		executor.execute(new AsyncRequestProcessor(asyncContext, dispatcherHandler));
+	}
 
 }

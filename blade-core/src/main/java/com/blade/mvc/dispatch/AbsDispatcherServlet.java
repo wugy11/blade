@@ -37,38 +37,40 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbsDispatcherServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbsDispatcherServlet.class);
+	private static final long serialVersionUID = -3071777104131316365L;
 
-    protected static ThreadPoolExecutor executor;
-    protected Blade blade;
-    protected DispatcherHandler dispatcherHandler;
-    protected int asyncContextTimeout;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbsDispatcherServlet.class);
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        blade = Blade.$();
-        this.dispatcherHandler = new DispatcherHandler(blade.routers());
-        this.asyncContextTimeout = blade.config().getInt("server.async-ctx-timeout", 10 * 1000);
-        executor = new ThreadPoolExecutor(100, 200, 50000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
-        LOGGER.info("init worker thread pool.");
-    }
+	protected static ThreadPoolExecutor executor;
+	protected Blade blade;
+	protected DispatcherHandler dispatcherHandler;
+	protected int asyncContextTimeout;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.service(req, resp);
-    }
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		blade = Blade.$();
+		this.dispatcherHandler = new DispatcherHandler(blade.routers());
+		this.asyncContextTimeout = blade.config().getInt("server.async-ctx-timeout", 10 * 1000);
+		executor = new ThreadPoolExecutor(100, 200, 50000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
+		LOGGER.info("init worker thread pool.");
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.service(req, resp);
-    }
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.service(req, resp);
+	}
 
-    @Override
-    public void destroy() {
-        super.destroy();
-        if (null != executor) {
-            executor.shutdown();
-            LOGGER.info("shutdown worker thread pool.");
-        }
-    }
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.service(req, resp);
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		if (null != executor) {
+			executor.shutdown();
+			LOGGER.info("shutdown worker thread pool.");
+		}
+	}
 }

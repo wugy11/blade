@@ -34,7 +34,8 @@ public final class MethodArgumentN {
         return Modifier.isFinal(parameter.getModifiers());
     }
 
-    public static Object[] getArgs(Request request, Response response, Method actionMethod) throws Exception {
+    @SuppressWarnings("deprecation")
+	public static Object[] getArgs(Request request, Response response, Method actionMethod) throws Exception {
 
         int parameterCount = 0;
         for (final Parameter parameter : actionMethod.getParameters()) {
@@ -98,7 +99,7 @@ public final class MethodArgumentN {
                 String val = request.pathParam(paramName);
                 if (StringKit.isBlank(paramName)) {
                     paramName = parameter.getName();
-                    val = request.pathParam(paramName);
+					val = request.pathParam(paramName);
                 }
                 if (StringKit.isBlank(val)) {
                     throw new NotFoundException("path param [" + paramName + "] is null");
