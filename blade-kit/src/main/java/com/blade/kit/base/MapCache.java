@@ -41,7 +41,8 @@ public class MapCache {
      * @param <T>
      * @return
      */
-    public <T> T get(String key) {
+    @SuppressWarnings("unchecked")
+	public <T> T get(String key) {
         CacheObject cacheObject = cachePool.get(key);
         if (null != cacheObject) {
             long cur = System.currentTimeMillis() / 1000;
@@ -53,7 +54,8 @@ public class MapCache {
         return null;
     }
 
-    public <T> T get(String key, Object defaultValue) {
+    @SuppressWarnings("unchecked")
+	public <T> T get(String key, Object defaultValue) {
         T value = get(key);
         if (null == value) {
             return (T) defaultValue;
@@ -74,7 +76,8 @@ public class MapCache {
         return this.get(key);
     }
 
-    public <T> T hget(String key, String field, Object defaultValue) {
+    @SuppressWarnings("unchecked")
+	public <T> T hget(String key, String field, Object defaultValue) {
         T value = hget(key, field);
         if (null == value) {
             return (T) defaultValue;

@@ -141,7 +141,7 @@ public class ActiveRecordTest {
         p1.setLast_name("Hello44");
         p1.setId(1);
         Tx.begin();
-        int c = 1/0;
+        System.out.println(1/0);
         activeRecord.update(p1);
         Tx.commit();
     }

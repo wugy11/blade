@@ -12,51 +12,53 @@ import java.util.Date;
 @Table(name = "person")
 public class Person implements Serializable {
 
-    private Integer id;
-    private String name;
-    private String last_name;
-    private Date dob;
+	private static final long serialVersionUID = 1443517656563652564L;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+	private Integer id;
+	private String name;
+	private String last_name;
+	private Date dob;
 
-    public Integer getId() {
-        return id;
-    }
+	@Column(name = "created_at")
+	private Date createdAt;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getLast_name() {
-        return last_name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
+	public String getLast_name() {
+		return last_name;
+	}
 
-    public Date getDob() {
-        return dob;
-    }
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
+	}
 
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
+	public Date getDob() {
+		return dob;
+	}
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
 }

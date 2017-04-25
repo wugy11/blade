@@ -62,7 +62,7 @@ public abstract class StringKit {
      * @return 如果为空, 则返回<code>true</code>
      */
     public static boolean isEmpty(String str) {
-    	return (str == null || str.length() == 0) ? true : false;
+    	return (str == null || str.length() == 0);
     }
     
     public static boolean isAnyEmpty(String...strings) {
