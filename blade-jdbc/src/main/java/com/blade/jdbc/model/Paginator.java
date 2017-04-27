@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import com.blade.kit.CollectionKit;
+
 /**
  * 分页对象
  * 
@@ -80,7 +82,7 @@ public class Paginator<T> implements Serializable {
 		
 		//以及页面边界的判定
 		judgePageBoudary();
-		
+		list = CollectionKit.newArrayList();
 	}
 	
 	private void calcNavigatePageNumbers() {

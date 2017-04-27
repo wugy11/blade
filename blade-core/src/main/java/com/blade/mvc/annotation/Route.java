@@ -51,7 +51,6 @@ public @interface Route {
      */
     String[] values() default {"/"};
 
-    @Deprecated
     String[] value() default {"/"};
 
     /**
