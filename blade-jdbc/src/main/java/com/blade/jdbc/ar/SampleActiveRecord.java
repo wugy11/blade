@@ -214,7 +214,7 @@ public class SampleActiveRecord implements ActiveRecord {
 		try (Connection con = sql2o.open()) {
 			List<?> list = con.createQuery(sql).withParams(boundSql.getParams().toArray())
 					.executeAndFetch(take.getEntityClass());
-			return !CollectionKit.isEmpty(list) ? (List<T>) list : null;
+			return null != list ? (List<T>) list : CollectionKit.newArrayList();
 		}
 	}
 
@@ -261,7 +261,7 @@ public class SampleActiveRecord implements ActiveRecord {
 		try (Connection con = sql2o.open()) {
 			List<?> list = con.createQuery(sql).withParams(boundSql.getParams().toArray())
 					.executeAndFetch(entity.getClass());
-			return !CollectionKit.isEmpty(list) ? (List<T>) list : null;
+			return null != list ? (List<T>) list : CollectionKit.newArrayList();
 		}
 	}
 
@@ -292,7 +292,7 @@ public class SampleActiveRecord implements ActiveRecord {
 		try (Connection con = sql2o.open()) {
 			List<?> list = con.createQuery(sql).withParams(boundSql.getParams().toArray())
 					.executeAndFetch(entity.getClass());
-			return !CollectionKit.isEmpty(list) ? (List<T>) list : null;
+			return null != list ? (List<T>) list : CollectionKit.newArrayList();
 		}
 	}
 
@@ -302,7 +302,7 @@ public class SampleActiveRecord implements ActiveRecord {
 		args = dealArgs(args);
 		try (Connection con = sql2o.open()) {
 			List<Map<String, Object>> list = con.createQuery(sql).withParams(args).executeAndFetchTable().asList();
-			return !CollectionKit.isEmpty(list) ? list.get(0) : null;
+			return null != list ? list.get(0) : CollectionKit.newHashMap();
 		}
 	}
 
@@ -417,9 +417,7 @@ public class SampleActiveRecord implements ActiveRecord {
 			String sql = Utils.getPageSql(boundSql.getSql(), dialect, pageRow);
 			List<?> list = con.createQuery(sql).withParams(boundSql.getParams().toArray())
 					.executeAndFetch(entity.getClass());
-			if (!CollectionKit.isEmpty(list)) {
-				paginator.setList((List<T>) list);
-			}
+			paginator.setList((List<T>) list);
 		}
 
 		return paginator;
@@ -448,9 +446,7 @@ public class SampleActiveRecord implements ActiveRecord {
 			String sql = Utils.getPageSql(boundSql.getSql(), dialect, pageRow);
 			List<?> list = con.createQuery(sql).withParams(boundSql.getParams().toArray())
 					.executeAndFetch(take.getEntityClass());
-			if (!CollectionKit.isEmpty(list)) {
-				paginator.setList((List<T>) list);
-			}
+			paginator.setList((List<T>) list);
 		}
 
 		return paginator;
@@ -470,9 +466,7 @@ public class SampleActiveRecord implements ActiveRecord {
 
 			sql = Utils.getPageSql(sql, dialect, pageRow);
 			List<?> list = con.createQuery(sql).withParams(args).executeAndFetch(type);
-			if (!CollectionKit.isEmpty(list)) {
-				paginator.setList((List<T>) list);
-			}
+			paginator.setList((List<T>) list);
 			return paginator;
 		}
 	}

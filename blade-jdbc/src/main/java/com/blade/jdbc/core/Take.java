@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.blade.jdbc.exceptions.AssistantException;
 import com.blade.jdbc.model.PageRow;
+import com.blade.jdbc.model.QueryOpts;
 import com.blade.kit.CollectionKit;
 
 /**
@@ -97,7 +98,7 @@ public class Take {
 	 */
 	public Take asc(String... field) {
 		for (String f : field) {
-			AutoField autoField = this.buildAutoFields(f, null, "asc", AutoField.ORDER_BY_FIELD, new Object[0]);
+			AutoField autoField = this.buildAutoFields(f, null, QueryOpts.ASC, AutoField.ORDER_BY_FIELD, new Object[0]);
 			this.orderByFields.add(autoField);
 		}
 		return this;
@@ -112,7 +113,8 @@ public class Take {
 	 */
 	public Take desc(String... field) {
 		for (String f : field) {
-			AutoField autoField = this.buildAutoFields(f, null, "desc", AutoField.ORDER_BY_FIELD, new Object[0]);
+			AutoField autoField = this.buildAutoFields(f, null, QueryOpts.DESC, AutoField.ORDER_BY_FIELD,
+					new Object[0]);
 			this.orderByFields.add(autoField);
 		}
 		return this;
@@ -128,7 +130,7 @@ public class Take {
 	 * @return
 	 */
 	public Take set(String fieldName, Object value) {
-		AutoField autoField = this.buildAutoFields(fieldName, null, "=", AutoField.UPDATE_FIELD, value);
+		AutoField autoField = this.buildAutoFields(fieldName, null, QueryOpts.EQ, AutoField.UPDATE_FIELD, value);
 		this.autoFields.add(autoField);
 		return this;
 	}
@@ -141,7 +143,7 @@ public class Take {
 	 * @return
 	 */
 	public Take setPKValueName(String pkName, String valueName) {
-		AutoField autoField = this.buildAutoFields(pkName, null, "=", AutoField.PK_VALUE_NAME, valueName);
+		AutoField autoField = this.buildAutoFields(pkName, null, QueryOpts.EQ, AutoField.PK_VALUE_NAME, valueName);
 		this.autoFields.add(autoField);
 		return this;
 	}
@@ -154,7 +156,7 @@ public class Take {
 	 * @return
 	 */
 	public Take and(String fieldName, Object... values) {
-		this.and(fieldName, "=", values);
+		this.and(fieldName, QueryOpts.EQ, values);
 		return this;
 	}
 
@@ -167,53 +169,54 @@ public class Take {
 	 * @return
 	 */
 	public Take and(String fieldName, String fieldOperator, Object... values) {
-		AutoField autoField = this.buildAutoFields(fieldName, "and", fieldOperator, AutoField.WHERE_FIELD, values);
+		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.AND, fieldOperator, AutoField.WHERE_FIELD,
+				values);
 		this.autoFields.add(autoField);
 		return this;
 	}
 
 	public Take like(String fieldName, String value) {
-		return this.and(fieldName, "like", value);
+		return this.and(fieldName, QueryOpts.LIKE, String.format("%s%s%s", "%", value, "%"));
 	}
 
 	public Take between(String fieldName, Object a, Object b) {
-		return this.and(fieldName, "between", a, b);
+		return this.and(fieldName, QueryOpts.BETWEEN, a, b);
 	}
 
 	public Take notBetween(String fieldName, Object a, Object b) {
-		return this.and(fieldName, "not between", a, b);
+		return this.and(fieldName, QueryOpts.NOT_BETWEEN, a, b);
 	}
 
 	public Take gt(String fieldName, Object value) {
-		return this.and(fieldName, ">", value);
+		return this.and(fieldName, QueryOpts.GT, value);
 	}
 
 	public Take gtE(String fieldName, Object value) {
-		return this.and(fieldName, ">=", value);
+		return this.and(fieldName, QueryOpts.GE, value);
 	}
 
 	public Take lt(String fieldName, Object value) {
-		return this.and(fieldName, "<", value);
+		return this.and(fieldName, QueryOpts.LT, value);
 	}
 
 	public Take ltE(String fieldName, Object value) {
-		return this.and(fieldName, "<=", value);
+		return this.and(fieldName, QueryOpts.LE, value);
 	}
 
 	public Take eq(String fieldName, Object value) {
-		return this.and(fieldName, "=", value);
+		return this.and(fieldName, QueryOpts.EQ, value);
 	}
 
 	public Take notEq(String fieldName, Object value) {
-		return this.and(fieldName, "<>", value);
+		return this.and(fieldName, QueryOpts.NEQ, value);
 	}
 
 	public <T> Take in(String fieldName, List<T> values) {
-		return this.and(fieldName, "in", values.toArray());
+		return this.and(fieldName, QueryOpts.IN, values.toArray());
 	}
 
 	public Take in(String fieldName, Object... values) {
-		return this.and(fieldName, "in", values);
+		return this.and(fieldName, QueryOpts.IN, values);
 	}
 
 	public <T> Take notIn(String fieldName, List<T> values) {
@@ -221,7 +224,7 @@ public class Take {
 	}
 
 	public Take notIn(String fieldName, Object... values) {
-		return this.and(fieldName, "not in", values);
+		return this.and(fieldName, QueryOpts.NOT_IN, values);
 	}
 
 	/**
@@ -232,7 +235,7 @@ public class Take {
 	 * @return
 	 */
 	public Take or(String fieldName, Object... values) {
-		this.or(fieldName, "=", values);
+		this.or(fieldName, QueryOpts.EQ, values);
 		return this;
 	}
 
@@ -245,7 +248,8 @@ public class Take {
 	 * @return
 	 */
 	public Take or(String fieldName, String fieldOperator, Object... values) {
-		AutoField autoField = this.buildAutoFields(fieldName, "or", fieldOperator, AutoField.WHERE_FIELD, values);
+		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.OR, fieldOperator, AutoField.WHERE_FIELD,
+				values);
 		this.autoFields.add(autoField);
 		return this;
 	}
@@ -265,7 +269,8 @@ public class Take {
 		if (this.isWhere) {
 			throw new AssistantException("There can be only one 'where'!");
 		}
-		AutoField autoField = this.buildAutoFields(fieldName, "and", fieldOperator, AutoField.WHERE_FIELD, values);
+		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.AND, fieldOperator, AutoField.WHERE_FIELD,
+				values);
 		this.autoFields.add(autoField);
 		this.isWhere = true;
 		return this;

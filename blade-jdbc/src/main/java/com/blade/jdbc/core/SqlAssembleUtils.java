@@ -257,11 +257,12 @@ public class SqlAssembleUtils {
             String columnName = nameHandler.getColumnName(autoField.getName());
             Object[] values = autoField.getValues();
 
-            if (QueryOpts.IN.equalsIgnoreCase(StringKit.trim(autoField.getFieldOperator()))
-					|| QueryOpts.NOT_IN.equalsIgnoreCase(StringKit.trim(autoField.getFieldOperator()))) {
+            String fieldOperator = autoField.getFieldOperator();
+			if (QueryOpts.IN.equalsIgnoreCase(StringKit.trim(fieldOperator))
+					|| QueryOpts.NOT_IN.equalsIgnoreCase(StringKit.trim(fieldOperator))) {
 
                 //in，not in的情况
-                sql.append(columnName).append(" ").append(autoField.getFieldOperator()).append(" ");
+                sql.append(columnName).append(" ").append(fieldOperator).append(" ");
                 sql.append("(");
                 for (int j = 0; j < values.length; j++) {
                     sql.append(" ?");
@@ -273,18 +274,18 @@ public class SqlAssembleUtils {
                 sql.append(")");
             } else if (values == null) {
                 //null 值
-                sql.append(columnName).append(" ").append(autoField.getFieldOperator())
+                sql.append(columnName).append(" ").append(fieldOperator)
                     .append(" null");
             } else if (values.length == 1) {
                 //一个值 =
-                sql.append(columnName).append(" ").append(autoField.getFieldOperator())
+                sql.append(columnName).append(" ").append(fieldOperator)
                     .append(" ?");
                 params.add(values[0]);
             } else {
                 //多个值，or的情况
                 sql.append("(");
                 for (int j = 0; j < values.length; j++) {
-                    sql.append(columnName).append(" ").append(autoField.getFieldOperator())
+                    sql.append(columnName).append(" ").append(fieldOperator)
                         .append(" ?");
                     params.add(values[j]);
                     if (j != values.length - 1) {
