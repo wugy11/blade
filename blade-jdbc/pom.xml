@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
 
     <name>blade-jdbc</name>
-    <url>https://github.com/bladejava/blade-jdbc</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

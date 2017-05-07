@@ -13,7 +13,6 @@
 	<packaging>jar</packaging>
 	<version>${blade-kit.version}</version>
 	<name>blade-kit</name>
-	<url>https://github.com/biezhi/blade/tree/master/blade-kit</url>
 		
 	<dependencies>
 		
