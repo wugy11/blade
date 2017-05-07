@@ -19,13 +19,20 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.Map;
 
 import com.blade.exception.RouteException;
 import com.blade.kit.AsmKit;
+import com.blade.kit.Assert;
+import com.blade.kit.DateKit;
 import com.blade.kit.StringKit;
+import com.blade.kit.reflect.FieldCallback;
+import com.blade.kit.reflect.ReflectKit;
 import com.blade.mvc.annotation.CookieParam;
+import com.blade.mvc.annotation.DateFormat;
 import com.blade.mvc.annotation.EntityObj;
 import com.blade.mvc.annotation.HeaderParam;
 import com.blade.mvc.annotation.MultipartParam;
@@ -47,7 +54,8 @@ public final class MethodArgument {
 
 		Object[] args = new Object[parameters.length];
 
-		actionMethod.setAccessible(true);
+		// actionMethod.setAccessible(true);
+		ReflectKit.forceAccess(actionMethod);
 
 		String[] paramaterNames = AsmKit.getMethodParamNames(actionMethod);
 
@@ -205,27 +213,21 @@ public final class MethodArgument {
 					|| parameterType.equals(long.class) || parameterType.equals(byte.class)
 					|| parameterType.equals(float.class)) {
 				result = 0;
-			}
-			if (parameterType.equals(boolean.class)) {
+			} else if (parameterType.equals(boolean.class)) {
 				result = false;
 			}
 		} else {
 			if (parameterType.equals(Integer.class) || parameterType.equals(int.class)) {
 				result = Integer.parseInt(val);
-			}
-			if (parameterType.equals(Long.class) || parameterType.equals(long.class)) {
+			} else if (parameterType.equals(Long.class) || parameterType.equals(long.class)) {
 				result = Long.parseLong(val);
-			}
-			if (parameterType.equals(Double.class) || parameterType.equals(double.class)) {
+			} else if (parameterType.equals(Double.class) || parameterType.equals(double.class)) {
 				result = Double.parseDouble(val);
-			}
-			if (parameterType.equals(Float.class) || parameterType.equals(float.class)) {
+			} else if (parameterType.equals(Float.class) || parameterType.equals(float.class)) {
 				result = Float.parseFloat(val);
-			}
-			if (parameterType.equals(Boolean.class) || parameterType.equals(boolean.class)) {
+			} else if (parameterType.equals(Boolean.class) || parameterType.equals(boolean.class)) {
 				result = Boolean.parseBoolean(val);
-			}
-			if (parameterType.equals(Byte.class) || parameterType.equals(byte.class)) {
+			} else if (parameterType.equals(Byte.class) || parameterType.equals(byte.class)) {
 				result = Byte.parseByte(val);
 			}
 		}
@@ -234,18 +236,57 @@ public final class MethodArgument {
 
 	public static <T> T mapToObj(Map<String, String> map, Class<T> clazz) throws Exception {
 		T obj = clazz.newInstance();
+		FieldCallback callBack = new FieldCallback() {
+
+			@Override
+			public void callBack(Field field) throws Exception {
+				String name = field.getName();
+				for (String key : map.keySet()) {
+					if (!key.equalsIgnoreCase(name))
+						continue;
+					String value = map.get(key);
+					if (StringKit.isEmpty(value))
+						continue;
+					Class<?> propertyType = field.getType();
+					if (Date.class.equals(propertyType)) {
+						DateFormat dateFormat = field.getAnnotation(DateFormat.class);
+						Assert.notNull(dateFormat, "请求参数为日期类型，需指定DateFormat注解");
+						String pattern = dateFormat.pattern();
+						field.set(obj, DateKit.dateFormat(value, pattern));
+					} else {
+						field.set(obj, getRequestParam(propertyType, value));
+					}
+					break;
+				}
+			}
+		};
+		callBack.callBackField(clazz);
+		return obj;
+	}
+
+	public static <T> T mapToObj2(Map<String, String> map, Class<T> clazz) throws Exception {
+		T obj = clazz.newInstance();
 		BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		for (PropertyDescriptor descriptor : propertyDescriptors) {
 			String name = descriptor.getName();
 			for (String key : map.keySet()) {
+				if (!key.equalsIgnoreCase(name))
+					continue;
 				String value = map.get(key);
-				if (key.equalsIgnoreCase(name) && !StringKit.isEmpty(value)) {
-					Class<?> propertyType = descriptor.getPropertyType();
-					Method writeMethod = descriptor.getWriteMethod();
+				if (StringKit.isEmpty(value))
+					continue;
+				Class<?> propertyType = descriptor.getPropertyType();
+				Method writeMethod = descriptor.getWriteMethod();
+				if (Date.class.equals(propertyType)) {
+					DateFormat dateFormat = writeMethod.getAnnotation(DateFormat.class);
+					Assert.notNull(dateFormat, "请求参数为日期类型，需指定DateFormat注解");
+					String pattern = dateFormat.pattern();
+					writeMethod.invoke(obj, DateKit.dateFormat(value, pattern));
+				} else {
 					writeMethod.invoke(obj, getRequestParam(propertyType, value));
-					break;
 				}
+				break;
 			}
 		}
 		return obj;

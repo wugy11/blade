@@ -78,7 +78,7 @@ public class SampleActiveRecord implements ActiveRecord {
 			take.setPKValueName(NameUtils.getCamelName(primaryName), pkValue);
 		}
 
-		final BoundSql boundSql = SqlAssembleUtils.buildInsertSql(entity, take, this.getNameHandler());
+		final BoundSql boundSql = SqlAssembleUtils.buildInsertSql(entity, take, handler);
 
 		String sql = boundSql.getSql();
 		Object[] params = boundSql.getParams().toArray();

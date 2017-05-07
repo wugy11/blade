@@ -18,6 +18,7 @@ package com.blade.kit.reflect;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -174,6 +175,10 @@ public abstract class ReflectKit {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String methodName = "get" + StringKit.firstUpperCase(name);
 		return invokeMehodByName(bean, methodName);
+	}
+
+	public static Object getFieldValue(Object bean, Field field) throws Exception {
+		return field.get(bean);
 	}
 
 	/** 类型转换 */
@@ -535,6 +540,11 @@ public abstract class ReflectKit {
 		return m != null && Modifier.isPublic(m.getModifiers());
 	}
 
+	public static boolean isAvaliable(Field field) {
+		int modifiers = field.getModifiers();
+		return !Modifier.isStatic(modifiers) && !Modifier.isTransient(modifiers);
+	}
+
 	public static void forceAccess(AccessibleObject object) {
 		if (object == null || object.isAccessible()) {
 			return;
@@ -559,5 +569,5 @@ public abstract class ReflectKit {
 		}
 		return false;
 	}
-	
+
 }
