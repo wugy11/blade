@@ -10,7 +10,7 @@ public interface FieldCallback {
 			Field[] fileds = tempClazz.getDeclaredFields();
 			for (Field field : fileds) {
 				ReflectKit.forceAccess(field);
-				if (ReflectKit.isAvaliable(field))
+				if (ReflectKit.isAvailable(field))
 					callBack(field);
 			}
 			tempClazz = tempClazz.getSuperclass();

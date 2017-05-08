@@ -540,7 +540,7 @@ public abstract class ReflectKit {
 		return m != null && Modifier.isPublic(m.getModifiers());
 	}
 
-	public static boolean isAvaliable(Field field) {
+	public static boolean isAvailable(Field field) {
 		int modifiers = field.getModifiers();
 		return !Modifier.isStatic(modifiers) && !Modifier.isTransient(modifiers);
 	}
