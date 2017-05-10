@@ -1,22 +1,12 @@
 package com.blade.jdbc.core;
 
+import com.blade.jdbc.model.SqlOpts;
+
 /**
  * 组装sql时的列信息
  */
 public class AutoField {
-    
-    /** sql中的update 字段 */
-    public static final int UPDATE_FIELD = 1;
-
-    /** sql中的where 字段 */
-    public static final int WHERE_FIELD  = 2;
-
-    /** 排序字段 */
-    public static final int ORDER_BY_FIELD = 3;
-
-    /** 主键值名称 例如oracle的序列名，非直接主键值 */
-    public static final int PK_VALUE_NAME = 4;
-
+	
     /** 名称 */
     private String          name;
 
@@ -29,8 +19,7 @@ public class AutoField {
     /** 值 */
     private Object[]        values;
 
-    /** 类型 对应上面申明的常量 */
-    private int             type;
+    private SqlOpts             type;
 
     public String getName() {
         return name;
@@ -48,11 +37,11 @@ public class AutoField {
         this.values = values;
     }
 
-    public int getType() {
+    public SqlOpts getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(SqlOpts type) {
         this.type = type;
     }
 

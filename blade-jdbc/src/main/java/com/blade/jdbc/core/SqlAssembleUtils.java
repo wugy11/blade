@@ -1,7 +1,5 @@
 package com.blade.jdbc.core;
 
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -13,8 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.blade.jdbc.annotation.Column;
 import com.blade.jdbc.exceptions.AssistantException;
-import com.blade.jdbc.model.QueryOpts;
-import com.blade.jdbc.utils.ClassUtils;
+import com.blade.jdbc.model.SqlOpts;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.reflect.FieldCallback;
@@ -27,10 +24,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 获取实体类对象
-	 * 
-	 * @param entity
-	 * @param take
-	 * @return
 	 */
 	public static Class<?> getEntityClass(Object entity, Take take) {
 		return entity == null ? take.getEntityClass() : entity.getClass();
@@ -52,7 +45,7 @@ public class SqlAssembleUtils {
 		Class<?> entityClass = getEntityClass(entity, take);
 		List<AutoField> autoFields = (take != null ? take.getAutoFields() : CollectionKit.newArrayList());
 
-		List<AutoField> entityAutoField = getEntityAutoField(entity, AutoField.UPDATE_FIELD);
+		List<AutoField> entityAutoField = getEntityAutoField(entity, SqlOpts.UPDATE);
 
 		// 添加到后面
 		autoFields.addAll(entityAutoField);
@@ -60,7 +53,7 @@ public class SqlAssembleUtils {
 		String tableName = nameHandler.getTableName(entityClass);
 		String pkName = nameHandler.getPKName(entityClass);
 
-		StringBuilder sql = new StringBuilder(QueryOpts.INSERT_INTO);
+		StringBuilder sql = new StringBuilder(SqlOpts.INSERT_INTO.getValue());
 		List<Object> params = CollectionKit.newArrayList();
 		sql.append(tableName);
 
@@ -70,7 +63,7 @@ public class SqlAssembleUtils {
 
 		for (AutoField autoField : autoFields) {
 
-			if (autoField.getType() != AutoField.UPDATE_FIELD && autoField.getType() != AutoField.PK_VALUE_NAME) {
+			if (autoField.getType() != SqlOpts.UPDATE && autoField.getType() != SqlOpts.PK_VALUE_NAME) {
 				continue;
 			}
 			String columnName = nameHandler.getColumnName(autoField.getName());
@@ -78,7 +71,7 @@ public class SqlAssembleUtils {
 
 			sql.append(columnName);
 			// 如果是主键，且是主键的值名称
-			if (pkName.equalsIgnoreCase(columnName) && autoField.getType() == AutoField.PK_VALUE_NAME) {
+			if (pkName.equalsIgnoreCase(columnName) && autoField.getType() == SqlOpts.PK_VALUE_NAME) {
 				// 参数直接append，传参方式会把值当成字符串造成无法调用序列的问题
 				args.append(value);
 			} else {
@@ -99,21 +92,13 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建更新sql
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildUpdateSql(Object entity, Take take, NameHandler nameHandler) {
 
 		Class<?> entityClass = getEntityClass(entity, take);
 		List<AutoField> autoFields = (take != null ? take.getAutoFields() : CollectionKit.newArrayList());
 
-		List<AutoField> entityAutoField = getEntityAutoField(entity, AutoField.UPDATE_FIELD);
+		List<AutoField> entityAutoField = getEntityAutoField(entity, SqlOpts.UPDATE);
 
 		// 添加到后面，防止or等操作被覆盖
 		autoFields.addAll(entityAutoField);
@@ -132,7 +117,7 @@ public class SqlAssembleUtils {
 
 			AutoField autoField = iterator.next();
 
-			if (AutoField.UPDATE_FIELD != autoField.getType()) {
+			if (SqlOpts.UPDATE != autoField.getType()) {
 				continue;
 			}
 
@@ -149,19 +134,9 @@ public class SqlAssembleUtils {
 				primaryValue = values[0];
 			}
 
-			// 白名单 黑名单
-			if (take != null && !CollectionKit.isEmpty(take.getIncludeFields())
-					&& !take.getIncludeFields().contains(autoField.getName())) {
-				continue;
-			} else if (take != null && !CollectionKit.isEmpty(take.getExcludeFields())
-					&& take.getExcludeFields().contains(autoField.getName())) {
-				continue;
-			}
-
 			if (!primaryName.equalsIgnoreCase(columnName)) {
 				sql.append(columnName).append(" ").append(autoField.getFieldOperator()).append(" ");
-				if (null == autoField.getValues() || autoField.getValues().length == 0
-						|| autoField.getValues()[0] == null) {
+				if (CollectionKit.isEmpty(autoField.getValues()) || autoField.getValues()[0] == null) {
 					sql.append("null");
 				} else {
 					sql.append(" ?");
@@ -191,14 +166,8 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 获取所有的操作属性，entity非null字段将被转换到列表
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param operateType
-	 *            the operate type
-	 * @return all auto field
 	 */
-	private static List<AutoField> getEntityAutoField(Object entity, int operateType) {
+	private static List<AutoField> getEntityAutoField(Object entity, SqlOpts operateType) {
 
 		// 汇总的所有操作属性
 		List<AutoField> autoFieldList = CollectionKit.newArrayList();
@@ -214,19 +183,29 @@ public class SqlAssembleUtils {
 			@Override
 			public void callBack(Field field) throws Exception {
 				Column column = field.getAnnotation(Column.class);
-				if (null == column || !column.ignore()) {
-					Object value = ReflectKit.getFieldValue(entity, field);
-					if (null != value) {
-						String fieldName = field.getName();
-						AutoField autoField = new AutoField();
-						autoField.setName(fieldName);
-						autoField.setSqlOperator("and");
-						autoField.setFieldOperator("=");
-						autoField.setValues(new Object[] { value });
-						autoField.setType(operateType);
-
-						autoFieldList.add(autoField);
+				if (null == column) {
+					String fieldName = field.getName();
+					buildAutoField(entity, operateType, autoFieldList, field, fieldName);
+				} else {
+					if (!column.ignore()) {
+						String name = column.name();
+						String fieldName = StringKit.isEmpty(name) ? name : field.getName();
+						buildAutoField(entity, operateType, autoFieldList, field, fieldName);
 					}
+				}
+			}
+
+			private void buildAutoField(Object entity, SqlOpts operateType, List<AutoField> autoFieldList, Field field,
+					String fieldName) throws Exception {
+				AutoField autoField = new AutoField();
+				Object value = ReflectKit.getFieldValue(entity, field);
+				if (null != value) {
+					autoField.setName(fieldName);
+					autoField.setSqlOperator("and");
+					autoField.setFieldOperator("=");
+					autoField.setValues(new Object[] { value });
+					autoField.setType(operateType);
+					autoFieldList.add(autoField);
 				}
 			}
 		};
@@ -242,12 +221,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建where条件sql
-	 *
-	 * @param autoFields
-	 *            the auto fields
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	private static BoundSql builderWhereSql(List<AutoField> autoFields, NameHandler nameHandler) {
 
@@ -256,7 +229,7 @@ public class SqlAssembleUtils {
 		Iterator<AutoField> iterator = autoFields.iterator();
 		while (iterator.hasNext()) {
 			AutoField autoField = iterator.next();
-			if (AutoField.WHERE_FIELD != autoField.getType()) {
+			if (SqlOpts.WHERE != autoField.getType()) {
 				continue;
 			}
 			// 操作过，移除
@@ -268,8 +241,8 @@ public class SqlAssembleUtils {
 			Object[] values = autoField.getValues();
 
 			String fieldOperator = autoField.getFieldOperator();
-			if (QueryOpts.IN.equalsIgnoreCase(StringKit.trim(fieldOperator))
-					|| QueryOpts.NOT_IN.equalsIgnoreCase(StringKit.trim(fieldOperator))) {
+			if (SqlOpts.IN.getValue().equalsIgnoreCase(StringKit.trim(fieldOperator))
+					|| SqlOpts.NOT_IN.getValue().equalsIgnoreCase(StringKit.trim(fieldOperator))) {
 
 				// in，not in的情况
 				sql.append(columnName).append(" ").append(fieldOperator).append(" ");
@@ -307,11 +280,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建根据主键删除sql
-	 *
-	 * @param clazz
-	 * @param id
-	 * @param nameHandler
-	 * @return
 	 */
 	public static BoundSql buildDeleteSql(Class<?> clazz, Serializable id, NameHandler nameHandler) {
 
@@ -325,21 +293,13 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建删除sql
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildDeleteSql(Object entity, Take take, NameHandler nameHandler) {
 
 		Class<?> entityClass = getEntityClass(entity, take);
 		List<AutoField> autoFields = (take != null ? take.getAutoFields() : CollectionKit.newArrayList());
 
-		List<AutoField> entityAutoField = getEntityAutoField(entity, AutoField.WHERE_FIELD);
+		List<AutoField> entityAutoField = getEntityAutoField(entity, SqlOpts.WHERE);
 
 		autoFields.addAll(entityAutoField);
 
@@ -356,24 +316,13 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建根据id查询sql
-	 *
-	 * @param clazz
-	 *            the clazz
-	 * @param pk
-	 *            the id
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildByIdSql(Class<?> clazz, Serializable pk, Take take, NameHandler nameHandler) {
 
 		Class<?> entityClass = (clazz == null ? take.getEntityClass() : clazz);
 		String tableName = nameHandler.getTableName(entityClass);
 		String primaryName = nameHandler.getPKName(entityClass);
-		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler,
-				take == null ? null : take.getIncludeFields(), take == null ? null : take.getExcludeFields());
+		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler);
 		String sql = "select " + columns + " from " + tableName + " where " + primaryName + " = ?";
 		List<Object> params = CollectionKit.newArrayList();
 		params.add(pk);
@@ -383,14 +332,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 按设置的条件构建查询sql
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildQuerySql(Object entity, Take take, NameHandler nameHandler) {
 
@@ -401,11 +342,10 @@ public class SqlAssembleUtils {
 		String tableName = nameHandler.getTableName(entityClass);
 		String primaryName = nameHandler.getPKName(entityClass);
 
-		List<AutoField> entityAutoField = getEntityAutoField(entity, AutoField.WHERE_FIELD);
+		List<AutoField> entityAutoField = getEntityAutoField(entity, SqlOpts.WHERE);
 		autoFields.addAll(entityAutoField);
 
-		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler,
-				take == null ? null : take.getIncludeFields(), take == null ? null : take.getExcludeFields());
+		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler);
 		StringBuilder querySql = new StringBuilder("select " + columns + " from ");
 		querySql.append(tableName);
 
@@ -423,14 +363,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建列表查询sql
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildListSql(Object entity, Take take, NameHandler nameHandler) {
 
@@ -457,21 +389,13 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建记录数查询sql
-	 *
-	 * @param entity
-	 *            the entity
-	 * @param take
-	 *            the take
-	 * @param nameHandler
-	 *            the name handler
-	 * @return bound sql
 	 */
 	public static BoundSql buildCountSql(Object entity, Take take, NameHandler nameHandler) {
 
 		Class<?> entityClass = getEntityClass(entity, take);
 		List<AutoField> autoFields = (take != null ? take.getAutoFields() : CollectionKit.newArrayList());
 
-		List<AutoField> entityAutoField = getEntityAutoField(entity, AutoField.WHERE_FIELD);
+		List<AutoField> entityAutoField = getEntityAutoField(entity, SqlOpts.WHERE);
 		autoFields.addAll(entityAutoField);
 
 		String tableName = nameHandler.getTableName(entityClass);
@@ -491,40 +415,37 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建查询的列sql
-	 *
-	 * @param clazz
-	 *            the clazz
-	 * @param nameHandler
-	 *            the name handler
-	 * @param includeField
-	 *            the include field
-	 * @param excludeField
-	 *            the exclude field
-	 * @return string string
 	 */
-	public static String buildColumnSql(Class<?> clazz, NameHandler nameHandler, List<String> includeField,
-			List<String> excludeField) {
+	public static String buildColumnSql(Class<?> clazz, NameHandler nameHandler) {
 
 		StringBuilder columns = new StringBuilder();
 
-		// 获取属性信息
-		BeanInfo beanInfo = ClassUtils.getSelfBeanInfo(clazz);
-		PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+		FieldCallback callBack = new FieldCallback() {
 
-		for (PropertyDescriptor pd : pds) {
-
-			String fieldName = pd.getName();
-
-			// 白名单 黑名单
-			if (!CollectionKit.isEmpty(includeField) && !includeField.contains(fieldName)) {
-				continue;
-			} else if (!CollectionKit.isEmpty(excludeField) && excludeField.contains(fieldName)) {
-				continue;
+			@Override
+			public void callBack(Field field) throws Exception {
+				Column column = field.getAnnotation(Column.class);
+				if (null == column) {
+					String fieldName = field.getName();
+					String columnName = nameHandler.getColumnName(fieldName);
+					columns.append(columnName);
+					columns.append(",");
+				} else {
+					if (!column.ignore()) {
+						String name = column.name();
+						String columnName = StringKit.isEmpty(name) ? name : nameHandler.getColumnName(field.getName());
+						columns.append(columnName);
+						columns.append(",");
+					}
+				}
 			}
 
-			String columnName = nameHandler.getColumnName(fieldName);
-			columns.append(columnName);
-			columns.append(",");
+		};
+		try {
+			callBack.callBackField(clazz);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("获取属性失败：" + e);
 		}
 		columns.deleteCharAt(columns.length() - 1);
 		return columns.toString();
@@ -532,10 +453,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建排序条件
-	 *
-	 * @param sort
-	 * @param nameHandler
-	 * @param properties
 	 */
 	public static String buildOrderBy(String sort, NameHandler nameHandler, String... properties) {
 
@@ -553,12 +470,6 @@ public class SqlAssembleUtils {
 
 	/**
 	 * 构建查询oracle xmltype类型的sql
-	 *
-	 * @param clazz
-	 * @param fieldName
-	 * @param id
-	 * @param nameHandler
-	 * @return
 	 */
 	public static BoundSql buildOracleXmlTypeSql(Class<?> clazz, String fieldName, Long id, NameHandler nameHandler) {
 		String tableName = nameHandler.getTableName(clazz);

@@ -1,11 +1,10 @@
 package com.blade.jdbc.core;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.blade.jdbc.exceptions.AssistantException;
 import com.blade.jdbc.model.PageRow;
-import com.blade.jdbc.model.QueryOpts;
+import com.blade.jdbc.model.SqlOpts;
 import com.blade.kit.CollectionKit;
 
 /**
@@ -22,22 +21,11 @@ public class Take {
 	/** 排序字段 */
 	private List<AutoField> orderByFields;
 
-	/** 白名单 */
-	private List<String> includeFields;
-
-	/** 黑名单 */
-	private List<String> excludeFields;
-
 	/** where标识 */
 	private boolean isWhere = false;
 
 	private PageRow pageRow;
 
-	/**
-	 * constructor
-	 *
-	 * @param clazz
-	 */
 	public Take(Class<?> clazz) {
 		this.entityClass = clazz;
 		this.autoFields = CollectionKit.newArrayList();
@@ -46,44 +34,13 @@ public class Take {
 
 	/**
 	 * 初始化
-	 * 
-	 * @param clazz
-	 * @return
 	 */
 	public static Take create(Class<?> clazz) {
 		return new Take(clazz);
 	}
 
-	/**
-	 * 添加白名单
-	 *
-	 * @param field
-	 * @return
-	 */
-	public Take include(String... field) {
-		if (this.includeFields == null) {
-			this.includeFields = CollectionKit.newArrayList();
-		}
-		this.includeFields.addAll(Arrays.asList(field));
-		return this;
-	}
-
-	/**
-	 * 添加黑名单
-	 *
-	 * @param field
-	 * @return
-	 */
-	public Take exclude(String... field) {
-		if (this.excludeFields == null) {
-			this.excludeFields = CollectionKit.newArrayList();
-		}
-		this.excludeFields.addAll(Arrays.asList(field));
-		return this;
-	}
-
 	public Take orderby(String field) {
-		AutoField autoField = this.buildAutoFields(field, null, "", AutoField.ORDER_BY_FIELD, new Object[0]);
+		AutoField autoField = this.buildAutoFields(field, null, null, SqlOpts.ORDER_BY, new Object[0]);
 		this.orderByFields.add(autoField);
 
 		return this;
@@ -91,14 +48,10 @@ public class Take {
 
 	/**
 	 * asc 排序属性
-	 *
-	 * @param field
-	 *            the field
-	 * @return
 	 */
 	public Take asc(String... field) {
 		for (String f : field) {
-			AutoField autoField = this.buildAutoFields(f, null, QueryOpts.ASC, AutoField.ORDER_BY_FIELD, new Object[0]);
+			AutoField autoField = this.buildAutoFields(f, null, SqlOpts.ASC, SqlOpts.ORDER_BY, new Object[0]);
 			this.orderByFields.add(autoField);
 		}
 		return this;
@@ -106,15 +59,10 @@ public class Take {
 
 	/**
 	 * desc 排序属性
-	 *
-	 * @param field
-	 *            the field
-	 * @return
 	 */
 	public Take desc(String... field) {
 		for (String f : field) {
-			AutoField autoField = this.buildAutoFields(f, null, QueryOpts.DESC, AutoField.ORDER_BY_FIELD,
-					new Object[0]);
+			AutoField autoField = this.buildAutoFields(f, null, SqlOpts.DESC, SqlOpts.ORDER_BY, new Object[0]);
 			this.orderByFields.add(autoField);
 		}
 		return this;
@@ -122,101 +70,81 @@ public class Take {
 
 	/**
 	 * 设置操作属性
-	 *
-	 * @param fieldName
-	 *            the field name
-	 * @param value
-	 *            the value
-	 * @return
 	 */
 	public Take set(String fieldName, Object value) {
-		AutoField autoField = this.buildAutoFields(fieldName, null, QueryOpts.EQ, AutoField.UPDATE_FIELD, value);
+		AutoField autoField = this.buildAutoFields(fieldName, null, SqlOpts.EQ, SqlOpts.UPDATE, value);
 		this.autoFields.add(autoField);
 		return this;
 	}
 
 	/**
 	 * 设置主键值名称，如oracle序列名，非直接的值
-	 * 
-	 * @param pkName
-	 * @param valueName
-	 * @return
 	 */
 	public Take setPKValueName(String pkName, String valueName) {
-		AutoField autoField = this.buildAutoFields(pkName, null, QueryOpts.EQ, AutoField.PK_VALUE_NAME, valueName);
+		AutoField autoField = this.buildAutoFields(pkName, null, SqlOpts.EQ, SqlOpts.PK_VALUE_NAME, valueName);
 		this.autoFields.add(autoField);
 		return this;
 	}
 
 	/**
 	 * 设置and条件
-	 *
-	 * @param fieldName
-	 * @param values
-	 * @return
 	 */
 	public Take and(String fieldName, Object... values) {
-		this.and(fieldName, QueryOpts.EQ, values);
+		this.and(fieldName, SqlOpts.EQ, values);
 		return this;
 	}
 
 	/**
 	 * 设置and条件
-	 *
-	 * @param fieldName
-	 * @param fieldOperator
-	 * @param values
-	 * @return
 	 */
-	public Take and(String fieldName, String fieldOperator, Object... values) {
-		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.AND, fieldOperator, AutoField.WHERE_FIELD,
-				values);
+	public Take and(String fieldName, SqlOpts fieldOperator, Object... values) {
+		AutoField autoField = this.buildAutoFields(fieldName, SqlOpts.AND, fieldOperator, SqlOpts.WHERE, values);
 		this.autoFields.add(autoField);
 		return this;
 	}
 
 	public Take like(String fieldName, String value) {
-		return this.and(fieldName, QueryOpts.LIKE, String.format("%s%s%s", "%", value, "%"));
+		return this.and(fieldName, SqlOpts.LIKE, String.format("%s%s%s", "%", value, "%"));
 	}
 
 	public Take between(String fieldName, Object a, Object b) {
-		return this.and(fieldName, QueryOpts.BETWEEN, a, b);
+		return this.and(fieldName, SqlOpts.BETWEEN, a, b);
 	}
 
 	public Take notBetween(String fieldName, Object a, Object b) {
-		return this.and(fieldName, QueryOpts.NOT_BETWEEN, a, b);
+		return this.and(fieldName, SqlOpts.NOT_BETWEEN, a, b);
 	}
 
 	public Take gt(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.GT, value);
+		return this.and(fieldName, SqlOpts.GT, value);
 	}
 
 	public Take gtE(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.GE, value);
+		return this.and(fieldName, SqlOpts.GE, value);
 	}
 
 	public Take lt(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.LT, value);
+		return this.and(fieldName, SqlOpts.LT, value);
 	}
 
 	public Take ltE(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.LE, value);
+		return this.and(fieldName, SqlOpts.LE, value);
 	}
 
 	public Take eq(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.EQ, value);
+		return this.and(fieldName, SqlOpts.EQ, value);
 	}
 
 	public Take notEq(String fieldName, Object value) {
-		return this.and(fieldName, QueryOpts.NEQ, value);
+		return this.and(fieldName, SqlOpts.NEQ, value);
 	}
 
 	public <T> Take in(String fieldName, List<T> values) {
-		return this.and(fieldName, QueryOpts.IN, values.toArray());
+		return this.and(fieldName, SqlOpts.IN, values.toArray());
 	}
 
 	public Take in(String fieldName, Object... values) {
-		return this.and(fieldName, QueryOpts.IN, values);
+		return this.and(fieldName, SqlOpts.IN, values);
 	}
 
 	public <T> Take notIn(String fieldName, List<T> values) {
@@ -224,53 +152,34 @@ public class Take {
 	}
 
 	public Take notIn(String fieldName, Object... values) {
-		return this.and(fieldName, QueryOpts.NOT_IN, values);
+		return this.and(fieldName, SqlOpts.NOT_IN, values);
 	}
 
 	/**
 	 * 设置or条件
-	 *
-	 * @param fieldName
-	 * @param values
-	 * @return
 	 */
 	public Take or(String fieldName, Object... values) {
-		this.or(fieldName, QueryOpts.EQ, values);
+		this.or(fieldName, SqlOpts.EQ, values);
 		return this;
 	}
 
 	/**
 	 * 设置or条件
-	 *
-	 * @param fieldName
-	 * @param fieldOperator
-	 * @param values
-	 * @return
 	 */
-	public Take or(String fieldName, String fieldOperator, Object... values) {
-		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.OR, fieldOperator, AutoField.WHERE_FIELD,
-				values);
+	public Take or(String fieldName, SqlOpts fieldOperator, Object... values) {
+		AutoField autoField = this.buildAutoFields(fieldName, SqlOpts.OR, fieldOperator, SqlOpts.WHERE, values);
 		this.autoFields.add(autoField);
 		return this;
 	}
 
 	/**
 	 * 设置where条件属性
-	 *
-	 * @param fieldName
-	 *            the field name
-	 * @param fieldOperator
-	 *            the operator
-	 * @param values
-	 *            the values
-	 * @return
 	 */
-	public Take where(String fieldName, String fieldOperator, Object... values) {
+	public Take where(String fieldName, SqlOpts fieldOperator, Object... values) {
 		if (this.isWhere) {
 			throw new AssistantException("There can be only one 'where'!");
 		}
-		AutoField autoField = this.buildAutoFields(fieldName, QueryOpts.AND, fieldOperator, AutoField.WHERE_FIELD,
-				values);
+		AutoField autoField = this.buildAutoFields(fieldName, SqlOpts.AND, fieldOperator, SqlOpts.WHERE, values);
 		this.autoFields.add(autoField);
 		this.isWhere = true;
 		return this;
@@ -293,14 +202,6 @@ public class Take {
 		return autoFields;
 	}
 
-	public List<String> getIncludeFields() {
-		return includeFields;
-	}
-
-	public List<String> getExcludeFields() {
-		return excludeFields;
-	}
-
 	public List<AutoField> getOrderByFields() {
 		return orderByFields;
 	}
@@ -311,19 +212,17 @@ public class Take {
 
 	/**
 	 * 获取操作的字段
-	 *
-	 * @return
 	 */
-	private AutoField buildAutoFields(String fieldName, String sqlOperator, String fieldOperator, int type,
+	private AutoField buildAutoFields(String fieldName, SqlOpts sqlOperator, SqlOpts fieldOperator, SqlOpts type,
 			Object... values) {
 		AutoField autoField = new AutoField();
 		autoField.setName(fieldName);
-		autoField.setSqlOperator(sqlOperator);
-		autoField.setFieldOperator(fieldOperator);
+		autoField.setSqlOperator(sqlOperator.getValue());
+		autoField.setFieldOperator(fieldOperator.getValue());
 		autoField.setValues(values);
 		autoField.setType(type);
 
-		if (type == AutoField.WHERE_FIELD) {
+		if (type == SqlOpts.WHERE) {
 			this.isWhere = true;
 		}
 
