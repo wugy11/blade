@@ -35,397 +35,384 @@ import java.util.Set;
  */
 public interface Request {
 
-    /**
-     * @return Return HttpServletRequest
-     */
-    HttpServletRequest raw();
+	/**
+	 * @return Return HttpServletRequest
+	 */
+	HttpServletRequest raw();
 
-    /**
-     * @return Return client request host
-     */
-    String host();
+	/**
+	 * @return Return client request host
+	 */
+	String host();
 
-    /**
-     * @return Return request URL
-     */
-    String url();
+	/**
+	 * @return Return request URL
+	 */
+	String url();
 
-    /**
-     * @return Return request URI
-     */
-    String uri();
+	/**
+	 * @return Return request URI
+	 */
+	String uri();
 
-    /**
-     * @return Return UA
-     */
-    String userAgent();
+	/**
+	 * @return Return UA
+	 */
+	String userAgent();
 
-    /**
-     * @return Return PathInfo
-     */
-    String pathInfo();
+	/**
+	 * @return Return PathInfo
+	 */
+	String pathInfo();
 
-    /**
-     * @return Return protocol
-     */
-    String protocol();
+	/**
+	 * @return Return protocol
+	 */
+	String protocol();
 
-    /**
-     * @return Return servletPath
-     */
-    String servletPath();
+	/**
+	 * @return Return servletPath
+	 */
+	String servletPath();
 
-    /**
-     * @return Return contextPath
-     */
-    String contextPath();
+	/**
+	 * @return Return contextPath
+	 */
+	String contextPath();
 
-    /**
-     * @return Return ServletContext
-     */
-    ServletContext context();
+	/**
+	 * @return Return ServletContext
+	 */
+	ServletContext context();
 
-    /**
-     * @return Return parameters on the path Map
-     */
-    Map<String, String> pathParams();
+	/**
+	 * @return Return parameters on the path Map
+	 */
+	Map<String, String> pathParams();
 
-    /**
-     * Get a URL parameter
-     *
-     * @param name Parameter name
-     * @return Return parameter value
-     */
-    String pathString(String name);
+	/**
+	 * Get a URL parameter
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return parameter value
+	 */
+	String pathString(String name);
 
-    /**
-     * Get a URL parameter, and returns defaultValue if it is NULL
-     *
-     * @param name         Parameter name
-     * @param defaultValue Default Value
-     * @return Return parameter value
-     */
-    String pathString(String name, String defaultValue);
+	/**
+	 * Get a URL parameter, and returns defaultValue if it is NULL
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param defaultValue
+	 *            Default Value
+	 * @return Return parameter value
+	 */
+	String pathString(String name, String defaultValue);
 
-    /**
-     * @param name Parameter name
-     * @return Return Int parameter value
-     * @see #pathInt(String name)
-     */
-//    @Deprecated
-//    int pathParamAsInt(String name);
+	/**
+	 * Return a URL parameter for a Int type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return Int parameter value
+	 */
+	int pathInt(String name);
 
-    /**
-     * Return a URL parameter for a Int type
-     *
-     * @param name Parameter name
-     * @return Return Int parameter value
-     */
-    int pathInt(String name);
+	/**
+	 * Return a URL parameter for a Long type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return Long parameter value
+	 */
+	long pathLong(String name);
 
-    /**
-     * @param name Parameter name
-     * @return Return Long parameter value
-     * @see #pathLong(String name)
-     */
-//    @Deprecated
-//    long pathParamAsLong(String name);
+	/**
+	 * @return Return query string
+	 */
+	String queryString();
 
-    /**
-     * Return a URL parameter for a Long type
-     *
-     * @param name Parameter name
-     * @return Return Long parameter value
-     */
-    long pathLong(String name);
+	/**
+	 * @return Return request query Map
+	 */
+	Map<String, String> querys();
 
-    /**
-     * @return Return query string
-     */
-    String queryString();
+	/**
+	 * Get a request parameter
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return request parameter value
+	 */
+	String query(String name);
 
-    /**
-     * @return Return request query Map
-     */
-    Map<String, String> querys();
+	/**
+	 * Get a request parameter, if NULL is returned to defaultValue
+	 *
+	 * @param name
+	 *            parameter name
+	 * @param defaultValue
+	 *            default String value
+	 * @return Return request parameter values
+	 */
+	String query(String name, String defaultValue);
 
-    /**
-     * Get a request parameter
-     *
-     * @param name Parameter name
-     * @return Return request parameter value
-     */
-    String query(String name);
+	/**
+	 * Returns a request parameter for a Int type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return Int parameter values
+	 */
+	int queryInt(String name);
 
-    /**
-     * Get a request parameter, if NULL is returned to defaultValue
-     *
-     * @param name         parameter name
-     * @param defaultValue default String value
-     * @return Return request parameter values
-     */
-    String query(String name, String defaultValue);
+	/**
+	 * Returns a request parameter for a Int type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param defaultValue
+	 *            default int value
+	 * @return Return Int parameter values
+	 */
+	int queryInt(String name, int defaultValue);
 
-    /**
-     * @param name Parameter name
-     * @return Return Int parameter values
-     * @see #queryInt(String name)
-     */
-//    @Deprecated
-//    int queryAsInt(String name);
+	/**
+	 * Returns a request parameter for a Long type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return Long parameter values
+	 */
+	long queryLong(String name);
 
-    /**
-     * Returns a request parameter for a Int type
-     *
-     * @param name Parameter name
-     * @return Return Int parameter values
-     */
-    int queryInt(String name);
+	/**
+	 * Returns a request parameter for a Long type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param defaultValue
+	 *            default long value
+	 * @return Return Long parameter values
+	 */
+	long queryLong(String name, long defaultValue);
 
-    /**
-     * Returns a request parameter for a Int type
-     *
-     * @param name         Parameter name
-     * @param defaultValue default int value
-     * @return Return Int parameter values
-     */
-    int queryInt(String name, int defaultValue);
+	/**
+	 * Returns a request parameter for a Double type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return Double parameter values
+	 */
+	double queryDouble(String name);
 
-    /**
-     * @param name Parameter name
-     * @return Return Long parameter values
-     * @see #queryLong(String name)
-     */
-//    @Deprecated
-//    long queryAsLong(String name);
+	/**
+	 * Returns a request parameter for a Double type
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param defaultValue
+	 *            default double value
+	 * @return Return Double parameter values
+	 */
+	double queryDouble(String name, double defaultValue);
 
-    /**
-     * Returns a request parameter for a Long type
-     *
-     * @param name Parameter name
-     * @return Return Long parameter values
-     */
-    long queryLong(String name);
+	/**
+	 * @return Return request method
+	 */
+	String method();
 
-    /**
-     * Returns a request parameter for a Long type
-     *
-     * @param name         Parameter name
-     * @param defaultValue default long value
-     * @return Return Long parameter values
-     */
-    long queryLong(String name, long defaultValue);
+	/**
+	 * @return Return HttpMethod
+	 */
+	HttpMethod httpMethod();
 
-    /**
-     * @param name Parameter name
-     * @return Return Double parameter values
-     * @see #queryDouble(String name)
-     */
-//    @Deprecated
-//    double queryAsDouble(String name);
+	/**
+	 * @return Return server remote address
+	 */
+	String address();
 
-    /**
-     * Returns a request parameter for a Double type
-     *
-     * @param name Parameter name
-     * @return Return Double parameter values
-     */
-    double queryDouble(String name);
+	/**
+	 * @return Return current session
+	 */
+	Session session();
 
-    /**
-     * Returns a request parameter for a Double type
-     *
-     * @param name         Parameter name
-     * @param defaultValue default double value
-     * @return Return Double parameter values
-     */
-    double queryDouble(String name, double defaultValue);
+	/**
+	 * Return to the current or create a session
+	 *
+	 * @param create
+	 *            create session
+	 * @return Return session
+	 */
+	Session session(boolean create);
 
-    /**
-     * @return Return request method
-     */
-    String method();
+	/**
+	 * @return Return contentType
+	 */
+	String contentType();
 
-    /**
-     * @return Return HttpMethod
-     */
-    HttpMethod httpMethod();
+	/**
+	 * @return Return Server Port
+	 */
+	int port();
 
-    /**
-     * @return Return server remote address
-     */
-    String address();
+	/**
+	 * @return Return whether to use the SSL connection
+	 */
+	boolean isSecure();
 
-    /**
-     * @return Return current session
-     */
-    Session session();
+	/**
+	 * @return Return current request is a AJAX request
+	 */
+	boolean isAjax();
 
-    /**
-     * Return to the current or create a session
-     *
-     * @param create create session
-     * @return Return session
-     */
-    Session session(boolean create);
+	/**
+	 * @return Return Cookie Map
+	 */
+	Map<String, Cookie> cookies();
 
-    /**
-     * @return Return contentType
-     */
-    String contentType();
+	/**
+	 * Get String Cookie Value
+	 *
+	 * @param name
+	 *            cookie name
+	 * @return Return Cookie Value
+	 */
+	String cookie(String name);
 
-    /**
-     * @return Return Server Port
-     */
-    int port();
+	/**
+	 * Get String Cookie Value
+	 *
+	 * @param name
+	 *            cookie name
+	 * @param defaultValue
+	 *            default cookie value
+	 * @return Return Cookie Value
+	 */
+	String cookie(String name, String defaultValue);
 
-    /**
-     * @return Return whether to use the SSL connection
-     */
-    boolean isSecure();
+	/**
+	 * Get Cookie
+	 *
+	 * @param name
+	 *            cookie name
+	 * @return Return Cookie
+	 */
+	Cookie cookieRaw(String name);
 
-    /**
-     * @return Return current request is a AJAX request
-     */
-    boolean isAjax();
+	/**
+	 * @return Return header information Map
+	 */
+	Map<String, String> headers();
 
-    /**
-     * @return Return Cookie Map
-     */
-    Map<String, Cookie> cookies();
+	/**
+	 * Get header information
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return header information
+	 */
+	String header(String name);
 
-    /**
-     * Get String Cookie Value
-     *
-     * @param name cookie name
-     * @return Return Cookie Value
-     */
-    String cookie(String name);
+	/**
+	 * Get header information
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param defaultValue
+	 *            default header value
+	 * @return Return header information
+	 */
+	String header(String name, String defaultValue);
 
-    /**
-     * Get String Cookie Value
-     *
-     * @param name         cookie name
-     * @param defaultValue default cookie value
-     * @return Return Cookie Value
-     */
-    String cookie(String name, String defaultValue);
+	/**
+	 * Setting request encoding
+	 *
+	 * @param encoding
+	 *            coded string
+	 */
+	void encoding(String encoding);
 
-    /**
-     * Get Cookie
-     *
-     * @param name cookie name
-     * @return Return Cookie
-     */
-    Cookie cookieRaw(String name);
+	/**
+	 * Setting Request Attribute
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @param value
+	 *            Parameter Value
+	 */
+	void attribute(String name, Object value);
 
-    /**
-     * @return Return header information Map
-     */
-    Map<String, String> headers();
+	/**
+	 * Get a Request Attribute
+	 *
+	 * @param name
+	 *            Parameter name
+	 * @return Return parameter value
+	 */
+	<T> T attribute(String name);
 
-    /**
-     * Get header information
-     *
-     * @param name Parameter name
-     * @return Return header information
-     */
-    String header(String name);
+	/**
+	 * @return Return all Attribute in Request
+	 */
+	Set<String> attributes();
 
-    /**
-     * Get header information
-     *
-     * @param name         Parameter name
-     * @param defaultValue default header value
-     * @return Return header information
-     */
-    String header(String name, String defaultValue);
+	Map<String, FileItem> fileItems();
 
-    /**
-     * Setting request encoding
-     *
-     * @param encoding coded string
-     */
-    void encoding(String encoding);
+	FileItem fileItem(String name);
 
-    /**
-     * Setting Request Attribute
-     *
-     * @param name  Parameter name
-     * @param value Parameter Value
-     */
-    void attribute(String name, Object value);
+	/**
+	 * @return Return request body
+	 */
+	BodyParser body();
 
-    /**
-     * Get a Request Attribute
-     *
-     * @param name Parameter name
-     * @return Return parameter value
-     */
-    <T> T attribute(String name);
+	/**
+	 * Serialized form data, converted to the javabean
+	 *
+	 * @param slug
+	 *            bean slug, e.g: <input name="person.uid" value="123"/>, the
+	 *            slug is person
+	 * @param clazz
+	 *            bean type
+	 * @return Return converted Bean Object
+	 */
+	<T> T model(String slug, Class<? extends Serializable> clazz);
 
-    /**
-     * @return Return all Attribute in Request
-     */
-    Set<String> attributes();
+	/**
+	 * Setting route, execute request for use
+	 *
+	 * @param route
+	 *            route object
+	 */
+	void setRoute(Route route);
 
-    /**
-     * @return Return the requested file list
-     */
-//    @Deprecated
-//    FileItem[] files();
+	/**
+	 * @return Return Route of the current request
+	 */
+	Route route();
 
-    Map<String, FileItem> fileItems();
+	/**
+	 * Abort current request
+	 */
+	void abort();
 
-    FileItem fileItem(String name);
+	/**
+	 * @return Return is abort request
+	 */
+	boolean isAbort();
 
-    /**
-     * @return Return request body
-     */
-    BodyParser body();
+	/**
+	 * Request body interface
+	 *
+	 * @author biezhi
+	 */
+	interface BodyParser {
+		String asString();
 
-    /**
-     * Serialized form data, converted to the javabean
-     *
-     * @param slug  bean slug, e.g: <input name="person.uid" value="123"/>, the slug is person
-     * @param clazz bean type
-     * @return Return converted Bean Object
-     */
-    <T> T model(String slug, Class<? extends Serializable> clazz);
+		InputStream asInputStream();
 
-    /**
-     * Setting route, execute request for use
-     *
-     * @param route route object
-     */
-    void setRoute(Route route);
-
-    /**
-     * @return Return Route of the current request
-     */
-    Route route();
-
-    /**
-     * Abort current request
-     */
-    void abort();
-
-    /**
-     * @return Return is abort request
-     */
-    boolean isAbort();
-
-    /**
-     * Request body interface
-     *
-     * @author biezhi
-     */
-    interface BodyParser {
-        String asString();
-
-        InputStream asInputStream();
-
-        byte[] asByte();
-    }
+		byte[] asByte();
+	}
 
 }
