@@ -106,10 +106,10 @@ public class RouteBuilder {
             if (null != mapping) {
                 // build multiple route
                 HttpMethod methodType = mapping.method();
-                String[] paths = mapping.values();
-                if (mapping.value().length > 1 || !mapping.value()[0].equals("/")) {
-                    paths = mapping.value();
-                }
+                String[] paths = mapping.value();
+//                if (mapping.value().length > 1 || !mapping.value()[0].equals("/")) {
+//                    paths = mapping.value();
+//                }
                 if (paths.length > 0) {
                     for (String path : paths) {
                         String pathV = getRoutePath(path, nameSpace, suffix);

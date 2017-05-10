@@ -49,8 +49,6 @@ public @interface Route {
     /**
      * @return Request url
      */
-    String[] values() default {"/"};
-
     String[] value() default {"/"};
 
     /**
