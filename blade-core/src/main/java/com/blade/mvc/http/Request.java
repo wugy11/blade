@@ -91,29 +91,12 @@ public interface Request {
     Map<String, String> pathParams();
 
     /**
-     * @param name Parameter name
-     * @return Return parameter value
-     * @see #pathString(String name)
-     */
-    @Deprecated
-    String pathParam(String name);
-
-    /**
      * Get a URL parameter
      *
      * @param name Parameter name
      * @return Return parameter value
      */
     String pathString(String name);
-
-    /**
-     * @param name         Parameter name
-     * @param defaultValue Default Value
-     * @return Return parameter value
-     * @see #pathString(String name, String defaultValue)
-     */
-    @Deprecated
-    String pathParam(String name, String defaultValue);
 
     /**
      * Get a URL parameter, and returns defaultValue if it is NULL
@@ -129,8 +112,8 @@ public interface Request {
      * @return Return Int parameter value
      * @see #pathInt(String name)
      */
-    @Deprecated
-    int pathParamAsInt(String name);
+//    @Deprecated
+//    int pathParamAsInt(String name);
 
     /**
      * Return a URL parameter for a Int type
@@ -145,8 +128,8 @@ public interface Request {
      * @return Return Long parameter value
      * @see #pathLong(String name)
      */
-    @Deprecated
-    long pathParamAsLong(String name);
+//    @Deprecated
+//    long pathParamAsLong(String name);
 
     /**
      * Return a URL parameter for a Long type
@@ -188,8 +171,8 @@ public interface Request {
      * @return Return Int parameter values
      * @see #queryInt(String name)
      */
-    @Deprecated
-    int queryAsInt(String name);
+//    @Deprecated
+//    int queryAsInt(String name);
 
     /**
      * Returns a request parameter for a Int type
@@ -213,8 +196,8 @@ public interface Request {
      * @return Return Long parameter values
      * @see #queryLong(String name)
      */
-    @Deprecated
-    long queryAsLong(String name);
+//    @Deprecated
+//    long queryAsLong(String name);
 
     /**
      * Returns a request parameter for a Long type
@@ -238,8 +221,8 @@ public interface Request {
      * @return Return Double parameter values
      * @see #queryDouble(String name)
      */
-    @Deprecated
-    double queryAsDouble(String name);
+//    @Deprecated
+//    double queryAsDouble(String name);
 
     /**
      * Returns a request parameter for a Double type
@@ -389,8 +372,8 @@ public interface Request {
     /**
      * @return Return the requested file list
      */
-    @Deprecated
-    FileItem[] files();
+//    @Deprecated
+//    FileItem[] files();
 
     Map<String, FileItem> fileItems();
 

@@ -46,7 +46,6 @@ import com.blade.mvc.view.ModelAndView;
 
 public final class MethodArgument {
 
-	@SuppressWarnings("deprecation")
 	public static Object[] getArgs(Request request, Response response, Method actionMethod) throws Exception {
 
 		Class<?>[] parameters = actionMethod.getParameterTypes();
@@ -123,12 +122,12 @@ public final class MethodArgument {
 				if (annotationType == PathParam.class) {
 					PathParam pathParam = (PathParam) annotation;
 					String paramName = pathParam.value();
-					String val = request.pathParam(paramName);
+					String val = request.pathString(paramName);
 
 					if (StringKit.isBlank(paramName)) {
 						assert paramaterNames != null;
 						paramName = paramaterNames[i];
-						val = request.pathParam(paramName);
+						val = request.pathString(paramName);
 					}
 					if (StringKit.isBlank(val)) {
 						val = pathParam.defaultValue();
