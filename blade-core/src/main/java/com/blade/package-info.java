@@ -1,4 +1,0 @@
-/**
- * Blade
- */
-package com.blade;
