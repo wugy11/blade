@@ -6,58 +6,59 @@ import com.blade.jdbc.model.SqlOpts;
  * 组装sql时的列信息
  */
 public class AutoField {
-	
-    /** 名称 */
-    private String          name;
 
-    /** 操作符 and or */
-    private String          sqlOperator;
+	/** 名称 */
+	private String name;
 
-    /** 本身操作符 值大于、小于、in等 */
-    private String          fieldOperator;
+	/** 操作符 and or */
+	private String sqlOperator = "";
 
-    /** 值 */
-    private Object[]        values;
+	/** 本身操作符 值大于、小于、in等 */
+	private String fieldOperator = "";
 
-    private SqlOpts             type;
+	/** 值 */
+	private Object[] values;
 
-    public String getName() {
-        return name;
-    }
+	private SqlOpts type;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Object[] getValues() {
-        return values;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setValues(Object[] values) {
-        this.values = values;
-    }
+	public Object[] getValues() {
+		return values;
+	}
 
-    public SqlOpts getType() {
-        return type;
-    }
+	public void setValues(Object[] values) {
+		this.values = values;
+	}
 
-    public void setType(SqlOpts type) {
-        this.type = type;
-    }
+	public SqlOpts getType() {
+		return type;
+	}
 
-    public String getSqlOperator() {
-        return sqlOperator;
-    }
+	public void setType(SqlOpts type) {
+		this.type = type;
+	}
 
-    public void setSqlOperator(String sqlOperator) {
-        this.sqlOperator = sqlOperator;
-    }
+	public String getSqlOperator() {
+		return sqlOperator;
+	}
 
-    public String getFieldOperator() {
-        return fieldOperator;
-    }
+	public void setSqlOperator(String sqlOperator) {
+		this.sqlOperator = sqlOperator;
+	}
 
-    public void setFieldOperator(String fieldOperator) {
-        this.fieldOperator = fieldOperator;
-    }
+	public String getFieldOperator() {
+		return fieldOperator;
+	}
+
+	public void setFieldOperator(String fieldOperator) {
+		this.fieldOperator = fieldOperator;
+	}
+
 }

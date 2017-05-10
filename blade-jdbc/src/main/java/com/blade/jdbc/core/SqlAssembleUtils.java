@@ -201,8 +201,8 @@ public class SqlAssembleUtils {
 				Object value = ReflectKit.getFieldValue(entity, field);
 				if (null != value) {
 					autoField.setName(fieldName);
-					autoField.setSqlOperator("and");
-					autoField.setFieldOperator("=");
+					autoField.setSqlOperator(SqlOpts.AND.getValue());
+					autoField.setFieldOperator(SqlOpts.EQ.getValue());
 					autoField.setValues(new Object[] { value });
 					autoField.setType(operateType);
 					autoFieldList.add(autoField);
@@ -241,8 +241,8 @@ public class SqlAssembleUtils {
 			Object[] values = autoField.getValues();
 
 			String fieldOperator = autoField.getFieldOperator();
-			if (SqlOpts.IN.getValue().equalsIgnoreCase(StringKit.trim(fieldOperator))
-					|| SqlOpts.NOT_IN.getValue().equalsIgnoreCase(StringKit.trim(fieldOperator))) {
+			if (SqlOpts.IN.getValue().equalsIgnoreCase(fieldOperator)
+					|| SqlOpts.NOT_IN.getValue().equalsIgnoreCase(fieldOperator)) {
 
 				// in，not in的情况
 				sql.append(columnName).append(" ").append(fieldOperator).append(" ");
@@ -287,8 +287,9 @@ public class SqlAssembleUtils {
 		params.add(id);
 		String tableName = nameHandler.getTableName(clazz);
 		String primaryName = nameHandler.getPKName(clazz);
-		String sql = "delete from " + tableName + " where " + primaryName + " = ?";
-		return new BoundSql(sql, primaryName, params);
+		StringBuilder sql = new StringBuilder("delete from ").append(tableName).append(" where ").append(primaryName)
+				.append(" = ?");
+		return new BoundSql(sql.toString(), primaryName, params);
 	}
 
 	/**
@@ -306,7 +307,7 @@ public class SqlAssembleUtils {
 		String tableName = nameHandler.getTableName(entityClass);
 		String primaryName = nameHandler.getPKName(entityClass);
 
-		StringBuilder sql = new StringBuilder("delete from " + tableName + " where ");
+		StringBuilder sql = new StringBuilder("delete from ").append(tableName).append(" where ");
 		BoundSql boundSql = SqlAssembleUtils.builderWhereSql(autoFields, nameHandler);
 		boundSql.setSql(sql.append(boundSql.getSql()).toString());
 		boundSql.setPrimaryKey(primaryName);
@@ -323,11 +324,12 @@ public class SqlAssembleUtils {
 		String tableName = nameHandler.getTableName(entityClass);
 		String primaryName = nameHandler.getPKName(entityClass);
 		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler);
-		String sql = "select " + columns + " from " + tableName + " where " + primaryName + " = ?";
+		StringBuilder sql = new StringBuilder("select ").append(columns).append(" from ").append(tableName)
+				.append(" where ").append(primaryName).append(" = ?");
 		List<Object> params = CollectionKit.newArrayList();
 		params.add(pk);
 
-		return new BoundSql(sql, primaryName, params);
+		return new BoundSql(sql.toString(), primaryName, params);
 	}
 
 	/**
@@ -346,7 +348,7 @@ public class SqlAssembleUtils {
 		autoFields.addAll(entityAutoField);
 
 		String columns = SqlAssembleUtils.buildColumnSql(entityClass, nameHandler);
-		StringBuilder querySql = new StringBuilder("select " + columns + " from ");
+		StringBuilder querySql = new StringBuilder("select ").append(columns).append(" from ");
 		querySql.append(tableName);
 
 		List<Object> params = Collections.emptyList();

@@ -217,8 +217,10 @@ public class Take {
 			Object... values) {
 		AutoField autoField = new AutoField();
 		autoField.setName(fieldName);
-		autoField.setSqlOperator(sqlOperator.getValue());
-		autoField.setFieldOperator(fieldOperator.getValue());
+		if (null != sqlOperator)
+			autoField.setSqlOperator(sqlOperator.getValue());
+		if (null != fieldOperator)
+			autoField.setFieldOperator(fieldOperator.getValue());
 		autoField.setValues(values);
 		autoField.setType(type);
 
