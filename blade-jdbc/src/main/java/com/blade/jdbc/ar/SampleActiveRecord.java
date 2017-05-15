@@ -302,7 +302,7 @@ public class SampleActiveRecord implements ActiveRecord {
 		args = dealArgs(args);
 		try (Connection con = sql2o.open()) {
 			List<Map<String, Object>> list = con.createQuery(sql).withParams(args).executeAndFetchTable().asList();
-			return null != list ? list.get(0) : CollectionKit.newHashMap();
+			return CollectionKit.isNotEmpty(list) ? list.get(0) : CollectionKit.newHashMap();
 		}
 	}
 
