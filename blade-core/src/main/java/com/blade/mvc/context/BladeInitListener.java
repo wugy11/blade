@@ -15,15 +15,7 @@
  */
 package com.blade.mvc.context;
 
-import com.blade.Blade;
-import com.blade.banner.BannerStarter;
-import com.blade.context.WebContextHolder;
-import com.blade.embedd.EmbedServer;
-import com.blade.ioc.IocApplication;
-import com.blade.kit.DispatchKit;
-import com.blade.kit.SystemKit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.blade.Blade.$;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -31,7 +23,15 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import static com.blade.Blade.$;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.blade.Blade;
+import com.blade.context.WebContextHolder;
+import com.blade.embedd.EmbedServer;
+import com.blade.ioc.IocApplication;
+import com.blade.kit.DispatchKit;
+import com.blade.kit.SystemKit;
 
 /**
  * Blade Web Context Listener
@@ -80,7 +80,6 @@ public class BladeInitListener implements ServletContextListener, HttpSessionLis
 
 				LOGGER.info("blade.isDev\t=> {}", blade.isDev());
 
-				BannerStarter.printStart();
 				String appName = blade.config().get("app.name", "Blade");
 				appName = new String(appName.getBytes("iso8859-1"), "utf-8");
 				LOGGER.info("{} initialize successfully, Time elapsed: {} ms.", appName,
