@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.bladejava</groupId>
+		<artifactId>blade</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>blade-template-jetbrick</artifactId>
+	<packaging>jar</packaging>
+	<version>0.0.9</version>
+	<name>blade-template-jetbrick</name>
+
+	<properties>
+		<jetbrick-template.version>2.1.4</jetbrick-template.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.subchen</groupId>
+			<artifactId>jetbrick-template</artifactId>
+			<version>${jetbrick-template.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bladejava</groupId>
+			<artifactId>blade-core</artifactId>
+			<version>${blade-core.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

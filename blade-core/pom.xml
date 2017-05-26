@@ -45,16 +45,4 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>**/*.flf</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
-
 </project>
