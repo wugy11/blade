@@ -1,4 +1,4 @@
-package com.blade.mvc.http;
+package com.blade.exception;
 
 import java.io.IOException;
 

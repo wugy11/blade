@@ -1,16 +1,25 @@
 package com.blade.embedd;
 
-import com.blade.Blade;
-import com.blade.Const;
-import com.blade.exception.EmbedServerException;
-import com.blade.kit.CollectionKit;
-import com.blade.kit.StringKit;
-import com.blade.kit.base.Config;
-import com.blade.mvc.context.BladeInitListener;
-import com.blade.mvc.context.DynamicContext;
-import com.blade.mvc.dispatch.AsyncDispatcherServlet;
-import com.blade.mvc.dispatch.DispatcherServlet;
-import org.eclipse.jetty.server.*;
+import static com.blade.Blade.$;
+
+import java.io.File;
+import java.net.URL;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
+
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -21,25 +30,17 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
-import java.io.File;
-import java.net.URL;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.blade.Blade;
+import com.blade.Const;
+import com.blade.exception.BladeException;
+import com.blade.kit.CollectionKit;
+import com.blade.kit.StringKit;
+import com.blade.kit.base.Config;
+import com.blade.mvc.context.BladeInitListener;
+import com.blade.mvc.context.DynamicContext;
+import com.blade.mvc.dispatch.AsyncDispatcherServlet;
+import com.blade.mvc.dispatch.DispatcherServlet;
 
-import static com.blade.Blade.$;
-
-/**
- * Blade Jetty Server
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 0.0.8
- */
 public class EmbedJettyServer implements EmbedServer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmbedJettyServer.class);
@@ -65,12 +66,12 @@ public class EmbedJettyServer implements EmbedServer {
 	}
 
 	@Override
-	public void startup(int port) throws EmbedServerException {
+	public void startup(int port) throws BladeException {
 		this.startup(port, "/", null);
 	}
 
 	@Override
-	public void startup(int port, String contextPath) throws EmbedServerException {
+	public void startup(int port, String contextPath) throws BladeException {
 		this.startup(port, contextPath, null);
 	}
 
@@ -80,7 +81,7 @@ public class EmbedJettyServer implements EmbedServer {
 	}
 
 	@Override
-	public void startup(int port, String contextPath, String webRoot) throws EmbedServerException {
+	public void startup(int port, String contextPath, String webRoot) throws BladeException {
 		this.port = port;
 
 		Config config = Blade.$().config();
@@ -167,7 +168,7 @@ public class EmbedJettyServer implements EmbedServer {
 			LOGGER.info("Blade Server Listen on {}:{}", host, this.port);
 			server.join();
 		} catch (Exception e) {
-			throw new EmbedServerException(e);
+			throw new BladeException(e);
 		}
 	}
 
@@ -243,20 +244,20 @@ public class EmbedJettyServer implements EmbedServer {
 		}
 	}
 
-	public void shutdown() throws EmbedServerException {
+	public void shutdown() throws BladeException {
 		try {
 			server.stop();
 		} catch (Exception e) {
-			throw new EmbedServerException(e);
+			throw new BladeException(e);
 		}
 	}
 
 	@Override
-	public void join() throws EmbedServerException {
+	public void join() throws BladeException {
 		try {
 			server.join();
 		} catch (InterruptedException e) {
-			throw new EmbedServerException(e);
+			throw new BladeException(e);
 		}
 	}
 

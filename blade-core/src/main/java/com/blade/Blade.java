@@ -1,18 +1,3 @@
-/**
- * Copyright (c) 2015, biezhi 王爵 (biezhi.me@gmail.com)
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.blade;
 
 import java.io.InputStream;
@@ -27,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import com.blade.config.BConfig;
 import com.blade.embedd.EmbedServer;
 import com.blade.exception.BladeException;
-import com.blade.exception.EmbedServerException;
-import com.blade.exception.RouteException;
 import com.blade.ioc.Ioc;
 import com.blade.ioc.SimpleIoc;
 import com.blade.kit.Assert;
@@ -47,12 +30,6 @@ import com.blade.mvc.route.Routers;
 import com.blade.mvc.route.loader.ClassPathRouteLoader;
 import com.blade.plugin.Plugin;
 
-/**
- * Blade Core Class
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.7.1-release
- */
 public final class Blade {
 
 	/**
@@ -522,7 +499,7 @@ public final class Blade {
 			this.enableServer = true;
 			return embedServer;
 		}
-		throw new EmbedServerException("Not found EmbedServer");
+		throw new BladeException("Not found EmbedServer");
 	}
 
 	/**
@@ -610,7 +587,7 @@ public final class Blade {
 			routesLoader.setBasePackage(basePackage);
 			List<Route> routes = routesLoader.load();
 			routers.addRoutes(routes);
-		} catch (RouteException | ParseException e) {
+		} catch (BladeException | ParseException e) {
 			throw new BladeException(e);
 		}
 		return this;

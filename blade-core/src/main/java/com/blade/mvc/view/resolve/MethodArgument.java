@@ -1,18 +1,3 @@
-/**
- * Copyright (c) 2016, biezhi 王爵 (biezhi.me@gmail.com)
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.blade.mvc.view.resolve;
 
 import java.beans.BeanInfo;
@@ -24,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
-import com.blade.exception.RouteException;
+import com.blade.exception.BladeException;
 import com.blade.kit.AsmKit;
 import com.blade.kit.Assert;
 import com.blade.kit.DateKit;
@@ -111,7 +96,7 @@ public final class MethodArgument {
 					}
 
 					if (required && StringKit.isBlank(val)) {
-						throw new RouteException("query param [" + paramName + "] not is empty.");
+						throw new BladeException("query param [" + paramName + "] not is empty.");
 					}
 
 					args[i] = getRequestParam(argType, val);
@@ -152,7 +137,7 @@ public final class MethodArgument {
 					}
 
 					if (required && StringKit.isBlank(val)) {
-						throw new RouteException("header param [" + paramName + "] not is empty.");
+						throw new BladeException("header param [" + paramName + "] not is empty.");
 					}
 
 					args[i] = getRequestParam(argType, val);
@@ -176,7 +161,7 @@ public final class MethodArgument {
 					}
 
 					if (required && StringKit.isBlank(val)) {
-						throw new RouteException("cookie param [" + paramName + "] not is empty.");
+						throw new BladeException("cookie param [" + paramName + "] not is empty.");
 					}
 					args[i] = getRequestParam(argType, val);
 					continue;
