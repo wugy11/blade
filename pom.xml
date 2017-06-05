@@ -48,6 +48,7 @@
 		<module>blade-aop</module>
 		<module>blade-jdbc</module>
 		<module>blade-template-jetbrick</module>
+		<module>blade-mvc</module>
 	</modules>
 
 	<dependencyManagement>
