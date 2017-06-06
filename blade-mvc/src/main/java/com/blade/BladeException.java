@@ -3,23 +3,24 @@ package com.blade;
 /**
  * Blade Runtime Exception
  *
- * @author biezhi
- *         2017/5/31
+ * @author biezhi 2017/5/31
  */
 public class BladeException extends RuntimeException {
 
-    public BladeException() {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public BladeException(String message) {
-        super(message);
-    }
+	public BladeException() {
+	}
 
-    public BladeException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public BladeException(String message) {
+		super(message);
+	}
 
-    public BladeException(Throwable cause) {
-        super(cause);
-    }
+	public BladeException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public BladeException(Throwable cause) {
+		super(cause);
+	}
 }

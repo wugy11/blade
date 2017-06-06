@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public interface DefaultUI {
 
-    String HTML_FOOTER = "<hr/><br/><p><center><a href='https://github.com/biezhi/blade' target='_blank'>Blade-" + Const.VERSION + "</a></center></p>";
+	String HTML_FOOTER = "<hr/><br/><p><center><a href='https://github.com/biezhi/blade' target='_blank'>Blade-" + Const.VERSION + "</a></center></p>";
 
     /**
      * server 500

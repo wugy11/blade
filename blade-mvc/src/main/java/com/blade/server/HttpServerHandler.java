@@ -1,6 +1,5 @@
 package com.blade.server;
 
-import static com.blade.mvc.Const.CONTENT_TYPE_TEXT;
 import static com.blade.mvc.Const.ENV_KEY_MONITOR_ENABLE;
 import static com.blade.mvc.Const.ENV_KEY_PAGE_404;
 import static com.blade.mvc.Const.ENV_KEY_PAGE_500;
@@ -155,7 +154,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			WebStatistics.me().registerRequestFromIp(WebStatistics.getIpFromChannel(ctx.channel()),
 					LocalDateTime.now());
 			if (fullHttpRequest != null) {
-				ci.addUri(fullHttpRequest.getUri());
+				ci.addUri(fullHttpRequest.uri());
 			}
 		}
 	}
@@ -180,7 +179,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		if (cause instanceof BladeException) {
 			String error = cause.getMessage();
 
-			String contentType = null != response ? response.contentType() : CONTENT_TYPE_TEXT;
+			// String contentType = null != response ? response.contentType() :
+			// CONTENT_TYPE_TEXT;
 
 			StringWriter sw = new StringWriter();
 			PrintWriter writer = new PrintWriter(sw);
