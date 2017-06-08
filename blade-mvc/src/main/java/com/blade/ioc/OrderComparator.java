@@ -4,10 +4,6 @@ import com.blade.ioc.annotation.Order;
 
 import java.util.Comparator;
 
-/**
- * @author biezhi
- *         2017/6/2
- */
 public class OrderComparator<T> implements Comparator<T> {
 
     @Override

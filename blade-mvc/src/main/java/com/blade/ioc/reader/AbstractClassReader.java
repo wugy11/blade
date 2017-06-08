@@ -1,25 +1,18 @@
 package com.blade.ioc.reader;
 
-import com.blade.kit.BladeKit;
+import com.blade.kit.CollectionKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * 抽象类读取器
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.0
  */
 public abstract class AbstractClassReader implements ClassReader {
 
@@ -40,17 +33,10 @@ public abstract class AbstractClassReader implements ClassReader {
 
     /**
      * 根据条件获取class
-     *
-     * @param packageName
-     * @param packagePath
-     * @param parent
-     * @param annotation
-     * @param recursive
-     * @return
      */
     private Set<ClassInfo> findClassByPackage(final String packageName, final String packagePath,
                                               final Class<?> parent, final Class<? extends Annotation> annotation,
-                                              final boolean recursive, Set<ClassInfo> classes) throws ClassNotFoundException {
+                                              final boolean recursive, Set<ClassInfo> classes) throws Exception {
 
         // 获取此包的目录 建立一个File
         File dir = new File(packagePath);
@@ -59,10 +45,10 @@ public abstract class AbstractClassReader implements ClassReader {
             log.warn("The package [{}] not found.", packageName);
         }
         // 如果存在 就获取包下的所有文件 包括目录
-        File[] dirfiles = accept(dir, recursive);
+        File[] dirFiles = accept(dir, recursive);
         // 循环所有文件
-        if (null != dirfiles && dirfiles.length > 0) {
-            for (File file : dirfiles) {
+        if (null != dirFiles && dirFiles.length > 0) {
+            for (File file : dirFiles) {
                 // 如果是目录 则继续扫描
                 if (file.isDirectory()) {
                     findClassByPackage(packageName + '.' + file.getName(), file.getAbsolutePath(), parent, annotation, recursive, classes);
@@ -103,19 +89,11 @@ public abstract class AbstractClassReader implements ClassReader {
 
     /**
      * 过滤文件规则
-     *
-     * @param file
-     * @param recursive
-     * @return
      */
     private File[] accept(File file, final boolean recursive) {
-        File[] dirfiles = file.listFiles(new FileFilter() {
-            // 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
-            public boolean accept(File file) {
-                return (recursive && file.isDirectory()) || (file.getName().endsWith(".class"));
-            }
-        });
-        return dirfiles;
+        // 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
+        return file.listFiles((filterFile) -> (recursive && filterFile.isDirectory()) ||
+                (filterFile.getName().endsWith(".class")));
     }
 
     @Override
@@ -125,7 +103,7 @@ public abstract class AbstractClassReader implements ClassReader {
 
     @Override
     public Set<ClassInfo> getClassByAnnotation(String packageName, Class<?> parent, Class<? extends Annotation> annotation, boolean recursive) {
-        Set<ClassInfo> classes = new HashSet<>();
+        Set<ClassInfo> classes = CollectionKit.newHashSet();
         // 获取包的名字 并进行替换
         String packageDirName = packageName.replace('.', '/');
         // 定义一个枚举的集合 并进行循环来处理这个目录下的URL
@@ -139,16 +117,14 @@ public abstract class AbstractClassReader implements ClassReader {
                 // 获取包的物理路径
                 String filePath = new URI(url.getFile()).getPath();
                 Set<ClassInfo> subClasses = findClassByPackage(packageName, filePath, parent, annotation, recursive, classes);
-                if (BladeKit.isNotEmpty(subClasses)) {
+                if (!CollectionKit.isEmpty(subClasses)) {
                     classes.addAll(subClasses);
                 }
             }
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
             log.error("Add user custom view class error Can't find such Class files.");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return classes;
     }

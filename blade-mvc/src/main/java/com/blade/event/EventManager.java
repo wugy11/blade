@@ -14,6 +14,7 @@ public class EventManager {
     private Map<EventType, List<EventListener>> listenerMap;
 
     private OrderComparator<EventListener> comparator = new OrderComparator<>();
+
     public EventManager() {
         this.listenerMap = Stream.of(EventType.values()).collect(Collectors.toMap(v -> v, v -> new LinkedList<>()));
     }

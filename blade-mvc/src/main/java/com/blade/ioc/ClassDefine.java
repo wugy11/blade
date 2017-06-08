@@ -1,5 +1,7 @@
 package com.blade.ioc;
 
+import com.blade.kit.CollectionKit;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -7,10 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public final class ClassDefine {
 
-    private static final ConcurrentHashMap<Class<?>, ClassDefine> pool = new ConcurrentHashMap<Class<?>, ClassDefine>(128);
+    private static final ConcurrentMap<Class<?>, ClassDefine> pool = CollectionKit.newConcurrentMap(128);
 
     private final Class<?> clazz;
 
@@ -43,9 +46,9 @@ public final class ClassDefine {
         return clazz.getSimpleName();
     }
 
-    public ClassDefine getSuperKlass() {
-        Class<?> superKlass = clazz.getSuperclass();
-        return (superKlass == null) ? null : ClassDefine.create(superKlass);
+    public ClassDefine getSuperClass() {
+        Class<?> superclass = clazz.getSuperclass();
+        return (superclass == null) ? null : ClassDefine.create(superclass);
     }
 
     public List<ClassDefine> getInterfaces() {
@@ -53,7 +56,7 @@ public final class ClassDefine {
         if (interfaces.length == 0) {
             return Collections.emptyList();
         }
-        List<ClassDefine> results = new ArrayList<ClassDefine>(interfaces.length);
+        List<ClassDefine> results = CollectionKit.newArrayList(interfaces.length);
         for (Class<?> intf : interfaces) {
             results.add(ClassDefine.create(intf));
         }

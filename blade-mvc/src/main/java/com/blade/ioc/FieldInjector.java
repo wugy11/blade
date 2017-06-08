@@ -4,9 +4,6 @@ import java.lang.reflect.Field;
 
 /**
  * Bean Field Injector
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.5
  */
 public class FieldInjector implements Injector {
 
@@ -23,9 +20,6 @@ public class FieldInjector implements Injector {
         try {
             Class<?> fieldType = field.getType();
             Object value = ioc.getBean(fieldType);
-            if (value == null) {
-                throw new IllegalStateException("Can't inject bean: " + fieldType.getName() + " for field: " + field);
-            }
             field.setAccessible(true);
             field.set(bean, value);
         } catch (Exception e) {

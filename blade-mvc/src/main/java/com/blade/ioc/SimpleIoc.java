@@ -1,5 +1,6 @@
 package com.blade.ioc;
 
+import com.blade.kit.CollectionKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,15 +8,12 @@ import java.util.*;
 
 /**
  * The default IOC container implementation
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.5
  */
 public class SimpleIoc implements Ioc {
 
     private static final Logger log = LoggerFactory.getLogger(Ioc.class);
 
-    private final Map<String, BeanDefine> pool = new HashMap<>(32);
+    private final Map<String, BeanDefine> pool = CollectionKit.newHashMap(32);
 
     /**
      * Add user-defined objects
@@ -115,9 +113,7 @@ public class SimpleIoc implements Ioc {
         try {
             Object object = beanClass.newInstance();
             return new BeanDefine(object, beanClass, singleton);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -156,7 +152,7 @@ public class SimpleIoc implements Ioc {
     @Override
     public List<Object> getBeans() {
         Set<String> beanNames = this.getBeanNames();
-        List<Object> beans = new ArrayList<>(beanNames.size());
+        List<Object> beans = CollectionKit.newArrayList(beanNames.size());
         for (String beanName : beanNames) {
             Object bean = this.getBean(beanName);
             if (null != bean) {

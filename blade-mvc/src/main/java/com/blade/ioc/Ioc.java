@@ -5,9 +5,6 @@ import java.util.Set;
 
 /**
  * IOC container, it provides an interface for registration and bean.
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.5
  */
 public interface Ioc {
 

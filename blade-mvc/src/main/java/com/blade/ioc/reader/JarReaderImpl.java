@@ -15,9 +15,6 @@ import java.util.jar.JarFile;
 
 /**
  * 根据jar文件读取类
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.0
  */
 public class JarReaderImpl extends AbstractClassReader implements ClassReader {
 

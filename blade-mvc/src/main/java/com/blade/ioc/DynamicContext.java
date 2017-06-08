@@ -15,9 +15,6 @@ import com.blade.kit.StringKit;
 
 /**
  * Get ClassReader by JAR or folder
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.6.6
  */
 public final class DynamicContext {
 

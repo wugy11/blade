@@ -7,9 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * Return JSON Params
- *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.6.6
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
