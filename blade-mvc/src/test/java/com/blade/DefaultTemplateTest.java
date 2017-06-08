@@ -2,9 +2,7 @@ package com.blade;
 
 import com.blade.model.Person;
 import com.blade.mvc.ui.template.UncheckedTemplateException;
-
 import io.netty.handler.codec.http.HttpHeaderNames;
-
 import org.junit.Test;
 
 import java.io.BufferedWriter;

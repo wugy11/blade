@@ -18,12 +18,10 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.thread.Scheduler;
+
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
-
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
-import org.eclipse.jetty.util.thread.Scheduler;
 
 /**
  * @deprecated use {@link SocketChannelEndPoint} instead

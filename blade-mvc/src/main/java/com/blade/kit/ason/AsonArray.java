@@ -1,18 +1,15 @@
 package com.blade.kit.ason;
 
-import static com.blade.kit.ason.Util.getPathValue;
-import static com.blade.kit.ason.Util.isList;
-import static com.blade.kit.ason.Util.isNull;
-import static com.blade.kit.ason.Util.splitPath;
+import com.blade.kit.ReflectKit;
+import com.blade.kit.json.JSONArray;
+import com.blade.kit.json.JSONException;
+import com.blade.kit.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.blade.kit.ReflectKit;
-import com.blade.kit.json.JSONArray;
-import com.blade.kit.json.JSONException;
-import com.blade.kit.json.JSONObject;
+import static com.blade.kit.ason.Util.*;
 
 /**
  * @author Aidan Follestad (afollestad)

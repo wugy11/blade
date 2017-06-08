@@ -18,11 +18,10 @@
 
 package org.eclipse.jetty.security;
 
-import java.security.Principal;
+import org.eclipse.jetty.server.UserIdentity;
 
 import javax.security.auth.Subject;
-
-import org.eclipse.jetty.server.UserIdentity;
+import java.security.Principal;
 
 /**
  * Associates UserIdentities from with threads and UserIdentity.Contexts.

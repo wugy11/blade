@@ -18,10 +18,10 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.component.ContainerLifeCycle;
+
 import java.io.IOException;
 import java.util.Map;
-
-import org.eclipse.jetty.util.component.ContainerLifeCycle;
 
 /**
  * Factory for client-side {@link Connection} instances.

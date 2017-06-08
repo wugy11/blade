@@ -15,7 +15,14 @@
  */
 package com.blade.mvc.context;
 
-import static com.blade.Blade.$;
+import com.blade.Blade;
+import com.blade.context.WebContextHolder;
+import com.blade.embedd.EmbedServer;
+import com.blade.ioc.IocApplication;
+import com.blade.kit.DispatchKit;
+import com.blade.kit.SystemKit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -23,15 +30,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.blade.Blade;
-import com.blade.context.WebContextHolder;
-import com.blade.embedd.EmbedServer;
-import com.blade.ioc.IocApplication;
-import com.blade.kit.DispatchKit;
-import com.blade.kit.SystemKit;
+import static com.blade.Blade.$;
 
 /**
  * Blade Web Context Listener

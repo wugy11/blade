@@ -1,19 +1,18 @@
 package com.blade.mvc.http;
 
-import java.io.File;
-import java.util.Map;
-
 import com.blade.kit.JsonKit;
 import com.blade.mvc.Const;
 import com.blade.mvc.WebContext;
 import com.blade.mvc.ui.ModelAndView;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.CharsetUtil;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * Http Response

@@ -15,12 +15,11 @@
  */
 package com.blade.kit;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * IP工具类

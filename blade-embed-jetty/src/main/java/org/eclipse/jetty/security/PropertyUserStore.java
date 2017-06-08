@@ -18,22 +18,6 @@
 
 package org.eclipse.jetty.security;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.security.auth.Subject;
-
-
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.PathWatcher;
 import org.eclipse.jetty.util.PathWatcher.PathWatchEvent;
@@ -44,6 +28,13 @@ import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.resource.PathResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.security.Credential;
+
+import javax.security.auth.Subject;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.security.Principal;
+import java.util.*;
 
 /**
  * PropertyUserStore

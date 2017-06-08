@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.BufferUtil;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -26,8 +28,6 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.eclipse.jetty.util.BufferUtil;
 
 /**
  * <p>A {@link ByteBuffer} pool.</p>

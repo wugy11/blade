@@ -18,18 +18,6 @@
 
 package org.eclipse.jetty.security.authentication;
 
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.Principal;
-import java.security.cert.CRL;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.security.UserAuthentication;
 import org.eclipse.jetty.server.Authentication;
@@ -41,6 +29,17 @@ import org.eclipse.jetty.util.security.CertificateUtils;
 import org.eclipse.jetty.util.security.CertificateValidator;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Password;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.Principal;
+import java.security.cert.CRL;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 
 public class ClientCertAuthenticator extends LoginAuthenticator
 {

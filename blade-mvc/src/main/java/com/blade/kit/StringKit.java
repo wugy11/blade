@@ -1,8 +1,8 @@
 package com.blade.kit;
 
-import java.util.Random;
-
 import com.blade.mvc.multipart.MIMEType;
+
+import java.util.Random;
 
 /**
  * @author biezhi 2017/6/1

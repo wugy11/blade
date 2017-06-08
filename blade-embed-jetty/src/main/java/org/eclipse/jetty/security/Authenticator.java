@@ -18,15 +18,14 @@
 
 package org.eclipse.jetty.security;
 
-import java.util.Set;
+import org.eclipse.jetty.server.Authentication;
+import org.eclipse.jetty.server.Authentication.User;
+import org.eclipse.jetty.server.Server;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import org.eclipse.jetty.server.Authentication;
-import org.eclipse.jetty.server.Authentication.User;
-import org.eclipse.jetty.server.Server;
+import java.util.Set;
 
 /**
  * Authenticator Interface

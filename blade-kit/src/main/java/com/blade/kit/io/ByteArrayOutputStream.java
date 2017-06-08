@@ -1,11 +1,11 @@
 package com.blade.kit.io;
 
+import com.blade.kit.IOKit;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.blade.kit.IOKit;
 
 /**
  * 非同步的ByteArrayOutputStream替换方案, 执行toByteArray() 方法时返回的是只读的内部字节数组, 避免了没有必要的字节复制. 本代码移植自IBM

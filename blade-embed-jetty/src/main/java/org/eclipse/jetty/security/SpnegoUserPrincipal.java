@@ -18,9 +18,9 @@
 
 package org.eclipse.jetty.security;
 
-import java.security.Principal;
-
 import org.eclipse.jetty.util.B64Code;
+
+import java.security.Principal;
 
 public class SpnegoUserPrincipal implements Principal
 {

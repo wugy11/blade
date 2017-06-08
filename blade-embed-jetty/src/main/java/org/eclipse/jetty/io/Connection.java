@@ -18,10 +18,10 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.component.Container;
+
 import java.io.Closeable;
 import java.nio.ByteBuffer;
-
-import org.eclipse.jetty.util.component.Container;
 
 /**
  * <p>A {@link Connection} is associated to an {@link EndPoint} so that I/O events

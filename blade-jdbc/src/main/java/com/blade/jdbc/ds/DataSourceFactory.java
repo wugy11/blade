@@ -1,12 +1,11 @@
 package com.blade.jdbc.ds;
 
+import com.blade.jdbc.pool.BasicDataSourceImpl;
+
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import com.blade.jdbc.pool.BasicDataSourceImpl;
 
 public class DataSourceFactory {
 	

@@ -18,23 +18,17 @@
 
 package org.eclipse.jetty.security;
 
-import java.util.Properties;
-
-import javax.security.auth.Subject;
-import javax.servlet.ServletRequest;
-
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.B64Code;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.resource.Resource;
-import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSManager;
-import org.ietf.jgss.GSSName;
-import org.ietf.jgss.Oid;
+import org.ietf.jgss.*;
+
+import javax.security.auth.Subject;
+import javax.servlet.ServletRequest;
+import java.util.Properties;
 
 public class SpnegoLoginService extends AbstractLifeCycle implements LoginService
 {

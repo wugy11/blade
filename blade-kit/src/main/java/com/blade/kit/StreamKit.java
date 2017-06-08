@@ -15,23 +15,11 @@
  */
 package com.blade.kit;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-
 import com.blade.kit.io.ByteArray;
 import com.blade.kit.io.ByteArrayOutputStream;
 import com.blade.kit.io.FastByteArrayOutputStream;
+
+import java.io.*;
 
 /**
  * 基于流的工具类

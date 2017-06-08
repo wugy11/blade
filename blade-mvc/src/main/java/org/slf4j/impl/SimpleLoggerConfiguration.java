@@ -1,5 +1,7 @@
 package org.slf4j.impl;
 
+import org.slf4j.helpers.Util;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -8,8 +10,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-
-import org.slf4j.helpers.Util;
 
 /**
  * This class holds configuration values for {@link SimpleLogger}. The values

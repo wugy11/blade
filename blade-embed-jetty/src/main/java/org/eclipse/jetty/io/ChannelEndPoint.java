@@ -18,6 +18,13 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.BufferUtil;
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Logger;
+import org.eclipse.jetty.util.thread.Invocable;
+import org.eclipse.jetty.util.thread.Locker;
+import org.eclipse.jetty.util.thread.Scheduler;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,13 +32,6 @@ import java.nio.channels.ByteChannel;
 import java.nio.channels.CancelledKeyException;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.SelectionKey;
-
-import org.eclipse.jetty.util.BufferUtil;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
-import org.eclipse.jetty.util.thread.Invocable;
-import org.eclipse.jetty.util.thread.Locker;
-import org.eclipse.jetty.util.thread.Scheduler;
 
 /**
  * Channel End Point.

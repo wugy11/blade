@@ -1,19 +1,15 @@
 package com.blade.kit.io;
 
 
-import static com.blade.kit.Assert.checkNotNull;
-import static com.blade.kit.Assert.checkPositionIndexes;
+import com.blade.kit.Assert;
 
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blade.kit.Assert;
+import static com.blade.kit.Assert.checkNotNull;
+import static com.blade.kit.Assert.checkPositionIndexes;
 
 /**
  * Provides utility methods for working with character streams.

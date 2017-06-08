@@ -1,10 +1,10 @@
 package com.blade.jdbc.model;
 
+import com.blade.kit.CollectionKit;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-
-import com.blade.kit.CollectionKit;
 
 /**
  * 分页对象

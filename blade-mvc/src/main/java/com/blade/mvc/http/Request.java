@@ -1,19 +1,18 @@
 package com.blade.mvc.http;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpHeaders.Names.USER_AGENT;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.blade.kit.StringKit;
 import com.blade.kit.WebKit;
 import com.blade.mvc.WebContext;
 import com.blade.mvc.multipart.FileItem;
 import com.blade.mvc.route.Route;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaders.Names.USER_AGENT;
 
 /**
  * Http Request

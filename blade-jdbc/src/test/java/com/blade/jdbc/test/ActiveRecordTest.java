@@ -1,12 +1,12 @@
 package com.blade.jdbc.test;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.blade.jdbc.ds.DataSourceFactory;
-import com.blade.jdbc.model.PageRow;
-import com.blade.jdbc.model.Paginator;
 import com.blade.jdbc.ActiveRecord;
 import com.blade.jdbc.ar.SampleActiveRecord;
 import com.blade.jdbc.core.Take;
+import com.blade.jdbc.ds.DataSourceFactory;
+import com.blade.jdbc.model.PageRow;
+import com.blade.jdbc.model.Paginator;
 import com.blade.jdbc.test.model.Person;
 import com.blade.jdbc.tx.Tx;
 import com.zaxxer.hikari.HikariConfig;

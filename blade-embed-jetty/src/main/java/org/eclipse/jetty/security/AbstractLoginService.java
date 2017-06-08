@@ -19,18 +19,16 @@
 
 package org.eclipse.jetty.security;
 
-import java.io.Serializable;
-import java.security.Principal;
-
-import javax.security.auth.Subject;
-import javax.servlet.ServletRequest;
-
-
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.security.Credential;
+
+import javax.security.auth.Subject;
+import javax.servlet.ServletRequest;
+import java.io.Serializable;
+import java.security.Principal;
 
 /**
  * AbstractLoginService

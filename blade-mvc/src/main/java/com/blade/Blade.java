@@ -1,28 +1,5 @@
 package com.blade;
 
-import static com.blade.mvc.Const.DEFAULT_SERVER_ADDRESS;
-import static com.blade.mvc.Const.DEFAULT_SERVER_PORT;
-import static com.blade.mvc.Const.ENV_KEY_APP_NAME;
-import static com.blade.mvc.Const.ENV_KEY_BOOT_CONF;
-import static com.blade.mvc.Const.ENV_KEY_DEV_MODE;
-import static com.blade.mvc.Const.ENV_KEY_GZIP_ENABLE;
-import static com.blade.mvc.Const.ENV_KEY_SERVER_ADDRESS;
-import static com.blade.mvc.Const.ENV_KEY_SERVER_PORT;
-import static com.blade.mvc.Const.ENV_KEY_STATIC_LIST;
-import static com.blade.mvc.Const.PLUGIN_PACKAGE_NAME;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.function.Consumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.blade.event.EventListener;
 import com.blade.event.EventManager;
 import com.blade.event.EventType;
@@ -38,6 +15,14 @@ import com.blade.mvc.route.RouteMatcher;
 import com.blade.mvc.ui.template.DefaultEngine;
 import com.blade.mvc.ui.template.TemplateEngine;
 import com.blade.server.WebServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
+
+import static com.blade.mvc.Const.*;
 
 /**
  * Blade Core

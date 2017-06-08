@@ -18,18 +18,17 @@
 
 package org.eclipse.jetty.io.ssl;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
-import javax.net.ssl.SSLEngine;
-
 import org.eclipse.jetty.io.ByteBufferPool;
 import org.eclipse.jetty.io.ClientConnectionFactory;
 import org.eclipse.jetty.io.Connection;
 import org.eclipse.jetty.io.EndPoint;
 import org.eclipse.jetty.util.component.ContainerLifeCycle;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+
+import javax.net.ssl.SSLEngine;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class SslClientConnectionFactory implements ClientConnectionFactory
 {

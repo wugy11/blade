@@ -16,11 +16,11 @@
 
 package com.blade.kit.base;
 
+import com.blade.kit.Assert;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-
-import com.blade.kit.Assert;
 
 /**
  * Static utility methods pertaining to instances of {@link Throwable}.

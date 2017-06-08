@@ -18,14 +18,14 @@
 
 package org.eclipse.jetty.xml;
 
+import org.eclipse.jetty.util.StringUtil;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.Stack;
-
-import org.eclipse.jetty.util.StringUtil;
 
 public class XmlAppendable
 {

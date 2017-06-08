@@ -1,12 +1,12 @@
 package com.blade.kit.io;
 
-import static com.blade.kit.Assert.checkNotNull;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import static com.blade.kit.Assert.checkNotNull;
 /**
  * A class for reading lines of text. Provides the same functionality
  * as {@link java.io.BufferedReader#readLine()} but for all {@link Readable}

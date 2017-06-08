@@ -1,13 +1,13 @@
 package com.blade.jdbc.cache;
 
+import com.blade.jdbc.utils.Utils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import com.blade.jdbc.utils.Utils;
 
 public enum StatementCache {
 	INSTANCE;

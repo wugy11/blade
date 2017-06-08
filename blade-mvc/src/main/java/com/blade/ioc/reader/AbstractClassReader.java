@@ -34,9 +34,9 @@ public abstract class AbstractClassReader implements ClassReader {
     /**
      * 根据条件获取class
      */
-    private Set<ClassInfo> findClassByPackage(final String packageName, final String packagePath,
-                                              final Class<?> parent, final Class<? extends Annotation> annotation,
-                                              final boolean recursive, Set<ClassInfo> classes) throws Exception {
+    private void findClassByPackage(final String packageName, final String packagePath,
+                                    final Class<?> parent, final Class<? extends Annotation> annotation,
+                                    final boolean recursive, Set<ClassInfo> classes) throws Exception {
 
         // 获取此包的目录 建立一个File
         File dir = new File(packagePath);
@@ -51,7 +51,8 @@ public abstract class AbstractClassReader implements ClassReader {
             for (File file : dirFiles) {
                 // 如果是目录 则继续扫描
                 if (file.isDirectory()) {
-                    findClassByPackage(packageName + '.' + file.getName(), file.getAbsolutePath(), parent, annotation, recursive, classes);
+                    findClassByPackage(packageName + '.' + file.getName(), file.getAbsolutePath(), parent,
+                            annotation, recursive, classes);
                 } else {
                     // 如果是java类文件 去掉后面的.class 只留下类名
                     String className = file.getName().substring(0, file.getName().length() - 6);
@@ -68,7 +69,8 @@ public abstract class AbstractClassReader implements ClassReader {
                         if (null != clazz.getSuperclass() && clazz.getSuperclass().equals(parent)) {
                             classes.add(new ClassInfo(clazz));
                         } else {
-                            if (null != clazz.getInterfaces() && clazz.getInterfaces().length > 0 && clazz.getInterfaces()[0].equals(parent)) {
+                            if (null != clazz.getInterfaces() && clazz.getInterfaces().length > 0 &&
+                                    clazz.getInterfaces()[0].equals(parent)) {
                                 classes.add(new ClassInfo(clazz));
                             }
                         }
@@ -84,7 +86,6 @@ public abstract class AbstractClassReader implements ClassReader {
                 }
             }
         }
-        return classes;
     }
 
     /**
@@ -97,12 +98,14 @@ public abstract class AbstractClassReader implements ClassReader {
     }
 
     @Override
-    public Set<ClassInfo> getClassByAnnotation(String packageName, Class<? extends Annotation> annotation, boolean recursive) {
+    public Set<ClassInfo> getClassByAnnotation(String packageName, Class<? extends Annotation> annotation,
+                                               boolean recursive) {
         return this.getClassByAnnotation(packageName, null, annotation, recursive);
     }
 
     @Override
-    public Set<ClassInfo> getClassByAnnotation(String packageName, Class<?> parent, Class<? extends Annotation> annotation, boolean recursive) {
+    public Set<ClassInfo> getClassByAnnotation(String packageName, Class<?> parent, Class<? extends Annotation>
+            annotation, boolean recursive) {
         Set<ClassInfo> classes = CollectionKit.newHashSet();
         // 获取包的名字 并进行替换
         String packageDirName = packageName.replace('.', '/');
@@ -116,10 +119,7 @@ public abstract class AbstractClassReader implements ClassReader {
                 URL url = dirs.nextElement();
                 // 获取包的物理路径
                 String filePath = new URI(url.getFile()).getPath();
-                Set<ClassInfo> subClasses = findClassByPackage(packageName, filePath, parent, annotation, recursive, classes);
-                if (!CollectionKit.isEmpty(subClasses)) {
-                    classes.addAll(subClasses);
-                }
+                findClassByPackage(packageName, filePath, parent, annotation, recursive, classes);
             }
         } catch (ClassNotFoundException e) {
             log.error("Add user custom view class error Can't find such Class files.");

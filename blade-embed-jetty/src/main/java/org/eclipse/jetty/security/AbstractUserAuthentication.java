@@ -18,12 +18,12 @@
 
 package org.eclipse.jetty.security;
 
-import java.io.Serializable;
-import java.util.Set;
-
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.UserIdentity.Scope;
+
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * AbstractUserAuthentication

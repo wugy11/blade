@@ -18,15 +18,14 @@
 
 package org.eclipse.jetty.io;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
-import javax.net.ssl.SSLEngine;
-
 import org.eclipse.jetty.util.BufferUtil;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
+
+import javax.net.ssl.SSLEngine;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public abstract class NegotiatingClientConnection extends AbstractConnection
 {

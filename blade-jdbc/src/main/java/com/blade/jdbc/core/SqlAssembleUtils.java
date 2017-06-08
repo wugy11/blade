@@ -1,14 +1,5 @@
 package com.blade.jdbc.core;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.blade.jdbc.annotation.Column;
 import com.blade.jdbc.exceptions.AssistantException;
 import com.blade.jdbc.model.SqlOpts;
@@ -16,6 +7,14 @@ import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.reflect.FieldCallback;
 import com.blade.kit.reflect.ReflectKit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class SqlAssembleUtils {
 

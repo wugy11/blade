@@ -1,22 +1,16 @@
 package com.blade.kit.ason;
 
-import static com.blade.kit.ason.Util.fieldName;
-import static com.blade.kit.ason.Util.followPath;
-import static com.blade.kit.ason.Util.getPathValue;
-import static com.blade.kit.ason.Util.isJsonArray;
-import static com.blade.kit.ason.Util.isList;
-import static com.blade.kit.ason.Util.shouldIgnore;
-import static com.blade.kit.ason.Util.splitPath;
+import com.blade.kit.ReflectKit;
+import com.blade.kit.json.JSONArray;
+import com.blade.kit.json.JSONException;
+import com.blade.kit.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
-import com.blade.kit.ReflectKit;
-import com.blade.kit.json.JSONArray;
-import com.blade.kit.json.JSONException;
-import com.blade.kit.json.JSONObject;
+import static com.blade.kit.ason.Util.*;
 
 /**
  * @author Aidan Follestad (afollestad)

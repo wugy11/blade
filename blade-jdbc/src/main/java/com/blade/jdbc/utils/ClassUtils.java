@@ -1,16 +1,15 @@
 package com.blade.jdbc.utils;
 
+import com.blade.jdbc.exceptions.AssistantException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.blade.jdbc.exceptions.AssistantException;
 
 /**
  * 类辅助

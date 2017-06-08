@@ -1,11 +1,11 @@
 package com.blade.kit.io;
 
-import static com.blade.kit.Assert.checkNotNull;
-
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.Writer;
+
+import static com.blade.kit.Assert.checkNotNull;
 
 /**
  * Writer that places all output on an {@link Appendable} target. If the target

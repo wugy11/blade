@@ -1,11 +1,10 @@
 package com.blade.aop;
 
-import java.lang.reflect.Method;
-
 import com.blade.aop.annotation.Aop;
-
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
 
 public abstract class AbstractMethodInterceptor implements MethodInterceptor {
 

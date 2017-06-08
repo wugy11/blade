@@ -15,21 +15,15 @@
  */
 package com.blade.kit;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import com.blade.kit.exception.IllegalPathException;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.blade.kit.exception.IllegalPathException;
 
 /**
  * 有关文件处理的工具类。

@@ -18,10 +18,9 @@
 
 package org.eclipse.jetty.io.ssl;
 
+import javax.net.ssl.SSLEngine;
 import java.util.EventListener;
 import java.util.EventObject;
-
-import javax.net.ssl.SSLEngine;
 
 /**
  * <p>Implementations of this interface are notified of TLS handshake events.</p>

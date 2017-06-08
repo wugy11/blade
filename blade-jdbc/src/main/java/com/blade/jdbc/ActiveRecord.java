@@ -1,8 +1,8 @@
 package com.blade.jdbc;
 
+import com.blade.jdbc.core.Take;
 import com.blade.jdbc.model.PageRow;
 import com.blade.jdbc.model.Paginator;
-import com.blade.jdbc.core.Take;
 import org.sql2o.Sql2o;
 
 import javax.sql.DataSource;

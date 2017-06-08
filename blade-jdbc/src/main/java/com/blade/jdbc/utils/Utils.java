@@ -1,13 +1,9 @@
 package com.blade.jdbc.utils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import com.blade.jdbc.model.PageRow;
 import com.blade.kit.StringKit;
+
+import java.util.*;
 
 public class Utils {
 

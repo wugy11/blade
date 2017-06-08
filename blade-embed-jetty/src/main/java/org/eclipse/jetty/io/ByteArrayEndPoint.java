@@ -18,6 +18,12 @@
 
 package org.eclipse.jetty.io;
 
+import org.eclipse.jetty.util.BufferUtil;
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Logger;
+import org.eclipse.jetty.util.thread.Locker;
+import org.eclipse.jetty.util.thread.Scheduler;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -32,12 +38,6 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
-
-import org.eclipse.jetty.util.BufferUtil;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
-import org.eclipse.jetty.util.thread.Locker;
-import org.eclipse.jetty.util.thread.Scheduler;
 
 /* ------------------------------------------------------------ */
 /** ByteArrayEndPoint.

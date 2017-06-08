@@ -1,11 +1,11 @@
 package com.blade.kit.io;
 
+import com.blade.kit.Assert;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.blade.kit.Assert;
 
 /**
  * 代表一个byte数组。

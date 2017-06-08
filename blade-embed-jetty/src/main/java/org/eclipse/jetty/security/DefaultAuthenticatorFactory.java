@@ -18,16 +18,12 @@
 
 package org.eclipse.jetty.security;
 
-import javax.servlet.ServletContext;
-
 import org.eclipse.jetty.security.Authenticator.AuthConfiguration;
-import org.eclipse.jetty.security.authentication.BasicAuthenticator;
-import org.eclipse.jetty.security.authentication.ClientCertAuthenticator;
-import org.eclipse.jetty.security.authentication.DigestAuthenticator;
-import org.eclipse.jetty.security.authentication.FormAuthenticator;
-import org.eclipse.jetty.security.authentication.SpnegoAuthenticator;
+import org.eclipse.jetty.security.authentication.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.security.Constraint;
+
+import javax.servlet.ServletContext;
 
 /* ------------------------------------------------------------ */
 /**

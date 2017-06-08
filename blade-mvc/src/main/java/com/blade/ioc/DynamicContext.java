@@ -1,17 +1,16 @@
 package com.blade.ioc;
 
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.blade.ioc.reader.ClassInfo;
 import com.blade.ioc.reader.ClassPathClassReader;
 import com.blade.ioc.reader.ClassReader;
 import com.blade.ioc.reader.JarReaderImpl;
 import com.blade.kit.StringKit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.stream.Stream;
 
 /**
  * Get ClassReader by JAR or folder

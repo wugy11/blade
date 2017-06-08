@@ -15,6 +15,13 @@
  */
 package com.blade.mvc.route.loader;
 
+import com.blade.exception.BladeException;
+import com.blade.kit.IOKit;
+import com.blade.mvc.http.HttpMethod;
+import com.blade.mvc.http.Request;
+import com.blade.mvc.http.Response;
+import com.blade.mvc.route.Route;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,13 +31,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import com.blade.exception.BladeException;
-import com.blade.kit.IOKit;
-import com.blade.mvc.http.HttpMethod;
-import com.blade.mvc.http.Request;
-import com.blade.mvc.http.Response;
-import com.blade.mvc.route.Route;
 
 /**
  * Abstract loader implementation
