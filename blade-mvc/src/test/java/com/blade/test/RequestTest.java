@@ -1,4 +1,4 @@
-package com.blade;
+package com.blade.test;
 
 import com.blade.kit.Assert;
 import com.blade.kit.ason.Ason;

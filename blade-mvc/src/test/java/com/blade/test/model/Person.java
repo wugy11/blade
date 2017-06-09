@@ -1,4 +1,4 @@
-package com.blade.model;
+package com.blade.test.model;
 
 public class Person {
 

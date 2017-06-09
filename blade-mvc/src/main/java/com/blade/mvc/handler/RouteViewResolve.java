@@ -8,7 +8,7 @@ import com.blade.mvc.annotation.JSON;
 import com.blade.mvc.annotation.Path;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
-import com.blade.mvc.route.Route;
+import com.blade.mvc.route.RouteBean;
 import com.blade.mvc.ui.ModelAndView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +24,7 @@ public class RouteViewResolve {
 		// this.templateEngine = blade.templateEngine();
 	}
 
-	public boolean handle(Request request, Response response, Route route) {
+	public boolean handle(Request request, Response response, RouteBean route) {
 		try {
 			Method actionMethod = route.getAction();
 			Object target = route.getTarget();
@@ -72,7 +72,7 @@ public class RouteViewResolve {
 		return false;
 	}
 
-	public boolean invokeHook(Request request, Response response, Route route) throws BladeException {
+	public boolean invokeHook(Request request, Response response, RouteBean route) throws BladeException {
 		Method actionMethod = route.getAction();
 		Object target = route.getTarget();
 		if (null == target) {

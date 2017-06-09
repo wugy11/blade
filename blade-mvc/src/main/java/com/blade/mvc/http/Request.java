@@ -4,7 +4,7 @@ import com.blade.kit.StringKit;
 import com.blade.kit.WebKit;
 import com.blade.mvc.WebContext;
 import com.blade.mvc.multipart.FileItem;
-import com.blade.mvc.route.Route;
+import com.blade.mvc.route.RouteBean;
 import io.netty.buffer.ByteBuf;
 
 import java.util.List;
@@ -27,9 +27,9 @@ public interface Request {
 	 * @param route
 	 * @return
 	 */
-	Request initPathParams(Route route);
+	Request initPathParams(RouteBean route);
 
-	Route route();
+	RouteBean route();
 
 	/**
 	 * @return Return client request host

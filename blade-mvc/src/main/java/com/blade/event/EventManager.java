@@ -23,7 +23,7 @@ public class EventManager {
         listenerMap.get(type).add(listener);
     }
 
-    public void fireEvent(EventType type, Blade blade) {
+	public void fireEvent(EventType type, Blade blade) {
         listenerMap.get(type).stream()
                 .sorted(comparator)
                 .forEach(listener -> listener.handleEvent(new Event(type, blade)));

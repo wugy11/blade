@@ -1,8 +1,23 @@
 package com.blade.server;
 
+import static com.blade.mvc.Const.ENV_KEY_MONITOR_ENABLE;
+import static com.blade.mvc.Const.ENV_KEY_PAGE_404;
+import static com.blade.mvc.Const.ENV_KEY_PAGE_500;
+import static io.netty.handler.codec.http.HttpUtil.is100ContinueExpected;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.blade.Blade;
 import com.blade.BladeException;
-import com.blade.kit.BladeKit;
+import com.blade.kit.CollectionKit;
 import com.blade.metric.Connection;
 import com.blade.metric.WebStatistics;
 import com.blade.mvc.WebContext;
@@ -13,10 +28,11 @@ import com.blade.mvc.http.HttpRequest;
 import com.blade.mvc.http.HttpResponse;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
-import com.blade.mvc.route.Route;
+import com.blade.mvc.route.RouteBean;
 import com.blade.mvc.route.RouteHandler;
 import com.blade.mvc.route.RouteMatcher;
 import com.blade.mvc.ui.DefaultUI;
+
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,18 +41,6 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static com.blade.mvc.Const.*;
-import static io.netty.handler.codec.http.HttpUtil.is100ContinueExpected;
 
 /**
  * @author biezhi 2017/5/31
@@ -114,7 +118,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			return;
 		}
 
-		Route route = routeMatcher.lookupRoute(request.method(), uri);
+		RouteBean route = routeMatcher.lookupRoute(request.method(), uri);
 		if (null == route) {
 			// 404
 			response.notFound();
@@ -214,7 +218,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	 * @param route
 	 *            route object
 	 */
-	private boolean routeHandle(Request request, Response response, Route route) {
+	private boolean routeHandle(Request request, Response response, RouteBean route) {
 		Object target = route.getTarget();
 		if (null == target) {
 			Class<?> clazz = route.getAction().getDeclaringClass();
@@ -230,12 +234,11 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		}
 	}
 
-	private boolean invokeMiddlewares(List<Route> middlewares, Request request, Response response) {
-		if (BladeKit.isEmpty(middlewares)) {
+	private boolean invokeMiddlewares(List<RouteBean> middlewares, Request request, Response response) {
+		if (CollectionKit.isEmpty(middlewares)) 
 			return true;
-		}
 		Invoker invoker = new Invoker(request, response);
-		for (Route middleware : middlewares) {
+		for (RouteBean middleware : middlewares) {
 			WebHook webHook = (WebHook) middleware.getTarget();
 			boolean flag = webHook.before(invoker);
 			if (!flag)
@@ -252,8 +255,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	 * @param response
 	 * @return
 	 */
-	private boolean invokeHook(List<Route> hooks, Request request, Response response) {
-		for (Route route : hooks) {
+	private boolean invokeHook(List<RouteBean> hooks, Request request, Response response) {
+		for (RouteBean route : hooks) {
 			if (route.getTargetType() == RouteHandler.class) {
 				RouteHandler routeHandler = (RouteHandler) route.getTarget();
 				routeHandler.handle(request, response);

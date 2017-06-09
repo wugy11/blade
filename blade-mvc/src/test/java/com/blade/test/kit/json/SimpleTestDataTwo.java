@@ -1,4 +1,4 @@
-package com.blade.kit.json;
+package com.blade.test.kit.json;
 
 /**
  * @author Aidan Follestad (afollestad)

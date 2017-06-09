@@ -1,4 +1,4 @@
-package com.blade;
+package com.blade.test;
 
 import com.blade.event.EventType;
 import org.junit.Test;

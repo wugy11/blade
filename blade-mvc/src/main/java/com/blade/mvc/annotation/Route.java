@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  * Methods defined on the route notes
  * <p>
  * Restful routes:
+ * 
  * <pre>
  * ==========================================================================================
  * verb    path                   action          used for
@@ -24,23 +25,19 @@ import java.lang.annotation.Target;
  * DELETE 	/users/id              destroy         delete a specific book
  * </pre>
  *
- * @author <a href="mailto:biezhi.me@gmail.com" target="_blank">biezhi</a>
- * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Route {
 
-    String value() default "/";
+	/**
+	 * @return Request url
+	 */
+	String[] values() default { "/" };
 
-    /**
-     * @return Request url
-     */
-    String[] values() default {};
-
-    /**
-     * @return Request HttpMethod
-     */
-    HttpMethod method() default HttpMethod.ALL;
+	/**
+	 * @return Request HttpMethod
+	 */
+	HttpMethod method() default HttpMethod.ALL;
 
 }

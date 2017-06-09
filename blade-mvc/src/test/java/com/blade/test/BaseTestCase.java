@@ -1,5 +1,6 @@
-package com.blade;
+package com.blade.test;
 
+import com.blade.Blade;
 import com.blade.mvc.route.RouteHandler;
 import com.github.kevinsawicki.http.HttpRequest;
 import org.junit.After;

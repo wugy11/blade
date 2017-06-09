@@ -3,7 +3,7 @@ package com.blade.mvc.http;
 import com.blade.BladeException;
 import com.blade.kit.StringKit;
 import com.blade.mvc.multipart.FileItem;
-import com.blade.mvc.route.Route;
+import com.blade.mvc.route.RouteBean;
 import com.blade.server.SessionHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -42,7 +42,7 @@ public class HttpRequest implements Request {
 
 	// private HttpPostRequestDecoder decoder;
 	private SessionHandler sessionHandler;
-	private Route route;
+	private RouteBean route;
 
 	private ByteBuf body;
 
@@ -144,7 +144,7 @@ public class HttpRequest implements Request {
 	}
 
 	@Override
-	public Request initPathParams(Route route) {
+	public Request initPathParams(RouteBean route) {
 		this.route = route;
 		if (null != route.getPathParams())
 			this.pathParams = route.getPathParams();
@@ -152,7 +152,7 @@ public class HttpRequest implements Request {
 	}
 
 	@Override
-	public Route route() {
+	public RouteBean route() {
 		return this.route;
 	}
 

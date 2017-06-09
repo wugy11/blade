@@ -7,7 +7,7 @@ import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.hook.WebHook;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
-import com.blade.mvc.route.Route;
+import com.blade.mvc.route.RouteBean;
 import com.blade.mvc.route.RouteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class CsrfMiddleware implements WebHook {
             log.debug("gen token [{}]", token);
             tokens.add(token);
         } else {
-            Route route = request.route();
+            RouteBean route = request.route();
             Method method = route.getAction();
             ValidToken validToken = method.getAnnotation(ValidToken.class);
             if (null != validToken) {
