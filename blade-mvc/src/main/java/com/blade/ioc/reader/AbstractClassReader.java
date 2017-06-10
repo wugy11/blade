@@ -46,44 +46,44 @@ public abstract class AbstractClassReader implements ClassReader {
         }
         // 如果存在 就获取包下的所有文件 包括目录
         File[] dirFiles = accept(dir, recursive);
+        if (CollectionKit.isEmpty(dirFiles))
+            return;
         // 循环所有文件
-        if (null != dirFiles && dirFiles.length > 0) {
-            for (File file : dirFiles) {
-                // 如果是目录 则继续扫描
-                if (file.isDirectory()) {
-                    findClassByPackage(packageName + '.' + file.getName(), file.getAbsolutePath(), parent,
-                            annotation, recursive, classes);
-                } else {
-                    // 如果是java类文件 去掉后面的.class 只留下类名
-                    String className = file.getName().substring(0, file.getName().length() - 6);
+        for (File file : dirFiles) {
+            // 如果是目录 则继续扫描
+            if (file.isDirectory()) {
+                findClassByPackage(packageName + '.' + file.getName(), file.getAbsolutePath(), parent,
+                        annotation, recursive, classes);
+            } else {
+                // 如果是java类文件 去掉后面的.class 只留下类名
+                String className = file.getName().substring(0, file.getName().length() - 6);
 //                    Class<?> clazz = classLoader.defineClassByName(packageName + '.' + className);
-                    Class<?> clazz = Class.forName(packageName + '.' + className);
-                    if (null != parent && null != annotation) {
-                        if (null != clazz.getSuperclass() && clazz.getSuperclass().equals(parent) &&
-                                null != clazz.getAnnotation(annotation)) {
-                            classes.add(new ClassInfo(clazz));
-                        }
-                        continue;
+                Class<?> clazz = Class.forName(packageName + '.' + className);
+                if (null != parent && null != annotation) {
+                    if (null != clazz.getSuperclass() && clazz.getSuperclass().equals(parent) &&
+                            null != clazz.getAnnotation(annotation)) {
+                        classes.add(new ClassInfo(clazz));
                     }
-                    if (null != parent) {
-                        if (null != clazz.getSuperclass() && clazz.getSuperclass().equals(parent)) {
-                            classes.add(new ClassInfo(clazz));
-                        } else {
-                            if (null != clazz.getInterfaces() && clazz.getInterfaces().length > 0 &&
-                                    clazz.getInterfaces()[0].equals(parent)) {
-                                classes.add(new ClassInfo(clazz));
-                            }
-                        }
-                        continue;
-                    }
-                    if (null != annotation) {
-                        if (null != clazz.getAnnotation(annotation)) {
-                            classes.add(new ClassInfo(clazz));
-                        }
-                        continue;
-                    }
-                    classes.add(new ClassInfo(clazz));
+                    continue;
                 }
+                if (null != parent) {
+                    if (null != clazz.getSuperclass() && clazz.getSuperclass().equals(parent)) {
+                        classes.add(new ClassInfo(clazz));
+                    } else {
+                        if (null != clazz.getInterfaces() && clazz.getInterfaces().length > 0 &&
+                                clazz.getInterfaces()[0].equals(parent)) {
+                            classes.add(new ClassInfo(clazz));
+                        }
+                    }
+                    continue;
+                }
+                if (null != annotation) {
+                    if (null != clazz.getAnnotation(annotation)) {
+                        classes.add(new ClassInfo(clazz));
+                    }
+                    continue;
+                }
+                classes.add(new ClassInfo(clazz));
             }
         }
     }

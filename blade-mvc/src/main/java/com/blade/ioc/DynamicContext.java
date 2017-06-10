@@ -22,30 +22,30 @@ public final class DynamicContext {
     private static final ClassReader classpathReader = new ClassPathClassReader();
     private static final ClassReader jarReader = new JarReaderImpl();
 
-    private static boolean isJarContext = false;
+//    private static boolean isJarContext = false;
 
     private DynamicContext() {
     }
 
-    public static void init(Class<?> clazz) {
-        String rs = clazz.getResource("").toString();
-        if (rs.contains(".jar")) {
-            isJarContext = true;
-        }
-    }
+//    public static void init(Class<?> clazz) {
+//        String rs = clazz.getResource("").toString();
+//        if (rs.contains(".jar")) {
+//            isJarContext = true;
+//        }
+//    }
 
     public static Stream<ClassInfo> recursionFindClasses(String packageName) {
         return getClassReader(packageName).getClass(packageName, true).stream();
     }
 
-    public static ClassReader getClassReader(String packageName) {
+    private static ClassReader getClassReader(String packageName) {
         if (isJarPackage(packageName)) {
             return jarReader;
         }
         return classpathReader;
     }
 
-    public static boolean isJarPackage(String packageName) {
+    private static boolean isJarPackage(String packageName) {
         if (StringKit.isBlank(packageName)) {
             return false;
         }
@@ -54,16 +54,12 @@ public final class DynamicContext {
             Enumeration<URL> dirs = DynamicContext.class.getClassLoader().getResources(packageName);
             if (dirs.hasMoreElements()) {
                 String url = dirs.nextElement().toString();
-                return url.indexOf(".jar!") != -1 || url.indexOf(".zip!") != -1;
+                return url.contains(".jar") || url.contains(".zip");
             }
         } catch (Exception e) {
             log.error("", e);
         }
         return false;
-    }
-
-    public static boolean isJarContext() {
-        return isJarContext;
     }
 
 }

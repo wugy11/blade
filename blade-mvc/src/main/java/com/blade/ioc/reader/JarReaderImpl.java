@@ -21,21 +21,6 @@ public class JarReaderImpl extends AbstractClassReader implements ClassReader {
     private static final Logger log = LoggerFactory.getLogger(JarReaderImpl.class);
 
     @Override
-    public Set<ClassInfo> getClass(String packageName, boolean recursive) {
-        return this.getClassByAnnotation(packageName, null, null, recursive);
-    }
-
-    @Override
-    public Set<ClassInfo> getClass(String packageName, Class<?> parent, boolean recursive) {
-        return this.getClassByAnnotation(packageName, parent, null, recursive);
-    }
-
-    @Override
-    public Set<ClassInfo> getClassByAnnotation(String packageName, Class<? extends Annotation> annotation, boolean recursive) {
-        return this.getClassByAnnotation(packageName, null, annotation, recursive);
-    }
-
-    @Override
     public Set<ClassInfo> getClassByAnnotation(String packageName, Class<?> parent, Class<? extends Annotation> annotation, boolean recursive) {
         Set<ClassInfo> classes = new HashSet<>();
         // 获取包的名字 并进行替换
