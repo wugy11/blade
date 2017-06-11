@@ -1,33 +1,27 @@
 package com.blade.mvc.route;
 
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.blade.BladeException;
 import com.blade.ioc.annotation.Order;
 import com.blade.kit.BladeKit;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.PathKit;
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.hook.WebHook;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RouteMatcher {
 
@@ -305,7 +299,7 @@ public class RouteMatcher {
 
 	public void initMiddlewares(List<WebHook> hooks) {
 		this.middlewares = hooks.stream().map(webHook -> {
-			Method method = ReflectKit.getMethod(WebHook.class, "before", Invoker.class);
+			Method method = ClassKit.getMethod(WebHook.class, "before", Invoker.class);
 			return new RouteBean(HttpMethod.BEFORE, "/.*", webHook, WebHook.class, method);
 		}).collect(Collectors.toList());
 	}

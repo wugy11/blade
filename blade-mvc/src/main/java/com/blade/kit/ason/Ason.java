@@ -1,6 +1,6 @@
 package com.blade.kit.ason;
 
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.kit.json.JSONArray;
 import com.blade.kit.json.JSONException;
 import com.blade.kit.json.JSONObject;
@@ -95,7 +95,7 @@ public class Ason {
 		if (value == null || JSONObject.NULL.equals(value) || JSONObject.NULL == value) {
 			json.put(key, JSONObject.NULL);
 			return this;
-		} else if (ReflectKit.isPrimitive(value) || value instanceof JSONObject || value instanceof JSONArray) {
+		} else if (ClassKit.isPrimitive(value) || value instanceof JSONObject || value instanceof JSONArray) {
 			if (value instanceof Byte) {
 				value = ((Byte) value).intValue();
 			} else if (value instanceof Character) {
@@ -297,7 +297,7 @@ public class Ason {
 		final Object value = get(key, (T) null);
 		if (Util.isNull(value)) {
 			return defaultValue;
-		} else if (ReflectKit.isPrimitive(cls) || cls == JSONObject.class || cls == JSONArray.class || cls == Ason.class
+		} else if (ClassKit.isPrimitive(cls) || cls == JSONObject.class || cls == JSONArray.class || cls == Ason.class
 				|| cls == AsonArray.class) {
 			return (T) value;
 		} else if (cls.isArray()) {

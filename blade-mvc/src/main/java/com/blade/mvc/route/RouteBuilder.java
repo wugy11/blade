@@ -1,16 +1,15 @@
 package com.blade.mvc.route;
 
-import java.lang.reflect.Method;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.blade.kit.CollectionKit;
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.mvc.annotation.Path;
 import com.blade.mvc.annotation.Route;
 import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.http.HttpMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
 
 public class RouteBuilder {
 
@@ -29,8 +28,8 @@ public class RouteBuilder {
 			pattern = path.value();
 		}
 
-		Method before = ReflectKit.getMethod(webHook, "before", Invoker.class);
-		Method after = ReflectKit.getMethod(webHook, "after", Invoker.class);
+		Method before = ClassKit.getMethod(webHook, "before", Invoker.class);
+		Method after = ClassKit.getMethod(webHook, "after", Invoker.class);
 		buildRoute(webHook, hook, before, pattern, HttpMethod.BEFORE);
 		buildRoute(webHook, hook, after, pattern, HttpMethod.AFTER);
 	}

@@ -3,7 +3,7 @@ package com.blade.mvc.handler;
 import com.blade.BladeException;
 import com.blade.kit.AsmKit;
 import com.blade.kit.JsonKit;
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.kit.StringKit;
 import com.blade.mvc.annotation.*;
 import com.blade.mvc.hook.Invoker;
@@ -28,11 +28,11 @@ public final class MethodArgument {
 
         Parameter[] parameters = actionMethod.getParameters();
         Object[] args = new Object[parameters.length];
-        String[] paramaterNames = AsmKit.getMethodParamNames(actionMethod);
+        String[] parameterNames = AsmKit.getMethodParamNames(actionMethod);
 
         for (int i = 0, len = parameters.length; i < len; i++) {
             Parameter parameter = parameters[i];
-            String paramName = paramaterNames[i];
+            String paramName = parameterNames[i];
             int annoLen = parameter.getAnnotations().length;
             Class<?> argType = parameter.getType();
             if (annoLen > 0) {
@@ -66,7 +66,7 @@ public final class MethodArgument {
                     args[i] = request.fileItem(name).orElse(null);
                 }
             } else {
-                if (ReflectKit.isPrimitive(argType)) {
+                if (ClassKit.isPrimitive(argType)) {
                     args[i] = request.query(paramName);
                 } else {
                     if (argType == Invoker.class) {
@@ -95,8 +95,8 @@ public final class MethodArgument {
     }
 
     private static Object getBodyParam(Class<?> argType, Request request) throws BladeException {
-        if (ReflectKit.isPrimitive(argType)) {
-            return ReflectKit.convert(argType, request.bodyToString());
+        if (ClassKit.isPrimitive(argType)) {
+            return ClassKit.convert(argType, request.bodyToString());
         } else {
             String json = request.bodyToString();
             return StringKit.isNotBlank(json) ? JsonKit.formJson(request.bodyToString(), argType) : null;
@@ -106,7 +106,7 @@ public final class MethodArgument {
     private static Object getQueryParam(Class<?> argType, QueryParam queryParam, String paramName, Request request) throws BladeException {
         String name = StringKit.isBlank(queryParam.name()) ? paramName : queryParam.name();
 
-        if (ReflectKit.isPrimitive(argType)) {
+        if (ClassKit.isPrimitive(argType)) {
             Optional<String> val = request.query(name);
             boolean required = queryParam.required();
             if (!val.isPresent()) {
@@ -162,7 +162,7 @@ public final class MethodArgument {
             if (null == fields || fields.length == 0) {
                 return null;
             }
-            Object obj = ReflectKit.newInstance(argType);
+            Object obj = ClassKit.newInstance(argType);
             boolean hasField = false;
             for (Field field : fields) {
                 field.setAccessible(true);
@@ -175,7 +175,7 @@ public final class MethodArgument {
                     fieldValue = request.query(fieldName);
                 }
                 if (fieldValue.isPresent()) {
-                    Object value = ReflectKit.convert(field.getType(), fieldValue.get());
+                    Object value = ClassKit.convert(field.getType(), fieldValue.get());
                     field.set(obj, value);
                     hasField = true;
                 }

@@ -1,26 +1,16 @@
 package com.blade.test.kit.json;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.blade.kit.ason.*;
+import com.blade.kit.json.JSONArray;
+import com.blade.kit.json.JSONObject;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.blade.kit.ason.Ason;
-import com.blade.kit.ason.AsonArray;
-import com.blade.kit.ason.AsonIgnore;
-import com.blade.kit.ason.AsonName;
-import com.blade.kit.ason.AsonSerializer;
-import com.blade.kit.json.JSONArray;
-import com.blade.kit.json.JSONObject;
+import static org.junit.Assert.*;
 
 /**
  * @author Aidan Follestad (afollestad)

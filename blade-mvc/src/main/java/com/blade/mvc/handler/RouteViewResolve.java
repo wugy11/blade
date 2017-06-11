@@ -3,7 +3,7 @@ package com.blade.mvc.handler;
 import com.blade.Blade;
 import com.blade.BladeException;
 import com.blade.ioc.Ioc;
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.mvc.annotation.JSON;
 import com.blade.mvc.annotation.Path;
 import com.blade.mvc.http.Request;
@@ -41,9 +41,9 @@ public class RouteViewResolve {
 			Object returnParam;
 			if (len > 0) {
 				Object[] args = MethodArgument.getArgs(request, response, actionMethod);
-				returnParam = ReflectKit.invokeMehod(target, actionMethod, args);
+				returnParam = ClassKit.invokeMehod(target, actionMethod, args);
 			} else {
-				returnParam = ReflectKit.invokeMehod(target, actionMethod);
+				returnParam = ClassKit.invokeMehod(target, actionMethod);
 			}
 
 			if (null != returnParam) {
@@ -88,9 +88,9 @@ public class RouteViewResolve {
 			Object returnParam;
 			if (len > 0) {
 				Object[] args = MethodArgument.getArgs(request, response, actionMethod);
-				returnParam = ReflectKit.invokeMehod(target, actionMethod, args);
+				returnParam = ClassKit.invokeMehod(target, actionMethod, args);
 			} else {
-				returnParam = ReflectKit.invokeMehod(target, actionMethod);
+				returnParam = ClassKit.invokeMehod(target, actionMethod);
 			}
 
 			if (null != returnParam) {

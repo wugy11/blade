@@ -9,13 +9,12 @@ import java.util.Set;
  */
 public interface ClassReader {
 
-    Set<ClassInfo> getClass(String packageName, boolean recursive);
+    Set<Class<?>> getClass(String packageName);
 
-    Set<ClassInfo> getClass(String packageName, Class<?> parent, boolean recursive);
+    Set<Class<?>> getClass(String packageName, Class<?> parent);
 
-    Set<ClassInfo> getClassByAnnotation(String packageName, Class<? extends Annotation> annotation, boolean recursive);
+    Set<Class<?>> getClassByAnnotation(Class<? extends Annotation> annotation);
 
-    Set<ClassInfo> getClassByAnnotation(String packageName, Class<?> parent, Class<? extends Annotation> annotation,
-                                        boolean recursive);
+    Set<Class<?>> getClassByAnnotation(String packageName, Class<? extends Annotation> annotation);
 
 }

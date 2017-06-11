@@ -113,4 +113,16 @@ public final class StringKit {
         return MIMEType.get(ext);
     }
 
+    public static String subAtFirst(String string, String subStr) {
+        if (isBlank(string) || isBlank(subStr) || !string.contains(subStr))
+            return string;
+        return string.substring(0, string.indexOf(subStr));
+    }
+
+    public static String subAtLast(String string, String subStr) {
+        if (isBlank(string) || isBlank(subStr) || !string.contains(subStr))
+            return string;
+        return string.substring(0, string.lastIndexOf(subStr));
+    }
+
 }

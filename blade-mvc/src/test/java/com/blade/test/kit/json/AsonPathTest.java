@@ -1,20 +1,11 @@
 package com.blade.test.kit.json;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.blade.kit.ason.*;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-
-import com.blade.kit.ason.Ason;
-import com.blade.kit.ason.AsonArray;
-import com.blade.kit.ason.AsonName;
-import com.blade.kit.ason.InvalidPathException;
-import com.blade.kit.ason.Util;
+import static org.junit.Assert.*;
 
 public class AsonPathTest {
 

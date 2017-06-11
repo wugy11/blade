@@ -19,7 +19,7 @@ public final class JsonKit {
 		if (cls.isArray()) {
 			return Ason.serializeArray(object).toString();
 		}
-		if (ReflectKit.hasInterface(cls, List.class)) {
+		if (ClassKit.hasInterface(cls, List.class)) {
 			return Ason.serializeList((List<? extends Object>) object).toString();
 		}
 		if (cls.getSuperclass().equals(AbstractList.class)) {

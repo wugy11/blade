@@ -2,7 +2,6 @@ package com.blade.test;
 
 import com.blade.mvc.ui.template.UncheckedTemplateException;
 import com.blade.test.model.Person;
-
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.junit.Test;
 

@@ -1,6 +1,5 @@
 package com.blade.kit;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.stream.Stream;
@@ -8,12 +7,13 @@ import java.util.stream.Stream;
 /**
  * @author biezhi 2017/5/31
  */
-public class ReflectKit {
+public class ClassKit {
 
     public static <T> T newInstance(Class<T> cls) {
         try {
             return cls.newInstance();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

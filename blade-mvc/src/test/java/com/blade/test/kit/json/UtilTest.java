@@ -1,12 +1,11 @@
 package com.blade.test.kit.json;
 
-import com.blade.kit.ReflectKit;
+import com.blade.kit.ClassKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.ason.Ason;
 import com.blade.kit.ason.AsonArray;
 import com.blade.kit.ason.AsonIgnore;
 import com.blade.kit.json.JSONObject;
-
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -110,16 +109,16 @@ public class UtilTest {
 
 	@Test
 	public void test_default_primitive() throws Exception {
-		assertEquals(false, ReflectKit.defaultPrimitiveValue(boolean.class));
-		assertEquals(0d, ReflectKit.defaultPrimitiveValue(double.class));
-		assertEquals(0f, ReflectKit.defaultPrimitiveValue(float.class));
-		assertEquals((short) 0, ReflectKit.defaultPrimitiveValue(short.class));
-		assertEquals(0, ReflectKit.defaultPrimitiveValue(int.class));
-		assertEquals(0L, ReflectKit.defaultPrimitiveValue(long.class));
-		assertEquals((byte) 0, ReflectKit.defaultPrimitiveValue(byte.class));
-		assertEquals('\0', ReflectKit.defaultPrimitiveValue(char.class));
-		assertNull(ReflectKit.defaultPrimitiveValue(String.class));
-		assertNull(ReflectKit.defaultPrimitiveValue(Character.class));
+		assertEquals(false, ClassKit.defaultPrimitiveValue(boolean.class));
+		assertEquals(0d, ClassKit.defaultPrimitiveValue(double.class));
+		assertEquals(0f, ClassKit.defaultPrimitiveValue(float.class));
+		assertEquals((short) 0, ClassKit.defaultPrimitiveValue(short.class));
+		assertEquals(0, ClassKit.defaultPrimitiveValue(int.class));
+		assertEquals(0L, ClassKit.defaultPrimitiveValue(long.class));
+		assertEquals((byte) 0, ClassKit.defaultPrimitiveValue(byte.class));
+		assertEquals('\0', ClassKit.defaultPrimitiveValue(char.class));
+		assertNull(ClassKit.defaultPrimitiveValue(String.class));
+		assertNull(ClassKit.defaultPrimitiveValue(Character.class));
 	}
 
 	static class DefaultCtorClass {

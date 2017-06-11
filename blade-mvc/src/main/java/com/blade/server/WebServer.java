@@ -5,14 +5,13 @@ import com.blade.Environment;
 import com.blade.event.BeanProcessor;
 import com.blade.event.EventType;
 import com.blade.ioc.BeanDefine;
-import com.blade.ioc.DynamicContext;
 import com.blade.ioc.Ioc;
 import com.blade.ioc.OrderComparator;
 import com.blade.ioc.annotation.Bean;
-import com.blade.ioc.reader.ClassInfo;
+import com.blade.ioc.reader.DefaultClassReader;
 import com.blade.kit.BladeKit;
+import com.blade.kit.ClassKit;
 import com.blade.kit.CollectionKit;
-import com.blade.kit.ReflectKit;
 import com.blade.kit.StringKit;
 import com.blade.mvc.Const;
 import com.blade.mvc.WebContext;
@@ -34,8 +33,8 @@ import io.netty.handler.ssl.SslContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.blade.mvc.Const.CLASSPATH;
 
@@ -44,175 +43,181 @@ import static com.blade.mvc.Const.CLASSPATH;
  */
 public class WebServer {
 
-	private static final Logger log = LoggerFactory.getLogger(WebServer.class);
+    private static final Logger log = LoggerFactory.getLogger(WebServer.class);
 
-	private Blade blade;
-	private Environment environment;
+    private Blade blade;
+    private Environment environment;
 
-	private EventLoopGroup bossGroup, workerGroup;
-	private Channel channel;
+    private EventLoopGroup bossGroup, workerGroup;
+    private Channel channel;
 
-	private RouteBuilder routeBuilder;
+    private RouteBuilder routeBuilder;
 
-	public void initAndStart(Blade blade) throws Exception {
-		this.blade = blade;
-		this.environment = blade.environment();
+    private static final DefaultClassReader classReader = new DefaultClassReader();
 
-		long initStart = System.currentTimeMillis();
-		log.info("Blade environment: jdk.version\t=> {}", System.getProperty("java.version"));
-		log.info("Blade environment: user.dir\t\t=> {}", System.getProperty("user.dir"));
-		log.info("Blade environment: java.io.tmpdir\t=> {}", System.getProperty("java.io.tmpdir"));
-		log.info("Blade environment: user.timezone\t=> {}", System.getProperty("user.timezone"));
-		log.info("Blade environment: file.encoding\t=> {}", System.getProperty("file.encoding"));
-		log.info("Blade environment: classpath\t\t=> {}", CLASSPATH);
+    public void initAndStart(Blade blade) throws Exception {
+        this.blade = blade;
+        this.environment = blade.environment();
 
-		this.loadConfig();
-		this.initConfig();
+        long initStart = System.currentTimeMillis();
+        log.info("Blade environment: jdk.version\t=> {}", System.getProperty("java.version"));
+        log.info("Blade environment: user.dir\t\t=> {}", System.getProperty("user.dir"));
+        log.info("Blade environment: java.io.tmpdir\t=> {}", System.getProperty("java.io.tmpdir"));
+        log.info("Blade environment: user.timezone\t=> {}", System.getProperty("user.timezone"));
+        log.info("Blade environment: file.encoding\t=> {}", System.getProperty("file.encoding"));
+        log.info("Blade environment: classpath\t\t=> {}", CLASSPATH);
 
-		WebContext.init(blade, "/", false);
+        this.loadConfig();
+        this.initConfig();
 
-		this.initIoc();
+        WebContext.init(blade, "/", false);
 
-		this.startServer(initStart);
+        this.initIoc();
 
-	}
+        this.startServer(initStart);
 
-	private void initIoc() {
-		RouteMatcher routeMatcher = blade.routeMatcher();
-		routeMatcher.initMiddlewares(blade.middlewares());
+    }
 
-		routeBuilder = new RouteBuilder(routeMatcher);
+    private void initIoc() {
+        RouteMatcher routeMatcher = blade.routeMatcher();
+        routeMatcher.initMiddlewares(blade.middlewares());
 
-		blade.scanPackages().stream().flatMap(DynamicContext::recursionFindClasses).map(ClassInfo::getClazz)
-				.filter(ReflectKit::isNormalClass).forEach(this::parseCls);
+        routeBuilder = new RouteBuilder(routeMatcher);
 
-		routeMatcher.register();
+        blade.scanPackages().stream().flatMap(this::getClassStream)
+                .filter(ClassKit::isNormalClass).forEach(this::parseCls);
 
-		beanProcessors.stream().sorted(new OrderComparator<>()).forEach(b -> b.preHandle(blade));
+        routeMatcher.register();
 
-		Ioc ioc = blade.ioc();
-		if (!CollectionKit.isEmpty(ioc.getBeans())) {
-			log.info("⬢ Register bean: {}", ioc.getBeans());
-		}
+        beanProcessors.stream().sorted(new OrderComparator<>()).forEach(b -> b.preHandle(blade));
 
-		List<BeanDefine> beanDefines = ioc.getBeanDefines();
-		if (!CollectionKit.isEmpty(beanDefines)) {
-			beanDefines.forEach(b -> BladeKit.injection(ioc, b));
-		}
+        Ioc ioc = blade.ioc();
+        if (!CollectionKit.isEmpty(ioc.getBeans())) {
+            log.info("⬢ Register bean: {}", ioc.getBeans());
+        }
 
-		beanProcessors.stream().sorted(new OrderComparator<>()).forEach(b -> b.processor(blade));
+        List<BeanDefine> beanDefines = ioc.getBeanDefines();
+        if (!CollectionKit.isEmpty(beanDefines)) {
+            beanDefines.forEach(b -> BladeKit.injection(ioc, b));
+        }
 
-	}
+        beanProcessors.stream().sorted(new OrderComparator<>()).forEach(b -> b.processor(blade));
 
-	private void startServer(long startTime) throws Exception {
-		// Configure SSL.
-		SslContext sslCtx = null;
-		boolean SSL = false;
+    }
 
-		// Configure the server.
-		this.bossGroup = new NioEventLoopGroup(1);
-		this.workerGroup = new NioEventLoopGroup();
+    private void startServer(long startTime) throws Exception {
+        // Configure SSL.
+        SslContext sslCtx = null;
+        boolean SSL = false;
 
-		ServerBootstrap b = new ServerBootstrap();
-		b.option(ChannelOption.SO_BACKLOG, 1024);
+        // Configure the server.
+        this.bossGroup = new NioEventLoopGroup(1);
+        this.workerGroup = new NioEventLoopGroup();
 
-		b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-				.handler(new LoggingHandler(LogLevel.DEBUG)).childHandler(new HttpServerInitializer(blade, sslCtx));
+        ServerBootstrap b = new ServerBootstrap();
+        b.option(ChannelOption.SO_BACKLOG, 1024);
 
-		String address = environment.get(Const.ENV_KEY_SERVER_ADDRESS, Const.DEFAULT_SERVER_ADDRESS);
-		int port = environment.getInt(Const.ENV_KEY_SERVER_PORT, Const.DEFAULT_SERVER_PORT);
+        b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+                .handler(new LoggingHandler(LogLevel.DEBUG)).childHandler(new HttpServerInitializer(blade, sslCtx));
 
-		channel = b.bind(address, port).sync().channel();
-		String appName = environment.get(Const.ENV_KEY_APP_NAME, "Blade");
+        String address = environment.get(Const.ENV_KEY_SERVER_ADDRESS, Const.DEFAULT_SERVER_ADDRESS);
+        int port = environment.getInt(Const.ENV_KEY_SERVER_PORT, Const.DEFAULT_SERVER_PORT);
 
-		log.info("⬢ {} initialize successfully, Time elapsed: {} ms.", appName, System.currentTimeMillis() - startTime);
-		log.info("⬢ Blade start with {}:{}", address, port);
-		log.info("⬢ Open your web browser and navigate to {}://{}:{} ⚡", (SSL ? "https" : "http"),
-				address.replace("0.0.0.0", "127.0.0.1"), port);
+        channel = b.bind(address, port).sync().channel();
+        String appName = environment.get(Const.ENV_KEY_APP_NAME, "Blade");
 
-		blade.eventManager().fireEvent(EventType.SERVER_STARTED, blade);
-	}
+        log.info("⬢ {} initialize successfully, Time elapsed: {} ms.", appName, System.currentTimeMillis() - startTime);
+        log.info("⬢ Blade start with {}:{}", address, port);
+        log.info("⬢ Open your web browser and navigate to {}://{}:{} ⚡", (SSL ? "https" : "http"),
+                address.replace("0.0.0.0", "127.0.0.1"), port);
 
-	private List<BeanProcessor> beanProcessors = new ArrayList<>();
+        blade.eventManager().fireEvent(EventType.SERVER_STARTED, blade);
+    }
 
-	private void parseCls(Class<?> clazz) {
-		if (null != clazz.getAnnotation(Bean.class))
-			blade.register(clazz);
-		if (null != clazz.getAnnotation(Path.class)) {
-			if (null == clazz.getAnnotation(Bean.class)) {
-				blade.register(clazz);
-			}
-			Object controller = blade.ioc().getBean(clazz);
-			routeBuilder.addRouter(clazz, controller);
-		}
-		if (ReflectKit.hasInterface(clazz, WebHook.class)) {
-			if (null != clazz.getAnnotation(Bean.class)) {
-				Object hook = blade.ioc().getBean(clazz);
-				routeBuilder.addWebHook(clazz, hook);
-			}
-		}
-		if (ReflectKit.hasInterface(clazz, BeanProcessor.class))
-			beanProcessors.add((BeanProcessor) blade.ioc().getBean(clazz));
+    private List<BeanProcessor> beanProcessors = CollectionKit.newArrayList();
 
-	}
+    private Stream<Class<?>> getClassStream(String packageName) {
+        return classReader.getClass(packageName).stream();
+    }
 
-	private void loadConfig() {
+    private void parseCls(Class<?> clazz) {
+        if (null != clazz.getAnnotation(Bean.class))
+            blade.register(clazz);
+        if (null != clazz.getAnnotation(Path.class)) {
+            if (null == clazz.getAnnotation(Bean.class)) {
+                blade.register(clazz);
+            }
+            Object controller = blade.ioc().getBean(clazz);
+            routeBuilder.addRouter(clazz, controller);
+        }
+        if (ClassKit.hasInterface(clazz, WebHook.class)) {
+            if (null != clazz.getAnnotation(Bean.class)) {
+                Object hook = blade.ioc().getBean(clazz);
+                routeBuilder.addWebHook(clazz, hook);
+            }
+        }
+        if (ClassKit.hasInterface(clazz, BeanProcessor.class))
+            beanProcessors.add((BeanProcessor) blade.ioc().getBean(clazz));
 
-		String bootConf = blade.environment().get(Const.ENV_KEY_BOOT_CONF, "classpath:app.properties");
+    }
 
-		Environment bootEnv = Environment.of(bootConf);
+    private void loadConfig() {
 
-		bootEnv.props().forEach((key, value) -> environment.set(key.toString(), value));
+        String bootConf = blade.environment().get(Const.ENV_KEY_BOOT_CONF, "classpath:app.properties");
 
-		blade.register(environment);
+        Environment bootEnv = Environment.of(bootConf);
 
-	}
+        bootEnv.props().forEach((key, value) -> environment.set(key.toString(), value));
 
-	private void initConfig() {
+        blade.register(environment);
 
-		if (null != blade.bootClass()) {
-			if (blade.scanPackages().size() == 1 && blade.scanPackages().contains(Const.PLUGIN_PACKAGE_NAME)) {
-				blade.scanPackages(blade.bootClass().getPackage().getName());
-			}
-		}
+    }
 
-		DefaultUI.printBanner();
+    private void initConfig() {
 
-		String statics = environment.get(Const.ENV_KEY_STATIC_DIRS, "");
-		if (StringKit.isNotBlank(statics)) {
-			blade.addStatics(statics.split(","));
-		}
+        if (null != blade.bootClass()) {
+            if (blade.scanPackages().size() == 1 && blade.scanPackages().contains(Const.PLUGIN_PACKAGE_NAME)) {
+                blade.scanPackages(blade.bootClass().getPackage().getName());
+            }
+        }
 
-		if (environment.getBoolean(Const.ENV_KEY_MONITOR_ENABLE, true)) {
-			DefaultUI.registerStatus(blade);
-		}
+        DefaultUI.printBanner();
 
-		String templatePath = environment.get(Const.ENV_KEY_TEMPLATE_PATH, "templates");
-		if (templatePath.charAt(0) == '/') {
-			templatePath = templatePath.substring(1);
-		}
-		if (templatePath.endsWith("/")) {
-			templatePath = templatePath.substring(0, templatePath.length() - 1);
-		}
-		DefaultEngine.TEMPLATE_PATH = templatePath;
-	}
+        String statics = environment.get(Const.ENV_KEY_STATIC_DIRS, "");
+        if (StringKit.isNotBlank(statics)) {
+            blade.addStatics(statics.split(","));
+        }
 
-	public void stop() {
-		if (this.bossGroup != null) {
-			this.bossGroup.shutdownGracefully();
-		}
-		if (this.workerGroup != null) {
-			this.workerGroup.shutdownGracefully();
-		}
-	}
+        if (environment.getBoolean(Const.ENV_KEY_MONITOR_ENABLE, true)) {
+            DefaultUI.registerStatus(blade);
+        }
 
-	public void join() throws InterruptedException {
-		try {
-			channel.closeFuture().sync();
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.stop();
-		}
-	}
+        String templatePath = environment.get(Const.ENV_KEY_TEMPLATE_PATH, "templates");
+        if (templatePath.charAt(0) == '/') {
+            templatePath = templatePath.substring(1);
+        }
+        if (templatePath.endsWith("/")) {
+            templatePath = templatePath.substring(0, templatePath.length() - 1);
+        }
+        DefaultEngine.TEMPLATE_PATH = templatePath;
+    }
+
+    public void stop() {
+        if (this.bossGroup != null) {
+            this.bossGroup.shutdownGracefully();
+        }
+        if (this.workerGroup != null) {
+            this.workerGroup.shutdownGracefully();
+        }
+    }
+
+    public void join() throws InterruptedException {
+        try {
+            channel.closeFuture().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.stop();
+        }
+    }
 
 }
