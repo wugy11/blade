@@ -42,7 +42,7 @@ public class ClassKit {
      * @param method 方法名称
      * @param args   方法参数
      */
-    public static Object invokeMehod(Object bean, Method method, Object... args) throws Exception {
+    public static Object invokeMethod(Object bean, Method method, Object... args) throws Exception {
         Class<?>[] types = method.getParameterTypes();
         int argCount = args == null ? 0 : args.length;
         // 参数个数对不上
@@ -80,9 +80,9 @@ public class ClassKit {
     /**
      * 对象是否其中一个
      */
-    public static boolean is(Object obj, Object... mybe) {
-        if (obj != null && mybe != null) {
-            for (Object mb : mybe)
+    public static boolean is(Object obj, Object... types) {
+        if (obj != null && types != null) {
+            for (Object mb : types)
                 if (obj.equals(mb))
                     return true;
         }

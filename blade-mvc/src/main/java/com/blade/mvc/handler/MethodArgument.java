@@ -2,8 +2,8 @@ package com.blade.mvc.handler;
 
 import com.blade.BladeException;
 import com.blade.kit.AsmKit;
-import com.blade.kit.JsonKit;
 import com.blade.kit.ClassKit;
+import com.blade.kit.JsonKit;
 import com.blade.kit.StringKit;
 import com.blade.mvc.annotation.*;
 import com.blade.mvc.hook.Invoker;
@@ -71,10 +71,8 @@ public final class MethodArgument {
                 } else {
                     if (argType == Invoker.class) {
                         args[i] = new Invoker(request, response);
-                        continue;
                     } else if (argType == Request.class) {
                         args[i] = request;
-                        continue;
                     } else if (argType == Response.class) {
                         args[i] = response;
                     } else if (argType == Session.class || argType == HttpSession.class) {
@@ -112,13 +110,9 @@ public final class MethodArgument {
             if (!val.isPresent()) {
                 val = Optional.of(queryParam.defaultValue());
             }
-            if (required && !val.isPresent()) {
-                throw new BladeException("query param [" + paramName + "] not is empty.");
-            }
             return getRequestParam(argType, val.get());
-        } else {
-            return parseModel(argType, request, name);
         }
+        return parseModel(argType, request, name);
     }
 
     private static Object getCookie(Class<?> argType, CookieParam cookieParam, String paramName, Request request) {
@@ -127,9 +121,6 @@ public final class MethodArgument {
         boolean required = cookieParam.required();
         if (!val.isPresent()) {
             val = Optional.of(cookieParam.defaultValue());
-        }
-        if (required && !val.isPresent()) {
-            throw new BladeException("cookie param [" + paramName + "] not is empty.");
         }
         return getRequestParam(argType, val.get());
     }

@@ -23,9 +23,6 @@ public interface Request {
 
 	/**
 	 * init request path parameters
-	 *
-	 * @param route
-	 * @return
 	 */
 	Request initPathParams(RouteBean route);
 
@@ -319,9 +316,6 @@ public interface Request {
 
 	/**
 	 * Add a cookie to the request
-	 *
-	 * @param cookie
-	 * @return
 	 */
 	Request cookie(Cookie cookie);
 
@@ -397,9 +391,6 @@ public interface Request {
 
 	/**
 	 * get file item by request part name
-	 *
-	 * @param name
-	 * @return
 	 */
 	default Optional<FileItem> fileItem(String name) {
 		return Optional.ofNullable(fileItems().get(name));

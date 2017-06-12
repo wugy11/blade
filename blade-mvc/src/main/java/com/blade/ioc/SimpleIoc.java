@@ -65,7 +65,7 @@ public class SimpleIoc implements Ioc {
     /**
      * Add user-defined objects
      */
-    public void addBean(String name, BeanDefine beanDefine) {
+    private void addBean(String name, BeanDefine beanDefine) {
         if (pool.put(name, beanDefine) != null) {
             log.warn("Duplicated Bean: {}", name);
         }
@@ -84,14 +84,14 @@ public class SimpleIoc implements Ioc {
     /**
      * Register @Bean marked objects
      */
-    public Object addBean(Class<?> type, boolean singleton) {
+    private Object addBean(Class<?> type, boolean singleton) {
         return addBean(type.getName(), type, singleton);
     }
 
     /**
      * Register @Bean marked objects
      */
-    public Object addBean(String name, Class<?> beanClass, boolean singleton) {
+    private Object addBean(String name, Class<?> beanClass, boolean singleton) {
         BeanDefine beanDefine = this.getBeanDefine(beanClass, singleton);
 
         if (pool.put(name, beanDefine) != null) {
@@ -112,7 +112,7 @@ public class SimpleIoc implements Ioc {
         return beanDefine.getBean();
     }
 
-    public BeanDefine getBeanDefine(Class<?> beanClass, boolean singleton) {
+    private BeanDefine getBeanDefine(Class<?> beanClass, boolean singleton) {
         try {
             Object object = beanClass.newInstance();
             return new BeanDefine(object, beanClass, singleton);
