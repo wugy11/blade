@@ -125,15 +125,9 @@ public abstract class UUID {
      */
     public static String UU(String uu16) {
         StringBuilder sb = new StringBuilder();
-        sb.append(uu16.substring(0, 8));
-        sb.append('-');
-        sb.append(uu16.substring(8, 12));
-        sb.append('-');
-        sb.append(uu16.substring(12, 16));
-        sb.append('-');
-        sb.append(uu16.substring(16, 20));
-        sb.append('-');
-        sb.append(uu16.substring(20));
+        sb.append(uu16.substring(0, 8)).append('-').append(uu16.substring(8, 12))
+                .append('-').append(uu16.substring(12, 16)).append('-')
+                .append(uu16.substring(16, 20)).append('-').append(uu16.substring(20));
         return sb.toString();
     }
 
@@ -154,8 +148,7 @@ public abstract class UUID {
         char[] cs = uu64.toCharArray();
         int index = 0;
         // 每次取2个字符，恢复成3个byte，重复10次，
-        for (int i = 0; i < 10; i++) {
-            int off = i * 2;
+        for (int i = 0, off = i * 2; i < 10; i++) {
             char cl = cs[off];
             char cr = cs[off + 1];
             int l = Arrays.binarySearch(_UU64, cl);
@@ -217,23 +210,20 @@ public abstract class UUID {
     public static String captchaChar(int length, boolean caseSensitivity) {
         StringBuilder sb = new StringBuilder();
         Random rand = new Random();// 随机用以下三个随机生成器
-        Random randdata = new Random();
-        int data = 0;
+        Random randData = new Random();
+        int index = rand.nextInt(caseSensitivity ? 3 : 2);
         for (int i = 0; i < length; i++) {
-            int index = rand.nextInt(caseSensitivity ? 3 : 2);
             // 目的是随机选择生成数字，大小写字母
             switch (index) {
                 case 0:
-                    data = randdata.nextInt(10);// 仅仅会生成0~9, 0~9的ASCII为48~57
-                    sb.append(data);
+                    sb.append(randData.nextInt(10));// 仅仅会生成0~9, 0~9的ASCII为48~57
                     break;
                 case 1:
-                    data = randdata.nextInt(26) + 97;// 保证只会产生ASCII为97~122(a-z)之间的整数,
-                    sb.append((char) data);
+                    sb.append((char) (randData.nextInt(26) + 97));// 保证只会产生ASCII为97~122(a-z)之间的整数,
                     break;
                 case 2: // caseSensitivity为true的时候, 才会有大写字母
-                    data = randdata.nextInt(26) + 65;// 保证只会产生ASCII为65~90(A~Z)之间的整数
-                    sb.append((char) data);
+                    // 保证只会产生ASCII为65~90(A~Z)之间的整数
+                    sb.append((char) (randData.nextInt(26) + 65));
                     break;
             }
         }
