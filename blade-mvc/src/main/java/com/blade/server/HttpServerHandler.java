@@ -54,16 +54,16 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private final StaticFileHandler staticFileHandler;
 	private final SessionHandler sessionHandler;
 
-	private final Connection ci;
+	private final Connection conn;
 	private final boolean openMonitor;
 
 	private String page404, page500;
 
-	public HttpServerHandler(Blade blade, Connection ci) {
+	public HttpServerHandler(Blade blade, Connection conn) {
 		this.blade = blade;
 		this.statics = blade.getStatics();
 
-		this.ci = ci;
+		this.conn = conn;
 		this.openMonitor = blade.environment().getBoolean(ENV_KEY_MONITOR_ENABLE, true);
 		this.page404 = blade.environment().get(ENV_KEY_PAGE_404, null);
 		this.page500 = blade.environment().get(ENV_KEY_PAGE_500, null);
@@ -150,7 +150,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			WebStatistics.me().registerRequestFromIp(WebStatistics.getIpFromChannel(ctx.channel()),
 					LocalDateTime.now());
 			if (fullHttpRequest != null) {
-				ci.addUri(fullHttpRequest.uri());
+				conn.addUri(fullHttpRequest.uri());
 			}
 		}
 	}
@@ -245,11 +245,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
 	/**
 	 * invoke hooks
-	 *
-	 * @param hooks
-	 * @param request
-	 * @param response
-	 * @return
 	 */
 	private boolean invokeHook(List<RouteBean> hooks, Request request, Response response) {
 		for (RouteBean route : hooks) {

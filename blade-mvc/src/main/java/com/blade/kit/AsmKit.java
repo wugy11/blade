@@ -4,9 +4,7 @@ import org.objectweb.asm.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ASM Tools
@@ -16,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class AsmKit {
 
-    private static final Map<Method, String[]> pool = new ConcurrentHashMap<>();
+    private static final Map<Method, String[]> pool = CollectionKit.newConcurrentMap();
 
     /**
      * <p>
@@ -25,7 +23,6 @@ public final class AsmKit {
      *
      * @param types   asm的类型({@link Type})
      * @param clazzes java 类型({@link Class})
-     * @return
      */
     private static boolean sameType(Type[] types, Class<?>[] clazzes) {
         // 个数不同
@@ -63,24 +60,24 @@ public final class AsmKit {
             public MethodVisitor visitMethod(final int access, final String name, final String desc,
                                              final String signature, final String[] exceptions) {
                 final Type[] args = Type.getArgumentTypes(desc);
+                MethodVisitor v = super.visitMethod(access, name, desc, signature, exceptions);
                 // 方法名相同并且参数个数相同
                 if (!name.equals(m.getName()) || !sameType(args, m.getParameterTypes())) {
-                    return super.visitMethod(access, name, desc, signature, exceptions);
+                    return v;
                 }
-                MethodVisitor v = super.visitMethod(access, name, desc, signature, exceptions);
                 return new MethodVisitor(Opcodes.ASM5, v) {
                     @Override
                     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end,
                                                    int index) {
-                        int i = index - 1;
-                        // 如果是静态方法，则第一就是参数
-                        // 如果不是静态方法，则第一个是"this"，然后才是方法的参数
-                        if (Modifier.isStatic(m.getModifiers())) {
-                            i = index;
-                        }
-                        if (i >= 0 && i < paramNames.length) {
-                            paramNames[i] = name;
-                        }
+//                        int i = index - 1;
+//                        // 如果是静态方法，则第一就是参数
+//                        // 如果不是静态方法，则第一个是"this"，然后才是方法的参数
+//                        if (Modifier.isStatic(m.getModifiers())) {
+//                            i = index;
+//                        }
+//                        if (i >= 0 && i < paramNames.length) {
+//                            paramNames[i] = name;
+//                        }
                         super.visitLocalVariable(name, desc, signature, start, end, index);
                     }
                 };

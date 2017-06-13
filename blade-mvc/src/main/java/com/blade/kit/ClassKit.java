@@ -19,22 +19,7 @@ public class ClassKit {
     }
 
     public static Object convert(Class<?> type, String value) {
-        if (type == Integer.class) {
-            return Integer.parseInt(value);
-        } else if (type == String.class) {
-            return value;
-        } else if (type == Double.class) {
-            return Double.parseDouble(value);
-        } else if (type == Float.class) {
-            return Float.parseFloat(value);
-        } else if (type == Long.class) {
-            return Long.parseLong(value);
-        } else if (type == Boolean.class) {
-            return Boolean.parseBoolean(value);
-        } else if (type == Short.class) {
-            return Short.parseShort(value);
-        }
-        return value;
+        return cast(value, type);
     }
 
     /**
@@ -59,20 +44,27 @@ public class ClassKit {
 
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object value, Class<T> type) {
-        if (value != null && !type.isAssignableFrom(value.getClass())) {
-            if (is(type, int.class, Integer.class)) {
-                value = Integer.parseInt(String.valueOf(value));
-            } else if (is(type, long.class, Long.class)) {
-                value = Long.parseLong(String.valueOf(value));
-            } else if (is(type, float.class, Float.class)) {
-                value = Float.parseFloat(String.valueOf(value));
-            } else if (is(type, double.class, Double.class)) {
-                value = Double.parseDouble(String.valueOf(value));
-            } else if (is(type, boolean.class, Boolean.class)) {
-                value = Boolean.parseBoolean(String.valueOf(value));
-            } else if (is(type, String.class)) {
-                value = String.valueOf(value);
-            }
+        if (null == value)
+            return null;
+        if (type.isAssignableFrom(value.getClass()))
+            return (T) value;
+        String val = String.valueOf(value);
+        if (is(type, int.class, Integer.class)) {
+            value = Integer.parseInt(val);
+        } else if (is(type, long.class, Long.class)) {
+            value = Long.parseLong(val);
+        } else if (is(type, float.class, Float.class)) {
+            value = Float.parseFloat(val);
+        } else if (is(type, double.class, Double.class)) {
+            value = Double.parseDouble(val);
+        } else if (is(type, boolean.class, Boolean.class)) {
+            value = Boolean.parseBoolean(val);
+        } else if (is(type, String.class)) {
+            value = val;
+        } else if (is(type, short.class, Short.class)) {
+            value = Short.parseShort(val);
+        } else if (is(type, byte.class, Byte.class)) {
+            value = Byte.parseByte(val);
         }
         return (T) value;
     }
@@ -80,7 +72,7 @@ public class ClassKit {
     /**
      * 对象是否其中一个
      */
-    public static boolean is(Object obj, Object... types) {
+    private static boolean is(Object obj, Object... types) {
         if (obj != null && types != null) {
             for (Object mb : types)
                 if (obj.equals(mb))

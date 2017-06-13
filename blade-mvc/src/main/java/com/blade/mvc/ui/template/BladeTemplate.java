@@ -1,11 +1,12 @@
 package com.blade.mvc.ui.template;
 
+import com.blade.kit.CollectionKit;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Character.isDigit;
@@ -31,7 +32,7 @@ public class BladeTemplate {
 
     private final String str;
 
-    private final Map<String, Object> arguments = new HashMap<>();
+    private final Map<String, Object> arguments = CollectionKit.newHashMap();
 
     private BladeTemplate(String str) {
         this.str = str;
@@ -73,12 +74,12 @@ public class BladeTemplate {
         return template(readFromFile(strPath, encoding), args);
     }
 
-    public void failIfArgExists(String argName) {
+    private void failIfArgExists(String argName) {
         if (arguments.containsKey(argName))
             throw UncheckedTemplateException.argumentAlreadyExist(argName);
     }
 
-    public static String readFromFile(String strPath, Charset encoding) {
+    private static String readFromFile(String strPath, Charset encoding) {
         try {
             byte[] encodedBytes = readAllBytes(Paths.get(strPath));
             return new String(encodedBytes, encoding);
@@ -87,7 +88,7 @@ public class BladeTemplate {
         }
     }
 
-    public static String readFromFile(String strPath) {
+    private static String readFromFile(String strPath) {
         return readFromFile(strPath, Charset.forName("UTF8"));
     }
 

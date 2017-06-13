@@ -1,10 +1,7 @@
 package com.blade.mvc.handler;
 
 import com.blade.BladeException;
-import com.blade.kit.AsmKit;
-import com.blade.kit.ClassKit;
-import com.blade.kit.JsonKit;
-import com.blade.kit.StringKit;
+import com.blade.kit.*;
 import com.blade.mvc.annotation.*;
 import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.http.HttpSession;
@@ -150,7 +147,7 @@ public final class MethodArgument {
     private static Object parseModel(Class<?> argType, Request request, String name) {
         try {
             Field[] fields = argType.getDeclaredFields();
-            if (null == fields || fields.length == 0) {
+            if (CollectionKit.isEmpty(fields)) {
                 return null;
             }
             Object obj = ClassKit.newInstance(argType);
@@ -191,24 +188,7 @@ public final class MethodArgument {
                 result = false;
             }
         } else {
-            if (parameterType.equals(Integer.class) || parameterType.equals(int.class)) {
-                result = Integer.parseInt(val);
-            }
-            if (parameterType.equals(Long.class) || parameterType.equals(long.class)) {
-                result = Long.parseLong(val);
-            }
-            if (parameterType.equals(Double.class) || parameterType.equals(double.class)) {
-                result = Double.parseDouble(val);
-            }
-            if (parameterType.equals(Float.class) || parameterType.equals(float.class)) {
-                result = Float.parseFloat(val);
-            }
-            if (parameterType.equals(Boolean.class) || parameterType.equals(boolean.class)) {
-                result = Boolean.parseBoolean(val);
-            }
-            if (parameterType.equals(Byte.class) || parameterType.equals(byte.class)) {
-                result = Byte.parseByte(val);
-            }
+            result = ClassKit.convert(parameterType, val);
         }
         return result;
     }

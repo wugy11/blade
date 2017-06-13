@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public interface DefaultUI {
 
-	String HTML_FOOTER = "<hr/><br/><p><center><a href='https://github.com/biezhi/blade' target='_blank'>Blade-" + Const.VERSION + "</a></center></p>";
+    String HTML_FOOTER = "<hr/><br/><p><center><a href='https://github.com/biezhi/blade' target='_blank'>Blade-" + Const.VERSION + "</a></center></p>";
 
     /**
      * server 500
@@ -44,11 +44,11 @@ public interface DefaultUI {
     }
 
 
-    public static String getKey(MonitorEnum monitorEnum) {
+    static String getKey(MonitorEnum monitorEnum) {
         return bundle.getString(monitorEnum.name());
     }
 
-    public static void registerStatus(Blade blade) {
+    static void registerStatus(Blade blade) {
 
         WebStatistics webStatistics = WebStatistics.me();
         blade.get("/blade/monitor", ((request, response) -> {
@@ -70,7 +70,8 @@ public interface DefaultUI {
             if (webStatistics.getIpRequestsAsStrings().size() == 0) {
                 htmlCreator.paragraph(getKey(MonitorEnum.no_completed_requests));
             } else {
-                List<String> requestsTableHeaders = Arrays.asList(getKey(MonitorEnum.ip), getKey(MonitorEnum.requests), getKey(MonitorEnum.last_request));
+                List<String> requestsTableHeaders = Arrays.asList(getKey(MonitorEnum.ip), getKey(MonitorEnum.requests),
+                        getKey(MonitorEnum.last_request));
                 htmlCreator.addTableWithHeaders(requestsTableHeaders);
                 webStatistics.getIpRequestsAsStrings().forEach(htmlCreator::addRowToTable);
                 htmlCreator.endTable();
@@ -111,8 +112,8 @@ public interface DefaultUI {
             " ~   ~~~ ~ ~ ~   ~~~"
     };
 
-    public static void printBanner() {
-        StringBuffer text = new StringBuffer();
+    static void printBanner() {
+        StringBuilder text = new StringBuilder();
         for (String s : banner) {
             text.append("\r\n\t\t" + s);
         }

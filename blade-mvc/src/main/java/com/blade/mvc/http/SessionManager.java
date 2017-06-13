@@ -1,7 +1,8 @@
 package com.blade.mvc.http;
 
+import com.blade.kit.CollectionKit;
+
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author biezhi
@@ -12,7 +13,7 @@ public class SessionManager {
     private Map<String, Session> sessionMap;
 
     public SessionManager() {
-        this.sessionMap = new ConcurrentHashMap<>();
+        this.sessionMap = CollectionKit.newConcurrentMap();
     }
 
     public Map<String, Session> getSessions() {

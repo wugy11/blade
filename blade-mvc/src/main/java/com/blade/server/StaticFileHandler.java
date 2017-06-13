@@ -54,12 +54,6 @@ public class StaticFileHandler implements RequestHandler<Boolean> {
 
 	/**
 	 * print static file to clinet
-	 *
-	 * @param ctx
-	 * @param request
-	 * @param response
-	 * @param uri
-	 * @throws Exception
 	 */
 	@Override
 	public Boolean handle(ChannelHandlerContext ctx, Request request, Response response) throws Exception {

@@ -1,6 +1,7 @@
 package com.blade.mvc.ui.template;
 
 import com.blade.BladeException;
+import com.blade.kit.CollectionKit;
 import com.blade.kit.IOKit;
 import com.blade.mvc.Const;
 import com.blade.mvc.WebContext;
@@ -32,7 +33,7 @@ public class DefaultEngine implements TemplateEngine {
             Request request = WebContext.request();
             String body = IOKit.readToString(viewPath);
 
-            Map<String, Object> attrs = new HashMap<>();
+            Map<String, Object> attrs = CollectionKit.newHashMap();
             attrs.putAll(request.attributes());
             Session session = request.session();
             if (null != session) {
