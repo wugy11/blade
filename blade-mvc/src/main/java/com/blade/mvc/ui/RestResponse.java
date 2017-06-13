@@ -108,36 +108,36 @@ public class RestResponse<T> {
 		this.timestamp = timestamp;
 	}
 
-	public static RestResponse ok() {
-		return new RestResponse(true);
+	public static RestResponse<?> ok() {
+		return new RestResponse<Object>(true);
 	}
 
-	public static <T> RestResponse ok(T payload) {
-		return new RestResponse(true, payload);
+	public static <T> RestResponse<T> ok(T payload) {
+		return new RestResponse<T>(true, payload);
 	}
 
-	public static <T> RestResponse ok(int code) {
-		return new RestResponse(true, null, code);
+	public static <T> RestResponse<?> ok(int code) {
+		return new RestResponse<Object>(true, null, code);
 	}
 
-	public static <T> RestResponse ok(T payload, int code) {
-		return new RestResponse(true, payload, code);
+	public static <T> RestResponse<T> ok(T payload, int code) {
+		return new RestResponse<T>(true, payload, code);
 	}
 
-	public static RestResponse fail() {
-		return new RestResponse(false);
+	public static RestResponse<?> fail() {
+		return new RestResponse<Object>(false);
 	}
 
-	public static RestResponse fail(String msg) {
-		return new RestResponse(false, msg);
+	public static RestResponse<?> fail(String msg) {
+		return new RestResponse<Object>(false, msg);
 	}
 
-	public static RestResponse fail(int code) {
-		return new RestResponse(false, null, code);
+	public static RestResponse<?> fail(int code) {
+		return new RestResponse<Object>(false, null, code);
 	}
 
-	public static RestResponse fail(int code, String msg) {
-		return new RestResponse(false, msg, code);
+	public static RestResponse<?> fail(int code, String msg) {
+		return new RestResponse<Object>(false, msg, code);
 	}
 
 }

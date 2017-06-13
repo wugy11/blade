@@ -5,7 +5,9 @@ package com.blade.kit.ason;
  */
 public class InvalidJsonException extends IllegalArgumentException {
 
-    InvalidJsonException(String json, Exception inner) {
-        super("Invalid JSON: " + json, inner);
-    }
+	private static final long serialVersionUID = 1L;
+
+	InvalidJsonException(String json, Exception inner) {
+		super("Invalid JSON: " + json, inner);
+	}
 }

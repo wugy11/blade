@@ -15,7 +15,7 @@ import static com.blade.kit.ason.Util.*;
 /**
  * @author Aidan Follestad (afollestad)
  */
-@SuppressWarnings({ "WeakerAccess", "unused", "unchecked", "SameParameterValue" })
+@SuppressWarnings({ "unchecked" })
 public class Ason {
 
 	private JSONObject json;
@@ -56,16 +56,16 @@ public class Ason {
 	}
 
 	public static <T> AsonArray<T> serializeArray(Object object) {
-		return AsonSerializer.get().serializeArray(object);
+		return (AsonArray<T>) AsonSerializer.get().serializeArray(object);
 	}
 
 	public static <T> AsonArray<T> serializeList(List<T> object) {
-		return AsonSerializer.get().serializeList(object);
+		return (AsonArray<T>) AsonSerializer.get().serializeList(object);
 	}
 
 	public static <T> T deserialize(String json, Class<T> cls) {
 		if (isJsonArray(json)) {
-			AsonArray ason = new AsonArray(json);
+			AsonArray<?> ason = new AsonArray<Object>(json);
 			return AsonSerializer.get().deserializeArray(ason, cls);
 		} else {
 			Ason ason = new Ason(json);
@@ -77,16 +77,16 @@ public class Ason {
 		return AsonSerializer.get().deserialize(json, cls);
 	}
 
-	public static <T> T deserialize(AsonArray json, Class<T> cls) {
+	public static <T> T deserialize(AsonArray<?> json, Class<T> cls) {
 		return AsonSerializer.get().deserializeArray(json, cls);
 	}
 
 	public static <T> List<T> deserializeList(String json, Class<T> cls) {
-		AsonArray array = new AsonArray(json);
+		AsonArray<?> array = new AsonArray<Object>(json);
 		return AsonSerializer.get().deserializeList(array, cls);
 	}
 
-	public static <T> List<T> deserializeList(AsonArray json, Class<T> cls) {
+	public static <T> List<T> deserializeList(AsonArray<?> json, Class<T> cls) {
 		return AsonSerializer.get().deserializeList(json, cls);
 	}
 
@@ -109,11 +109,11 @@ public class Ason {
 		} else if (value instanceof Ason) {
 			putInternal(intoArray, intoObject, key, ((Ason) value).toStockJson());
 		} else if (value instanceof AsonArray) {
-			putInternal(intoArray, intoObject, key, ((AsonArray) value).toStockJson());
+			putInternal(intoArray, intoObject, key, ((AsonArray<?>) value).toStockJson());
 		} else if (value.getClass().isArray()) {
 			putInternal(intoArray, intoObject, key, serializer.serializeArray(value));
 		} else if (isList(value.getClass())) {
-			putInternal(intoArray, intoObject, key, serializer.serializeList((List) value));
+			putInternal(intoArray, intoObject, key, serializer.serializeList((List<?>) value));
 		} else {
 			putInternal(intoArray, intoObject, key, serializer.serialize(value));
 		}
@@ -181,7 +181,6 @@ public class Ason {
 		return get(key, (T) null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T get(String key, T defaultValue) {
 		Object result;
 		if (key.contains(".")) {
@@ -195,7 +194,7 @@ public class Ason {
 		} else if (result instanceof JSONObject) {
 			result = new Ason((JSONObject) result);
 		} else if (result instanceof JSONArray) {
-			result = new AsonArray((JSONArray) result);
+			result = new AsonArray<Object>((JSONArray) result);
 		}
 		if (result instanceof Float) {
 			result = Float.valueOf((float) result).doubleValue();
@@ -284,15 +283,14 @@ public class Ason {
 		return get(key, (Ason) null);
 	}
 
-	public <IT> AsonArray<IT> getJsonArray(String key) {
-		return get(key, (AsonArray) null);
+	public <T> AsonArray<T> getJsonArray(String key) {
+		return (AsonArray<T>) get(key, (AsonArray<?>) null);
 	}
 
 	public <T> T get(String key, Class<T> cls) {
 		return get(key, cls, null);
 	}
 
-	@SuppressWarnings("Duplicates")
 	public <T> T get(String key, Class<T> cls, T defaultValue) {
 		final Object value = get(key, (T) null);
 		if (Util.isNull(value)) {

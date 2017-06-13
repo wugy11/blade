@@ -1,24 +1,11 @@
 package com.blade.server;
 
-import com.blade.Blade;
-import com.blade.kit.DateKit;
-import com.blade.kit.IOKit;
-import com.blade.kit.StringKit;
-import com.blade.mvc.Const;
-import com.blade.mvc.http.Request;
-import com.blade.mvc.http.Response;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.DefaultFileRegion;
-import io.netty.handler.codec.http.*;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.handler.stream.ChunkedFile;
-import io.netty.util.CharsetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
+import static io.netty.handler.codec.http.HttpResponseStatus.METHOD_NOT_ALLOWED;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_MODIFIED;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,8 +20,36 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import static io.netty.handler.codec.http.HttpResponseStatus.*;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.blade.Blade;
+import com.blade.kit.DateKit;
+import com.blade.kit.IOKit;
+import com.blade.kit.StringKit;
+import com.blade.mvc.Const;
+import com.blade.mvc.http.Request;
+import com.blade.mvc.http.Response;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.DefaultFileRegion;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpChunkedInput;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedFile;
+import io.netty.util.CharsetUtil;
 
 //import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
@@ -83,7 +98,7 @@ public class StaticFileHandler implements RequestHandler<Boolean> {
                     headers.set(HttpHeaderNames.CONTENT_TYPE, contentType);
                 headers.set(HttpHeaderNames.CONTENT_LENGTH, content.length());
                 if (request.keepAlive()) {
-                    headers.set(HttpHeaderNames.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                    headers.set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
                 }
                 // Write the initial line and the header.
                 ctx.writeAndFlush(httpResponse);

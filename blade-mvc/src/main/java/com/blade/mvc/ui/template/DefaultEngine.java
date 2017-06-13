@@ -1,5 +1,9 @@
 package com.blade.mvc.ui.template;
 
+import java.io.File;
+import java.io.Writer;
+import java.util.Map;
+
 import com.blade.BladeException;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.IOKit;
@@ -8,11 +12,6 @@ import com.blade.mvc.WebContext;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Session;
 import com.blade.mvc.ui.ModelAndView;
-
-import java.io.File;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * default template implment

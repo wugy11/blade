@@ -1,18 +1,17 @@
 package com.blade.mvc.http;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.blade.kit.StringKit;
 import com.blade.kit.WebKit;
 import com.blade.mvc.WebContext;
 import com.blade.mvc.multipart.FileItem;
 import com.blade.mvc.route.RouteBean;
+
 import io.netty.buffer.ByteBuf;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpHeaders.Names.USER_AGENT;
+import io.netty.handler.codec.http.HttpHeaderNames;
 
 /**
  * Http Request
@@ -47,7 +46,7 @@ public interface Request {
 	 * @return return user-agent
 	 */
 	default String userAgent() {
-		return header(USER_AGENT);
+		return header(HttpHeaderNames.USER_AGENT.toString());
 	}
 
 	/**
@@ -258,7 +257,7 @@ public interface Request {
 	 * @return Return contentType
 	 */
 	default String contentType() {
-		String contentType = header(CONTENT_TYPE);
+		String contentType = header(HttpHeaderNames.CONTENT_TYPE.toString());
 		return null != contentType ? contentType : "Unknown";
 	}
 
@@ -379,6 +378,7 @@ public interface Request {
 	 *            Parameter name
 	 * @return Return parameter value
 	 */
+	@SuppressWarnings("unchecked")
 	default <T> T attribute(String name) {
 		Object object = attributes().get(name);
 		return null != object ? (T) object : null;

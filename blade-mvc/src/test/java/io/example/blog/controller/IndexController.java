@@ -41,7 +41,7 @@ public class IndexController {
 
 	@Route(values = "/save", method = HttpMethod.POST)
 	@JSON
-	public RestResponse saveArticle(@BodyParam Article article, Request request) {
+	public RestResponse<?> saveArticle(@BodyParam Article article, Request request) {
 		System.out.println(article);
 		if (null == article) {
 			System.out.println(request.bodyToString());
@@ -51,7 +51,7 @@ public class IndexController {
 
 	@Route(values = "upload", method = HttpMethod.POST)
 	@JSON
-	public RestResponse upload(@MultipartParam("img2") FileItem fileItem) {
+	public RestResponse<?> upload(@MultipartParam("img2") FileItem fileItem) {
 		System.out.println(fileItem);
 		return RestResponse.ok();
 	}

@@ -50,16 +50,16 @@ public class AsonArray<T> implements Iterable<T> {
 			} else if (object instanceof Ason) {
 				insertObject = ((Ason) object).toStockJson();
 			} else if (object instanceof AsonArray) {
-				insertObject = ((AsonArray) object).toStockJson();
+				insertObject = ((AsonArray<?>) object).toStockJson();
 			} else if (object.getClass().isArray()) {
 				insertObject = AsonSerializer.get().serializeArray(object);
 				if (insertObject != null) {
-					insertObject = ((AsonArray) insertObject).toStockJson();
+					insertObject = ((AsonArray<?>) insertObject).toStockJson();
 				}
 			} else if (isList(object.getClass())) {
-				insertObject = AsonSerializer.get().serializeList((List) object);
+				insertObject = AsonSerializer.get().serializeList((List<?>) object);
 				if (insertObject != null) {
-					insertObject = ((AsonArray) insertObject).toStockJson();
+					insertObject = ((AsonArray<?>) insertObject).toStockJson();
 				}
 			} else {
 				insertObject = AsonSerializer.get().serialize(object);
@@ -98,9 +98,9 @@ public class AsonArray<T> implements Iterable<T> {
 		return this;
 	}
 
-	public AsonArray<T> addArrays(AsonArray... arrays) {
+	public AsonArray<T> addArrays(AsonArray<?>... arrays) {
 		if (arrays != null) {
-			for (AsonArray ary : arrays) {
+			for (AsonArray<?> ary : arrays) {
 				putInternal(ary);
 			}
 		} else {
@@ -114,7 +114,7 @@ public class AsonArray<T> implements Iterable<T> {
 		if (value instanceof JSONObject) {
 			value = new Ason((JSONObject) value);
 		} else if (value instanceof JSONArray) {
-			value = new AsonArray((JSONArray) value);
+			value = new AsonArray<Object>((JSONArray) value);
 		}
 		if (isNull(value)) {
 			return null;
@@ -183,7 +183,7 @@ public class AsonArray<T> implements Iterable<T> {
 		if (!(value instanceof JSONArray)) {
 			throw new IllegalStateException("Cannot use getList() on an array which does not contain JSON arrays.");
 		}
-		return AsonSerializer.get().deserializeList(new AsonArray((JSONArray) value), itemTypeCls);
+		return AsonSerializer.get().deserializeList(new AsonArray<Object>((JSONArray) value), itemTypeCls);
 	}
 
 	public T get(int index, Class<T> cls) {

@@ -5,7 +5,9 @@ package com.blade.kit.ason;
  */
 public class InvalidPathException extends IllegalArgumentException {
 
-    InvalidPathException(String message) {
-        super(message);
-    }
+	private static final long serialVersionUID = 1L;
+
+	InvalidPathException(String message) {
+		super(message);
+	}
 }
