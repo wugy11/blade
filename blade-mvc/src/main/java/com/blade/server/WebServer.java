@@ -14,7 +14,7 @@ import com.blade.kit.ClassKit;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.mvc.Const;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.annotation.Path;
 import com.blade.mvc.hook.WebHook;
 import com.blade.mvc.route.RouteBuilder;
@@ -70,7 +70,7 @@ public class WebServer {
         this.loadConfig();
         this.initConfig();
 
-        WebContext.init(blade, "/", false);
+        WebContextHolder.init(blade, "/", false);
 
         this.initIoc();
 

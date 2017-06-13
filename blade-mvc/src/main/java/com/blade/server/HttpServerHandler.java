@@ -5,7 +5,7 @@ import com.blade.BladeException;
 import com.blade.kit.CollectionKit;
 import com.blade.metric.Connection;
 import com.blade.metric.WebStatistics;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.handler.RouteViewResolve;
 import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.hook.WebHook;
@@ -106,7 +106,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		}
 
 		// write session
-		WebContext.set(new WebContext(request, response));
+		WebContextHolder.set(new WebContextHolder(request, response));
 
 		// web hook
 		if (!invokeHook(routeMatcher.getBefore(uri), request, response)) {
@@ -140,7 +140,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		invokeHook(routeMatcher.getAfter(uri), request, response);
 
 		this.sendFinish(response);
-		WebContext.remove();
+		WebContextHolder.remove();
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			ctx.close();
 			return;
 		}
-		Response response = WebContext.response();
+		Response response = WebContextHolder.response();
 		response.status(500);
 
 		if (cause instanceof BladeException) {
@@ -183,8 +183,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
 			if (null != page500) {
 				cause.printStackTrace(writer);
-				WebContext.request().attribute("error", error);
-				WebContext.request().attribute("stackTrace", sw.toString());
+				WebContextHolder.request().attribute("error", error);
+				WebContextHolder.request().attribute("stackTrace", sw.toString());
 				response.render(page500);
 			} else {
 				writer.write(String.format(DefaultUI.ERROR_START, cause.getClass() + " : " + cause.getMessage()));

@@ -4,7 +4,7 @@ import com.blade.Blade;
 import com.blade.event.EventManager;
 import com.blade.event.EventType;
 import com.blade.kit.UUID;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.http.*;
 
 import java.time.Instant;
@@ -37,7 +37,7 @@ public class SessionHandler {
 
     public Session createSession(Request request) {
         Session session = getSession(request);
-        Response response = WebContext.response();
+        Response response = WebContextHolder.response();
         if (null == session) {
             return createSession(request, response);
         } else {

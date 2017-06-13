@@ -2,7 +2,7 @@ package com.blade.mvc.http;
 
 import com.blade.kit.JsonKit;
 import com.blade.mvc.Const;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.ui.ModelAndView;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -177,7 +177,7 @@ public interface Response {
     default void json(String json) {
         FullHttpResponse response = new DefaultFullHttpResponse(Const.HTTP_VERSION,
                 HttpResponseStatus.valueOf(statusCode()), Unpooled.wrappedBuffer(json.getBytes(CharsetUtil.UTF_8)));
-        if (!WebContext.request().isIE()) {
+        if (!WebContextHolder.request().isIE()) {
             this.contentType(Const.CONTENT_TYPE_JSON);
         }
         this.send(response);

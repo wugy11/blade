@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.blade.kit.StringKit;
 import com.blade.kit.WebKit;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.multipart.FileItem;
 import com.blade.mvc.route.RouteBean;
 
@@ -58,7 +58,7 @@ public interface Request {
 	 * @return Return contextPath
 	 */
 	default String contextPath() {
-		return WebContext.contextPath();
+		return WebContextHolder.contextPath();
 	}
 
 	/**

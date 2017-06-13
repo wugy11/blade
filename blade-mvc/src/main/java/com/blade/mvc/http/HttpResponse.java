@@ -6,7 +6,7 @@ import com.blade.kit.DateKit;
 import com.blade.kit.StringKit;
 import com.blade.metric.WebStatistics;
 import com.blade.mvc.Const;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.ui.ModelAndView;
 import com.blade.mvc.ui.template.TemplateEngine;
 import com.blade.server.ProgressiveFutureListener;
@@ -172,7 +172,7 @@ public class HttpResponse implements Response {
         io.netty.handler.codec.http.HttpResponse httpResponse = new DefaultHttpResponse(HTTP_1_1, OK);
         HttpHeaders httpHeaders = httpResponse.headers().add(getDefaultHeader());
 
-        boolean keepAlive = WebContext.request().keepAlive();
+        boolean keepAlive = WebContextHolder.request().keepAlive();
         if (keepAlive) {
             httpResponse.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         }
@@ -212,7 +212,7 @@ public class HttpResponse implements Response {
         headers.set(HttpHeaderNames.LOCATION, newUri);
         FullHttpResponse response = new DefaultFullHttpResponse(Const.HTTP_VERSION, HttpResponseStatus.FOUND);
         this.send(response);
-        if (WebContext.blade().environment().getBoolean(Const.ENV_KEY_MONITOR_ENABLE, true)) {
+        if (WebContextHolder.blade().environment().getBoolean(Const.ENV_KEY_MONITOR_ENABLE, true)) {
             WebStatistics.me().registerRedirect(newUri);
         }
     }
@@ -225,7 +225,7 @@ public class HttpResponse implements Response {
     @Override
     public void send(FullHttpResponse response) {
         response.headers().add(getDefaultHeader());
-        boolean keepAlive = WebContext.request().keepAlive();
+        boolean keepAlive = WebContextHolder.request().keepAlive();
         // Add 'Content-Length' header only for a keep-alive connection.
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         if (!keepAlive) {

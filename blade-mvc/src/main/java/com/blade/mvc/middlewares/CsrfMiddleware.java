@@ -3,7 +3,7 @@ package com.blade.mvc.middlewares;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.UUID;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.hook.Invoker;
 import com.blade.mvc.hook.WebHook;
 import com.blade.mvc.http.Request;
@@ -72,8 +72,8 @@ public class CsrfMiddleware implements WebHook {
     }
 
     public static boolean validation() {
-        Request request = WebContext.request();
-        Response response = WebContext.response();
+        Request request = WebContextHolder.request();
+        Response response = WebContextHolder.response();
         Optional<String> tokenOptional = request.query(TOKEN_KEY);
         String token = tokenOptional.isPresent() ? tokenOptional.get() : request.header(TOKEN_KEY);
         if (StringKit.isBlank(token) || !tokens.contains(token)) {

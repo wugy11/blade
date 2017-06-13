@@ -8,7 +8,7 @@ import com.blade.BladeException;
 import com.blade.kit.CollectionKit;
 import com.blade.kit.IOKit;
 import com.blade.mvc.Const;
-import com.blade.mvc.WebContext;
+import com.blade.mvc.WebContextHolder;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Session;
 import com.blade.mvc.ui.ModelAndView;
@@ -29,7 +29,7 @@ public class DefaultEngine implements TemplateEngine {
         String viewPath = Const.CLASSPATH + TEMPLATE_PATH + File.separator + view;
         viewPath = viewPath.replace("//", "/");
         try {
-            Request request = WebContext.request();
+            Request request = WebContextHolder.request();
             String body = IOKit.readToString(viewPath);
 
             Map<String, Object> attrs = CollectionKit.newHashMap();
